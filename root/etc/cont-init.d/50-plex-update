@@ -1,0 +1,68 @@
+#!/usr/bin/with-contenv bash
+
+# If we are debugging, enable trace
+if [ "${DEBUG,,}" = "true" ]; then
+  set -x
+fi
+
+function getPref {
+  local key="$1"
+  
+  xmlstarlet sel -T -t -m "/Preferences" -v "@${key}" -n "${prefFile}"
+}
+
+# Get token
+[ -f /etc/default/plexmediaserver ] && . /etc/default/plexmediaserver
+pmsApplicationSupportDir="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${HOME}/Library/Application Support}"
+prefFile="${pmsApplicationSupportDir}/Plex Media Server/Preferences.xml"
+token="$(getPref "PlexOnlineToken")"
+
+# Determine current version
+if (dpkg --get-selections plexmediaserver 2> /dev/null | grep -wq "install"); then
+  installedVersion=$(dpkg-query -W -f='${Version}' plexmediaserver 2> /dev/null)
+else
+  installedVersion="none"
+fi
+
+# Get updated version number
+if [ "${VERSION,,}" = "latest" ]; then
+  versionInfo="$(curl -s "https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=8&distro=ubuntu&X-Plex-Token=${token}")"
+elif [ "${VERSION,,}" = "public" ]; then
+  versionInfo="$(curl -s "https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=16&distro=ubuntu")"
+else
+  versionInfo="$(curl -s "https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=8&distro=ubuntu&X-Plex-Token=${token}&version=${VERSION}")"
+fi
+
+if [ -z "${versionInfo}" ]; then
+  echo "Could not get any update information"
+  exit 0
+fi
+
+# Get update info from the XML.  Note: This could countain multiple updates when user specifies an exact version with the lowest first, so we'll use first always.
+remoteVersion=$(echo "${versionInfo}" | sed -n 's/.*Release.*version="\([^"]*\)".*/\1/p')
+remoteFile=$(echo "${versionInfo}" | sed -n 's/.*file="\([^"]*\)".*/\1/p')
+if [ -z "${remoteVersion}" ] || [ -z "${remoteFile}" ]; then
+  echo "Could not get update version"
+  exit 0
+fi
+
+# Check if there's no update required
+if [ "${remoteVersion}" = "${installedVersion}" ]; then
+  exit 0
+fi
+
+# Do update process
+echo "Atempting to upgrade to: ${remoteVersion}"
+rm -f /tmp/plexmediaserver*.deb
+wget -nv --show-progress --progress=bar:force:noscroll -O /tmp/plexmediaserver.deb \
+  "https://plex.tv/${remoteFile}"
+last=$?
+
+# test if deb file size is ok, or if download failed
+if [[ "$last" -gt "0" ]] || [[ $(stat -c %s /tmp/plexmediaserver.deb) -lt 10000 ]]; then
+  echo "Failed to fetch update"
+  exit 0
+fi
+
+dpkg -i --force-confold /tmp/plexmediaserver.deb
+rm -f /tmp/plexmediaserver.deb
