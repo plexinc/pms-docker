@@ -46,4 +46,11 @@ ENV VERSION=latest \
     CHANGE_CONFIG_DIR_OWNERSHIP="true" \
     HOME="/config"
 
+ARG TAG=latest
+
 COPY root/ /
+
+RUN \
+# Save version and install
+    /installBinary.sh && \
+    rm /installBinary.sh

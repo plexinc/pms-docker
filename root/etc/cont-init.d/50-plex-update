@@ -24,6 +24,17 @@ else
   installedVersion="none"
 fi
 
+# Read set version
+if [ -e /version.txt ]; then
+  VERSION="$(cat /version.txt)"
+  echo "Setting version to ${VERSION} per container configuration"
+fi
+
+# Short-circuit test of version before remote check to see if it's already installed.
+if [ "${VERSION}" = "${installedVersion}" ]; then
+  exit 0
+fi
+
 # Get updated version number
 if [ "${VERSION,,}" = "latest" ]; then
   versionInfo="$(curl -s "https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=8&distro=ubuntu&X-Plex-Token=${token}")"
