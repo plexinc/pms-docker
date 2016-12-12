@@ -25,23 +25,24 @@ else
 fi
 
 # Read set version
-if [ -e /version.txt ]; then
-  VERSION="$(cat /version.txt)"
-  echo "Setting version to ${VERSION} per container configuration"
+versionToInstall="$(cat /version.txt)"
+if [ -z "${versionToInstall}" ]; then
+  echo "No version specified in install.  Broken image"
+  exit 1
 fi
 
 # Short-circuit test of version before remote check to see if it's already installed.
-if [ "${VERSION}" = "${installedVersion}" ]; then
+if [ "${versionToInstall}" = "${installedVersion}" ]; then
   exit 0
 fi
 
 # Get updated version number
-if [ "${VERSION,,}" = "latest" ]; then
+if [ "${versionToInstall,,}" = "plexpass" ]; then
   versionInfo="$(curl -s "https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=8&distro=ubuntu&X-Plex-Token=${token}")"
-elif [ "${VERSION,,}" = "public" ]; then
+elif [ "${versionToInstall,,}" = "public" ]; then
   versionInfo="$(curl -s "https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=16&distro=ubuntu")"
 else
-  versionInfo="$(curl -s "https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=8&distro=ubuntu&X-Plex-Token=${token}&version=${VERSION}")"
+  versionInfo="$(curl -s "https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=8&distro=ubuntu&X-Plex-Token=${token}&version=${versionToInstall}")"
 fi
 
 if [ -z "${versionInfo}" ]; then
