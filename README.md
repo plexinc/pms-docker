@@ -39,13 +39,12 @@ plexinc/pms-docker
 - `-v <path/to/media>:/data/*` These are provided as examples for providing media into the container.  The exact structure of how the media is organized and presented inside the container is a matter of user preference.  You can use as many or as few of these parameters as required to provide your media to the container
 - `-e KEY="value"` These are environment variables which configure the container.  See below for a description of their meanings.
 
-The following are the recommended parameters.  With the exception of `VERSION`, each of the following parameters to the container are treated as first-run parameters only.  That is, all other paraters are ignored on subsequent runs of the server.  We recommend that you set the following parameters:
+The following are the recommended parameters.  Each of the following parameters to the container are treated as first-run parameters only.  That is, all other paraters are ignored on subsequent runs of the server.  We recommend that you set the following parameters:
 
 - **HOSTNAME** Sets the hostname inside the docker container. For example `-h PlexServer` will set the servername to PlexServer.
 - **TZ** Set the timezone inside the container.  For example: `Europe/London`.  The complete list can be found here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 - **PLEX_CLAIM** The claim token for the server to obtain a real server token.  If not provided, server is will not be automatically logged in.  If server is already logged in, this parameter is ignored.
 - **ADVERTISE_IP** This variable defines the additional IPs on which the server may be be found.  For example: `http://10.1.1.23:32400`.  This is recommended because the IP address seen within the container is usually not the IP address of the host.  This adds to the list where the server advertises that it can be found.
-- **VERSION** The version of PMS to install (defaults to `latest`).  Can be `latest`, `public`, or an explicit version number.  If the server is not logged in or you do not have Plex Pass on your account, this will be restricted to publicly available versions only.
 
 These parameters are usually not required but some special setups may benefit from their use.  As in the previous section, each is treated as first-run parameters only:
 
@@ -75,14 +74,10 @@ uid=1001(myuser) gid=1001(myuser) groups=1001(myuser)
 
 In the above case, if you set the `PLEX_UID` and `PLEX_GID` to `1001`, then the permissions will match that of your own user.
 
-## Installation
-The Plex Media Server is installed when the container is first run.  Additionally it will attempt to upgrade every time the container is started.  If you wish to upgrade the version within the container, simply stop and start the container when you have a network connection.  The startup script will automatically fetch the version associated with the `VERSION` variable and install it before starting the Plex Media Server.
+## Tags
+In addition to the standard version and `latest` tags, two other tags exist: `plexpass` and `public`. These two images behave differently than your typical containers.  These two images do **not** have any Plex Media Server binary installed.  Instead, when these containers are run, they will perform an update check and fetch the latest version, install it, and then continue execution.  They also run the update check whenever the container is restarted.  To update the version in the container, simply stop the container and start container again when you have a network connection. The startup script will automatically fetch the appropriate version and install it before starting the Plex Media Server.
 
-The values of `VERSION` are as follows:
-
-- **latest**: Fetches the latest version your account can access.  If the server is logged in and your account has Plex Pass, this will be the latest Plex Pass version.  Otherwise this will be the latest public version.
-- **public**: Fetches the latest public version.  Even if your server is logged in and has Plex Pass, this will still only fetch the latest public version.
-- **`<specific version>`**: Fetches the exact version specified.  This is subject to availability of that particular version.  This cannot be used to fetch Plex Pass versions of the server for users that do not have Plex Pass on their accounts.  For version `1.2.7`, this value would be `1.2.7.2987-1bef33a`.
+The `public` restricts this check to public versions only where as `plexpass` will fetch Plex Pass versions.  If the server is not logged in or you do not have Plex Pass on your account, the `plexpass` tagged images will be restricted to publicly available versions only.
 
 ## Useful information
 - Shell access to the container while it is running: `docker exec -it plex /bin/bash`
