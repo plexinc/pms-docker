@@ -7,11 +7,11 @@ if [ "${TAG}" != "plexpass" ] && [ "${TAG}" != "public" ]; then
   remoteFile=$(echo "${versionInfo}" | sed -n 's/.*file="\([^"]*\)".*/\1/p')
 
   if [ -z "${remoteVersion}" ] || [ -z "${remoteFile}" ]; then
-    echo "Could not get update version"
-    exit 0
+    echo "Could not get install version"
+    exit 1
   fi
   
-  echo "Atempting to upgrade to: ${remoteVersion}"
+  echo "Atempting to install: ${remoteVersion}"
   rm -f /tmp/plexmediaserver*.deb
   wget -nv --show-progress --progress=bar:force:noscroll -O /tmp/plexmediaserver.deb \
     "https://plex.tv/${remoteFile}"
