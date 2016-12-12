@@ -20,6 +20,7 @@ docker create \
 -e TZ="<timezone>" \
 -e PLEX_CLAIM="<claimToken>" \
 -e ADVERTISE_IP="http://<hostIPAddress>:32400/" \
+-h <HOSTNAME>
 -v <path/to/plex/database>:/config \
 -v <path/to/transcode/temp>:/transcode \
 -v <path/to/tv/series>:/data/tvshows \
@@ -40,6 +41,7 @@ plexinc/pms-docker
 
 The following are the recommended parameters.  With the exception of `VERSION`, each of the following parameters to the container are treated as first-run parameters only.  That is, all other paraters are ignored on subsequent runs of the server.  We recommend that you set the following parameters:
 
+- **HOSTNAME** Sets the hostname inside the docker container. For example `-h PlexServer` will set the servername to PlexServer.
 - **TZ** Set the timezone inside the container.  For example: `Europe/London`.  The complete list can be found here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 - **PLEX_CLAIM** The claim token for the server to obtain a real server token.  If not provided, server is will not be automatically logged in.  If server is already logged in, this parameter is ignored.
 - **ADVERTISE_IP** This variable defines the additional IPs on which the server may be be found.  For example: `http://10.1.1.23:32400`.  This is recommended because the IP address seen within the container is usually not the IP address of the host.  This adds to the list where the server advertises that it can be found.
