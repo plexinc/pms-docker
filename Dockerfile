@@ -3,16 +3,9 @@ FROM ubuntu:16.04
 ENV DEBIAN_FRONTEND="noninteractive" \
     TERM="xterm"
 
-# Install required packages
-ADD ["https://github.com/just-containers/s6-overlay/releases/download/v1.17.2.0/s6-overlay-amd64.tar.gz", \
-     "/tmp/"]
-
 ENTRYPOINT ["/init"]
 
 RUN \
-# Extract S6 overlay
-    tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
-
 # Update and get dependencies
     apt-get update && \
     apt-get install -y \
@@ -22,6 +15,10 @@ RUN \
       xmlstarlet \
       uuid-runtime \
     && \
+
+# Fetch and extract S6 overlay
+    curl -J -L -o /tmp/s6-overlay-amd64.tar.gz https://github.com/just-containers/s6-overlay/releases/download/v1.17.2.0/s6-overlay-amd64.tar.gz && \
+    tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
 
 # Add user
     useradd -U -d /config -s /bin/false plex && \
