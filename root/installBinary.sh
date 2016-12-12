@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "${TAG}" != "latest" ] && [ "${TAG}" != "latest" ]; then
+if [ "${TAG}" != "latest" ] && [ "${TAG}" != "public" ]; then
   echo "${TAG}" > /version.txt
   versionInfo="$(curl -s "https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=8&distro=ubuntu&X-Plex-Token=${token}&version=${TAG}")"
   remoteVersion=$(echo "${versionInfo}" | sed -n 's/.*Release.*version="\([^"]*\)".*/\1/p')
