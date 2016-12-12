@@ -53,7 +53,6 @@ These parameters are usually not required but some special setups may benefit fr
 - **PLEX_UID** The user id of the `plex` user created inside the container.
 - **PLEX_GID** The group id of the `plex` group created inside the container
 - **CHANGE_CONFIG_DIR_OWNERSHIP** Change ownership of config directory to the plex user.  Defaults to `true`
-- **CHANGE_DIR_RIGHTS** Change permissions of data directory (media) to be readable by plex user.  Defaults to `false`
 - **ALLOWED_NETWORKS** IP/netmask entries which allow access to the server without requiring authorization.  We recommend you set this only if you do not sign in your server.  For example `192.168.1.0/24,172.16.0.0/16` will allow access to the entire `192.168.1.x` range and the `172.16.x.x` range.
 
 ### Networking

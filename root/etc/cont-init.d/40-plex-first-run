@@ -53,13 +53,6 @@ if [ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]; then
   chown -R plex:plex /config /transcode
 fi
 
-# Update permisions for data we need to read
-if [ "${CHANGE_DIR_RIGHTS,,}" = "true" ]; then
-  echo "Changing data directory rights"
-  chgrp -R plex /data
-  chmod -R g+rX /data
-fi
-
 # Create empty shell pref file if it doesn't exist already
 if [ ! -e "${prefFile}" ]; then
   echo "Creating pref shell"
