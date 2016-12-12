@@ -30,6 +30,8 @@ docker create \
 plexinc/pms-docker
 ```
 
+For those who use docker-compose, this repository provides the necessary YML file to be modified for your own use.
+
 ## Parameters
 
 - `-p 32400:32400/tcp` Forwards port 32400 from the host to the container.  This is the primary port that Plex uses for communication and is required for Plex Media Server to operate.
