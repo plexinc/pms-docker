@@ -35,7 +35,7 @@ For those who use docker-compose, this repository provides the necessary YML fil
 ## Parameters
 
 - `-p 32400:32400/tcp` Forwards port 32400 from the host to the container.  This is the primary port that Plex uses for communication and is required for Plex Media Server to operate.
-- `-p *` Forwards complete set of other ports used by Plex to the container.  For a full explanation of which you may need, please see the help article: https://support.plex.tv/hc/en-us/articles/201543147-What-network-ports-do-I-need-to-allow-through-my-firewall
+- `-p …` Forwards complete set of other ports used by Plex to the container.  For a full explanation of which you may need, please see the help article: https://support.plex.tv/hc/en-us/articles/201543147-What-network-ports-do-I-need-to-allow-through-my-firewall
 - `-v <path/to/plex/database>:/config` The path where you wish Plex Media Server to store its configuration data.  This database can grow to be quite large depending on the size of your media collection.  This is usually a few GB but for large libraries or libraries where index files are generated, this can easily hit the 100s of GBs.
 - `-v <path/to/transcode/temp>:/transcode` The path where you would like Plex Media Server to store its transcoder temp files.  If not provided, the storage space within the container will be used.  Expect sizes in the 10s of GB.
 - `-v <path/to/media>:/data/*` These are provided as examples for providing media into the container.  The exact structure of how the media is organized and presented inside the container is a matter of user preference.  You can use as many or as few of these parameters as required to provide your media to the container
@@ -45,7 +45,7 @@ The following are the recommended parameters.  Each of the following parameters 
 
 - **HOSTNAME** Sets the hostname inside the docker container. For example `-h PlexServer` will set the servername to PlexServer.
 - **TZ** Set the timezone inside the container.  For example: `Europe/London`.  The complete list can be found here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-- **PLEX_CLAIM** The claim token for the server to obtain a real server token.  If not provided, server is will not be automatically logged in.  If server is already logged in, this parameter is ignored.
+- **PLEX_CLAIM** The claim token for the server to obtain a real server token.  If not provided, server is will not be automatically logged in.  If server is already logged in, this parameter is ignored.  You can obtain a claim token to login your server to your plex account by visiting https://plex.tv/claim  Note: These claim tokens only last for 5 minutes and they will only be honored if they are generated and used from the same IP address.  This is intended for situations where the machines on which they are generated and used are behind the same NAT or home router.
 - **ADVERTISE_IP** This variable defines the additional IPs on which the server may be be found.  For example: `http://10.1.1.23:32400`.  This is recommended because the IP address seen within the container is usually not the IP address of the host.  This adds to the list where the server advertises that it can be found.
 
 These parameters are usually not required but some special setups may benefit from their use.  As in the previous section, each is treated as first-run parameters only:
