@@ -36,7 +36,7 @@ For those who use docker-compose, this repository provides the necessary YML fil
 
 - `-p 32400:32400/tcp` Forwards port 32400 from the host to the container.  This is the primary port that Plex uses for communication and is required for Plex Media Server to operate.
 - `-p …` Forwards complete set of other ports used by Plex to the container.  For a full explanation of which you may need, please see the help article: https://support.plex.tv/hc/en-us/articles/201543147-What-network-ports-do-I-need-to-allow-through-my-firewall
-- `-v <path/to/plex/database>:/config` The path where you wish Plex Media Server to store its configuration data.  This database can grow to be quite large depending on the size of your media collection.  This is usually a few GB but for large libraries or libraries where index files are generated, this can easily hit the 100s of GBs.
+- `-v <path/to/plex/database>:/config` The path where you wish Plex Media Server to store its configuration data.  This database can grow to be quite large depending on the size of your media collection.  This is usually a few GB but for large libraries or libraries where index files are generated, this can easily hit the 100s of GBs.  If you have an existing database directory see the section below on the directory setup.
 - `-v <path/to/transcode/temp>:/transcode` The path where you would like Plex Media Server to store its transcoder temp files.  If not provided, the storage space within the container will be used.  Expect sizes in the 10s of GB.
 - `-v <path/to/media>:/data/*` These are provided as examples for providing media into the container.  The exact structure of how the media is organized and presented inside the container is a matter of user preference.  You can use as many or as few of these parameters as required to provide your media to the container
 - `-e KEY="value"` These are environment variables which configure the container.  See below for a description of their meanings.
@@ -79,6 +79,19 @@ In the above case, if you set the `PLEX_UID` and `PLEX_GID` to `1001`, then the 
 In addition to the standard version and `latest` tags, two other tags exist: `plexpass` and `public`. These two images behave differently than your typical containers.  These two images do **not** have any Plex Media Server binary installed.  Instead, when these containers are run, they will perform an update check and fetch the latest version, install it, and then continue execution.  They also run the update check whenever the container is restarted.  To update the version in the container, simply stop the container and start container again when you have a network connection. The startup script will automatically fetch the appropriate version and install it before starting the Plex Media Server.
 
 The `public` restricts this check to public versions only where as `plexpass` will fetch Plex Pass versions.  If the server is not logged in or you do not have Plex Pass on your account, the `plexpass` tagged images will be restricted to publicly available versions only.
+
+## Config Directory
+Inside the docker container, the database is stored with a `Library/Application Support/Plex Media Server` in the `config` directory.
+
+If you wish to migrate an existing directory to the docker config directory:
+
+- Locate the current config directory as directed here: https://support.plex.tv/hc/en-us/articles/202915258-Where-is-the-Plex-Media-Server-data-directory-located-
+- If the config dir is stored in a location such as `/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/`, the config dir will be `/var/lib/plexmediaserver`.
+- If the config dir does not contain `Library/Application Support/Plex Media Server/` or the directory containing `Library` has data unrelated to Plex, such as OS X, then you should:
+  - Create a new directory which will be your new config dir.
+  - Within that config dir, create the directories `Library/Application Support`
+  - Copy `Plex Media Server` into that `Library/Application Support`
+- Note: by default Plex will claim ownership of the entire contents of the `config` dir (see CHANGE_CONFIG_DIR_OWNERSHIP for more information).  As such, there should be nothing in that dir that you do not wish for Plex to own.
 
 ## Useful information
 - Shell access to the container while it is running: `docker exec -it plex /bin/bash`
