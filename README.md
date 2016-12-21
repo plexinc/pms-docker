@@ -94,6 +94,8 @@ If you wish to migrate an existing directory to the docker config directory:
 - Note: by default Plex will claim ownership of the entire contents of the `config` dir (see CHANGE_CONFIG_DIR_OWNERSHIP for more information).  As such, there should be nothing in that dir that you do not wish for Plex to own.
 
 ## Useful information
+- Start the container: `docker start plex`
+- Stop the conrainer: `docker stop plex`
 - Shell access to the container while it is running: `docker exec -it plex /bin/bash`
 - See the logs given by the startup script in real time: `docker logs -f plex`
 - Restart the application and upgrade to the latest version: `docker restart plex`
