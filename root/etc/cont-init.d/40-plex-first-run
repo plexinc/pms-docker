@@ -49,8 +49,14 @@ fi
 
 # Update ownership of dirs we need to write
 if [ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]; then
-  echo "Changing config and transcode directory ownership"
-  chown -R plex:plex /config /transcode
+  if [ -f "${prefFile}" ]; then
+    if [ ! "$(stat -c %U "${prefFile}")" = "plex" ]; then
+      chown -R plex:plex /config
+    fi
+  else
+    chown -R plex:plex /config
+  fi
+    chown -R /transcode
 fi
 
 # Create empty shell pref file if it doesn't exist already
