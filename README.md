@@ -20,7 +20,7 @@ docker create \
 -e TZ="<timezone>" \
 -e PLEX_CLAIM="<claimToken>" \
 -e ADVERTISE_IP="http://<hostIPAddress>:32400/" \
--h <HOSTNAME>
+-h <HOSTNAME> \
 -v <path/to/plex/database>:/config \
 -v <path/to/transcode/temp>:/transcode \
 -v <path/to/tv/series>:/data/tvshows \
