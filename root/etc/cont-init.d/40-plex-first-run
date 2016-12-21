@@ -50,7 +50,14 @@ fi
 # Update ownership of dirs we need to write
 if [ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]; then
   echo "Changing config and transcode directory ownership"
-  chown -R plex:plex /config /transcode
+  if [ -d "/transcode" ]; then
+    chown -R plex:plex /transcode
+  else
+    if [ ! -d /config/transcode ]; then
+      mkdir /config/transcode
+    fi
+  fi
+  chown -R plex:plex /config 
 fi
 
 # Create empty shell pref file if it doesn't exist already
@@ -108,7 +115,11 @@ fi
 
 # Set transcoder temp if not yet set
 if [ -z "$(getPref "TranscoderTempDirectory")" ]; then
-  setPref "TranscoderTempDirectory" "/transcode"
+  if [ -d "/transcode" ]; then
+    setPref "TranscoderTempDirectory" "/transcode"
+  else
+    setPref "TranscoderTempDirectory" "/config/transcode"
+  fi
 fi
 
 touch /.firstRunComplete
