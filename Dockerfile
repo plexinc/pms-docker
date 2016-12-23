@@ -51,5 +51,4 @@ COPY root/ /
 
 RUN \
 # Save version and install
-    /installBinary.sh && \
-    rm /installBinary.sh
+    /installBinary.sh
