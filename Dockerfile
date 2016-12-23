@@ -1,7 +1,10 @@
 FROM ubuntu:16.04
 
-ARG DEBIAN_FRONTEND="noninteractive"
-ENV TERM="xterm"
+
+ENV DEBIAN_FRONTEND="noninteractive" \
+    TERM="xterm"
+ 
+ARG S6_OVERLAY_VERSION=v1.17.2.0
 
 ENTRYPOINT ["/init"]
 
@@ -10,14 +13,13 @@ RUN \
     apt-get update && \
     apt-get install -y \
       curl \
-      sudo \
       wget \
       xmlstarlet \
       uuid-runtime \
     && \
 
 # Fetch and extract S6 overlay
-    curl -J -L -o /tmp/s6-overlay-amd64.tar.gz https://github.com/just-containers/s6-overlay/releases/download/v1.17.2.0/s6-overlay-amd64.tar.gz && \
+    curl -J -L -o /tmp/s6-overlay-amd64.tar.gz https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-amd64.tar.gz && \
     tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
 
 # Add user
@@ -50,5 +52,4 @@ COPY root/ /
 
 RUN \
 # Save version and install
-    /installBinary.sh && \
-    rm /installBinary.sh
+    /installBinary.sh
