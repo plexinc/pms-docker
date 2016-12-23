@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
-ENV DEBIAN_FRONTEND="noninteractive" \
-    TERM="xterm"
+ARG DEBIAN_FRONTEND="noninteractive"
+ENV TERM="xterm"
 
 ENTRYPOINT ["/init"]
 
