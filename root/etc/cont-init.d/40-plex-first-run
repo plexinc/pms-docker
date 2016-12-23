@@ -56,7 +56,7 @@ if [ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]; then
   else
     chown -R plex:plex /config
   fi
-  chown -R /transcode
+  chown -R plex:plex /transcode
 fi
 
 # Create empty shell pref file if it doesn't exist already
