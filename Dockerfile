@@ -1,9 +1,8 @@
 FROM ubuntu:16.04
 
-ENV DEBIAN_FRONTEND="noninteractive" \
-    TERM="xterm"
- 
 ARG S6_OVERLAY_VERSION=v1.17.2.0
+ARG DEBIAN_FRONTEND="noninteractive"
+ENV TERM="xterm"
 
 ENTRYPOINT ["/init"]
 
