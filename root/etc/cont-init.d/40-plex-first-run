@@ -50,7 +50,7 @@ fi
 # Update ownership of dirs we need to write
 if [ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]; then
   if [ -f "${prefFile}" ]; then
-    if [ ! "$(stat -c %U "${prefFile}")" = "plex" ]; then
+    if [ ! "$(stat -c %u "${prefFile}")" = "${PLEX_UID}" ]; then
       chown -R plex:plex /config
     fi
   else
