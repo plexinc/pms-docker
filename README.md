@@ -6,7 +6,7 @@ With our easy-to-install Plex Media Server software and your Plex apps, availabl
 
 ## Usage
 ```
-docker create \
+docker run \
 --name plex \
 -p 32400:32400/tcp \
 -p 3005:3005/tcp \
@@ -53,7 +53,7 @@ These parameters are usually not required but some special setups may benefit fr
 - **PLEX_UID** The user id of the `plex` user created inside the container.
 - **PLEX_GID** The group id of the `plex` group created inside the container
 - **CHANGE_CONFIG_DIR_OWNERSHIP** Change ownership of config directory to the plex user.  Defaults to `true`
-- **ALLOWED_NETWORKS** IP/netmask entries which allow access to the server without requiring authorization.  We recommend you set this only if you do not sign in your server.  For example `192.168.1.0/24,172.16.0.0/16` will allow access to the entire `192.168.1.x` range and the `172.16.x.x` range.
+- **ALLOWED_NETWORKS** IP/netmask entries which allow access to the server without requiring authorization.  We recommend you set this only if you do not sign in your server.  For example `192.168.1.0/24,172.16.0.0/16` will allow access to the entire `192.168.1.x` range and the `172.16.x.x` range.  Note: If you are not using `--net=host`, then localhost will appear to plex as coming from the docker networking gateway which is often `172.16.0.1`.
 
 ### Networking
 If `--net=host` is used, then the port forwarding paramaters (`-p …`) as well as the `ADVERTISE_IP` variable may be excluded.  This type of networking runs the container using the same networking stack as the host and as such it is no longer hidden behind the docker networking setup.  However, many docker implementations do not run docker on the actual host itself but rather run docker within a virtual machine.  In this case, the `--net-host` parameter may not provide the desired results.
