@@ -30,7 +30,7 @@ docker create \
 plexinc/pms-docker
 ```
 
-For those who use docker-compose, this repository provides the necessary YML file to be modified for your own use.
+For those who use docker-compose, this repository provides the necessary YML template file to be modified for your own use.
 
 ## Parameters
 
