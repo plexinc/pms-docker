@@ -7,7 +7,7 @@ fi
 
 function getPref {
   local key="$1"
-  
+
   xmlstarlet sel -T -t -m "/Preferences" -v "@${key}" -n "${prefFile}"
 }
 
@@ -66,8 +66,7 @@ fi
 # Do update process
 echo "Atempting to upgrade to: ${remoteVersion}"
 rm -f /tmp/plexmediaserver*.deb
-wget -nv --show-progress --progress=bar:force:noscroll -O /tmp/plexmediaserver.deb \
-  "https://plex.tv/${remoteFile}"
+curl -J -L -o /tmp/plexmediaserver.deb "https://plex.tv/${remoteFile}"
 last=$?
 
 # test if deb file size is ok, or if download failed
