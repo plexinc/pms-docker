@@ -80,6 +80,8 @@ In addition to the standard version and `latest` tags, two other tags exist: `pl
 
 The `public` restricts this check to public versions only where as `plexpass` will fetch Plex Pass versions.  If the server is not logged in or you do not have Plex Pass on your account, the `plexpass` tagged images will be restricted to publicly available versions only.
 
+To view all the images visit https://hub.docker.com/r/plexinc/pms-docker/
+
 ## Config Directory
 Inside the docker container, the database is stored with a `Library/Application Support/Plex Media Server` in the `config` directory.
 
