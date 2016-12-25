@@ -15,14 +15,14 @@ services:
       - 32413:32413/udp
       - 32414:32414/udp
     environment:
-      - TZ=<timezone>
-      - PLEX_CLAIM=<claimToken>
-      - ADVERTISE_IP=http://<hostIPAddress>:32400/
-    hostname: <hostname>
+      - TZ=${TZ}
+      - PLEX_CLAIM=${PLEX_CLAIM}
+      - ADVERTISE_IP=${ADVERTISE_IP}
+    hostname: ${HOSTNAME}
     volumes:
-      - <path/to/plex/database>:/config
-      - <path/to/transcode/temp>:/transcode
-      - <path/to/tv/series>:/data/tvshows
-      - <path/to/movies>:/data/movies
-      - <path/to/another/media>:/data/mediaTypeA
-      - <path/to/some/other/media>:/data/mediaTypeB
+      - ${VOL_DATABASE}:/config
+      - ${VOL_TRANSCODE}:/transcode
+      - ${VOL_SERIES}:/data/tvshows
+      - ${VOL_MOVIES}:/data/movies
+      - ${VOL_MEDIA_A}:/data/mediaTypeA
+      - ${VOL_MEDIA_B}:/data/mediaTypeB
