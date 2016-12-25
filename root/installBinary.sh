@@ -12,9 +12,7 @@ if [ "${TAG}" != "plexpass" ] && [ "${TAG}" != "public" ]; then
   fi
   
   echo "Atempting to install: ${remoteVersion}"
-  rm -f /tmp/plexmediaserver*.deb
-  wget -nv --show-progress --progress=bar:force:noscroll -O /tmp/plexmediaserver.deb \
-    "https://plex.tv/${remoteFile}"
+  curl -J -L -o /tmp/plexmediaserver.deb "https://plex.tv/${remoteFile}"
   last=$?
 
   # test if deb file size is ok, or if download failed
