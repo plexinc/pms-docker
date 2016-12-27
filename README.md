@@ -101,3 +101,12 @@ If you wish to migrate an existing directory to the docker config directory:
 - Shell access to the container while it is running: `docker exec -it plex /bin/bash`
 - See the logs given by the startup script in real time: `docker logs -f plex`
 - Restart the application and upgrade to the latest version: `docker restart plex`
+
+## Fedora, CentOS, Red Hat
+
+If you get the following output after you have started the container, then this is due to a patched version of Docker ([#158](https://github.com/just-containers/s6-overlay/issues/158#issuecomment-266913426))
+```
+plex    | s6-supervise (child): fatal: unable to exec run: Permission denied
+plex    | s6-supervise avahi: warning: unable to spawn ./run - waiting 10 seconds
+```
+As a workaround you can add `- /run` to volumes in your docker-compose.yml or `-v /run` to the docker create command.
