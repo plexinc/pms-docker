@@ -50,3 +50,6 @@ COPY root/ /
 RUN \
 # Save version and install
     /installBinary.sh
+
+HEALTHCHECK --interval=200s --timeout=100s CMD /healthcheck.sh || exit 1
+
