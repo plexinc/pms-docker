@@ -22,7 +22,4 @@ services:
     volumes:
       - <path/to/plex/database>:/config
       - <path/to/transcode/temp>:/transcode
-      - <path/to/tv/series>:/data/tvshows
-      - <path/to/movies>:/data/movies
-      - <path/to/another/media>:/data/mediaTypeA
-      - <path/to/some/other/media>:/data/mediaTypeB
+      - <path/to/media>:/data
