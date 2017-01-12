@@ -5,6 +5,8 @@ if [ "${DEBUG,,}" = "true" ]; then
   set -x
 fi
 
+. /plex-common.sh
+
 function getPref {
   local key="$1"
 
@@ -37,22 +39,8 @@ if [ "${versionToInstall}" = "${installedVersion}" ]; then
 fi
 
 # Get updated version number
-if [ "${versionToInstall,,}" = "plexpass" ]; then
-  versionInfo="$(curl -s "https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=8&distro=ubuntu&X-Plex-Token=${token}")"
-elif [ "${versionToInstall,,}" = "public" ]; then
-  versionInfo="$(curl -s "https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=16&distro=ubuntu")"
-else
-  versionInfo="$(curl -s "https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=8&distro=ubuntu&X-Plex-Token=${token}&version=${versionToInstall}")"
-fi
+getVersionInfo "${versionToInstall}" "${token}" remoteVersion remoteFile
 
-if [ -z "${versionInfo}" ]; then
-  echo "Could not get any update information"
-  exit 0
-fi
-
-# Get update info from the XML.  Note: This could countain multiple updates when user specifies an exact version with the lowest first, so we'll use first always.
-remoteVersion=$(echo "${versionInfo}" | sed -n 's/.*Release.*version="\([^"]*\)".*/\1/p')
-remoteFile=$(echo "${versionInfo}" | sed -n 's/.*file="\([^"]*\)".*/\1/p')
 if [ -z "${remoteVersion}" ] || [ -z "${remoteFile}" ]; then
   echo "Could not get update version"
   exit 0
@@ -64,16 +52,5 @@ if [ "${remoteVersion}" = "${installedVersion}" ]; then
 fi
 
 # Do update process
-echo "Atempting to upgrade to: ${remoteVersion}"
-rm -f /tmp/plexmediaserver*.deb
-curl -J -L -o /tmp/plexmediaserver.deb "https://plex.tv/${remoteFile}"
-last=$?
-
-# test if deb file size is ok, or if download failed
-if [[ "$last" -gt "0" ]] || [[ $(stat -c %s /tmp/plexmediaserver.deb) -lt 10000 ]]; then
-  echo "Failed to fetch update"
-  exit 0
-fi
-
-dpkg -i --force-confold /tmp/plexmediaserver.deb
-rm -f /tmp/plexmediaserver.deb
+echo "Attempting to upgrade to: ${remoteVersion}"
+installFromUrl "${remoteFile}"

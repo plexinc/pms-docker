@@ -44,6 +44,7 @@ ENV CHANGE_CONFIG_DIR_OWNERSHIP="true" \
     HOME="/config"
 
 ARG TAG=plexpass
+ARG URL=
 
 COPY root/ /
 
