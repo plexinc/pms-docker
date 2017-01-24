@@ -3,6 +3,8 @@ FROM ubuntu:16.04
 ARG S6_OVERLAY_VERSION=v1.17.2.0
 ARG DEBIAN_FRONTEND="noninteractive"
 ENV TERM="xterm"
+ENV LANG="C.UTF-8"
+ENV LC_ALL="C.UTF-8"
 
 ENTRYPOINT ["/init"]
 
