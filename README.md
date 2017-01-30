@@ -39,8 +39,8 @@ plexinc/pms-docker
 docker run \
 -d \
 --name plex \
---net=physical
---ip=<IPAddress>
+--net=physical \
+--ip=<IPAddress> \
 -e TZ="<timezone>" \
 -e PLEX_CLAIM="<claimToken>" \
 -h <HOSTNAME> \
