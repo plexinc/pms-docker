@@ -24,7 +24,7 @@ For those who use docker-compose, this repository provides the necessary YML tem
 docker run \
 -d \
 --name plex \
---net=host
+--net=host \
 -e TZ="<timezone>" \
 -e PLEX_CLAIM="<claimToken>" \
 -v <path/to/plex/database>:/config \
