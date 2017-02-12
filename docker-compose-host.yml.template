@@ -5,10 +5,10 @@ services:
     image: plexinc/pms-docker
     restart: unless-stopped
     environment:
-      - TZ=<timezone>
-      - PLEX_CLAIM=<claimToken>
+      - TZ=<AMERICA/PHOENIX>
+      - PLEX_CLAIM=<CLAIM-IHVX41QQQWKZXEYQDRXR>
     network_mode: host
     volumes:
-      - <path/to/plex/database>:/config
-      - <path/to/transcode/temp>:/transcode
-      - <path/to/media>:/data
+      - <%LOCALAPPDATA%\PLEX MEDIA SERVER\>:/config
+      - <%LOCALAPPDATA%\PLEX MEDIA SERVER\CACHE\TRANSCODE\SYNC\>:/transcode
+      - <C:\USERS\APPDATA\LOCAL>:/data
