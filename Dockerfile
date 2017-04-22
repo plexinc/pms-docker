@@ -10,6 +10,7 @@ RUN \
 # Update and get dependencies
     apt-get update && \
     apt-get install -y \
+      tzdata \
       curl \
       xmlstarlet \
       uuid-runtime \
