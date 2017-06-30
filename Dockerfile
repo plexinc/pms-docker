@@ -14,7 +14,6 @@ RUN \
       curl \
       xmlstarlet \
       uuid-runtime \
-      udev \
     && \
 
 # Fetch and extract S6 overlay
