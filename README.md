@@ -146,7 +146,7 @@ If you wish to migrate an existing directory to the docker config directory:
 
 ## Useful information
 - Start the container: `docker start plex`
-- Stop the conrainer: `docker stop plex`
+- Stop the container: `docker stop plex`
 - Shell access to the container while it is running: `docker exec -it plex /bin/bash`
 - See the logs given by the startup script in real time: `docker logs -f plex`
 - Restart the application and upgrade to the latest version: `docker restart plex`
