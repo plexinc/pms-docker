@@ -53,7 +53,7 @@ plexinc/pms-docker
 Similar to `Host Networking` above with these changes:
 
 - The network has been changed to `physical` which is the name of the `macvlan` network (yours is likely to be different).
-- The `--ip` parameter has been added to specify the IP address of the container.  This parameter is optional since the network may specify IPs to use but this paramater overrides those settings.
+- The `--ip` parameter has been added to specify the IP address of the container.  This parameter is optional since the network may specify IPs to use but this parameter overrides those settings.
 - The `-h <HOSTNAME>` has been added since this networking type doesn't use the hostname of the host.
 
 ### Bridge Networking
@@ -95,7 +95,7 @@ Note: In this configuration, you must do some additional configuration:
 - `-v <path/to/media>:/data` This is provided as examples for providing media into the container.  The exact structure of how the media is organized and presented inside the container is a matter of user preference.  You can use as many or as few of these parameters as required to provide your media to the container.
 - `-e KEY="value"` These are environment variables which configure the container.  See below for a description of their meanings.
 
-The following are the recommended parameters.  Each of the following parameters to the container are treated as first-run parameters only.  That is, all other paraters are ignored on subsequent runs of the server.  We recommend that you set the following parameters:
+The following are the recommended parameters.  Each of the following parameters to the container are treated as first-run parameters only.  That is, all other parameters are ignored on subsequent runs of the server.  We recommend that you set the following parameters:
 
 - **HOSTNAME** Sets the hostname inside the docker container. For example `-h PlexServer` will set the servername to `PlexServer`.  Not needed in Host Networking.
 - **TZ** Set the timezone inside the container.  For example: `Europe/London`.  The complete list can be found here: [https://en.wikipedia.org/wiki/List_of_tz_database_time_zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
@@ -165,4 +165,3 @@ As a workaround you can add `- /run` to volumes in your docker-compose.yml or `-
 If the claim token is not added during initial configuration you will need to use ssh tunneling to gain access and setup the server for first run. During first run you setup the server to make it available and configurable. However, this setup option will only be triggered if you access it over http://localhost:32400/web, it will not be triggered if you access it over http://ip_of_server:32400/web. If you are setting up PMS on a headless server, you can use a SSH tunnel to link http://localhost:32400/web (on your current computer) to http://localhost:32400/web (on the headless server running PMS):
 
 `ssh username@ip_of_server -L 32400:ip_of_server:32400 -N`
-
