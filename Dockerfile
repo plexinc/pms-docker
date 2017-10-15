@@ -14,6 +14,7 @@ RUN \
       curl \
       xmlstarlet \
       uuid-runtime \
+      udev \
     && \
 
 # Fetch and extract S6 overlay
@@ -54,4 +55,3 @@ RUN \
     /installBinary.sh
 
 HEALTHCHECK --interval=200s --timeout=100s CMD /healthcheck.sh || exit 1
-
