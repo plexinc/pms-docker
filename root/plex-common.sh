@@ -10,7 +10,7 @@ function getVersionInfo {
   local tokenNeeded=1
   if [ ! -z "${PLEX_UPDATE_CHANNEL}" ] && [ "${PLEX_UPDATE_CHANNEL}" > 0 ]; then
     channel="${PLEX_UPDATE_CHANNEL}"
-  elif [ "${version,,}" = "plexpass" ]; then
+  elif [ "${version,,}" = "beta" ]; then
     channel=8
   elif [ "${version,,}" = "public" ]; then
     channel=16

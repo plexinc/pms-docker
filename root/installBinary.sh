@@ -6,7 +6,7 @@ echo "${TAG}" > /version.txt
 if [ ! -z "${URL}" ]; then
   echo "Attempting to install from URL: ${URL}"
   installFromRawUrl "${URL}"
-elif [ "${TAG}" != "plexpass" ] && [ "${TAG}" != "public" ]; then
+elif [ "${TAG}" != "beta" ] && [ "${TAG}" != "public" ]; then
   getVersionInfo "${TAG}" "" remoteVersion remoteFile
 
   if [ -z "${remoteVersion}" ] || [ -z "${remoteFile}" ]; then
