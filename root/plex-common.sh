@@ -6,15 +6,25 @@ function getVersionInfo {
   declare -n remoteVersion=$3
   declare -n remoteFile=$4
   
-  local versionInfo
-  
-  if [ "${version,,}" = "plexpass" ]; then
-    versionInfo="$(curl -s "https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=8&distro=ubuntu&X-Plex-Token=${token}")"
+  local channel
+  local tokenNeeded=1
+  if [ ! -z "${PLEX_UPDATE_CHANNEL}" ] && [ "${PLEX_UPDATE_CHANNEL}" > 0 ]; then
+    channel="${PLEX_UPDATE_CHANNEL}"
+  elif [ "${version,,}" = "plexpass" ]; then
+    channel=8
   elif [ "${version,,}" = "public" ]; then
-    versionInfo="$(curl -s "https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=16&distro=ubuntu")"
+    channel=16
+    tokenNeeded=0
   else
-    versionInfo="$(curl -s "https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=8&distro=ubuntu&X-Plex-Token=${token}&version=${version}")"
+    channel=8
   fi
+  
+  local url="https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=${channel}&distro=ubuntu"
+  if [ ${tokenNeeded} -gt 0 ]; then
+    url="${url}&X-Plex-Token=${token}"
+  fi
+  
+  local versionInfo="$(curl -s "${url}")"
   
   # Get update info from the XML.  Note: This could countain multiple updates when user specifies an exact version with the lowest first, so we'll use first always.
   remoteVersion=$(echo "${versionInfo}" | sed -n 's/.*Release.*version="\([^"]*\)".*/\1/p')
