@@ -54,3 +54,15 @@ fi
 # Do update process
 echo "Attempting to upgrade to: ${remoteVersion}"
 installFromUrl "${remoteFile}"
+
+# Update ownership of dirs we need to write
+if [ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]; then
+  if [ -f "${prefFile}" ]; then
+    if [ ! "$(stat -c %u "${prefFile}")" = "$(id -u plex)" ]; then
+      chown -R plex:plex /config
+    fi
+  else
+    chown -R plex:plex /config
+  fi
+  chown -R plex:plex /transcode
+fi
