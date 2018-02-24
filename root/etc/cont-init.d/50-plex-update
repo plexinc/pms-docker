@@ -27,42 +27,35 @@ else
 fi
 
 # Read set version
-versionToInstall="$(cat /version.txt)"
-if [ -z "${versionToInstall}" ]; then
-  echo "No version specified in install.  Broken image"
-  exit 1
+installChannel="$(cat /channel.txt)"
+if [ -z "${installChannel}" ]; then
+  if [ -f "/version.txt" ]; then
+    echo "Migrating /version.txt to /channel.txt"
+    mv /version.txt /channel.txt
+    installChannel="$(cat /channel.txt)"
+  else
+    echo "No version specified in install. Falling back to public version."
+    installChannel=public
+  fi
 fi
 
-# Short-circuit test of version before remote check to see if it's already installed.
-if [ "${versionToInstall}" = "${installedVersion}" ]; then
-  exit 0
-fi
+getVersionInfo "${installChannel}" "${token}" remoteVersion remoteFile
+echo "Latest ${installChannel} version: $remoteVersion"
 
 # Get updated version number
-getVersionInfo "${versionToInstall}" "${token}" remoteVersion remoteFile
-
-if [ -z "${remoteVersion}" ] || [ -z "${remoteFile}" ]; then
-  echo "Could not get update version"
-  exit 0
-fi
+getVersionInfo "${installChannel}" "${token}" remoteVersion remoteFile
 
 # Check if there's no update required
 if [ "${remoteVersion}" = "${installedVersion}" ]; then
+  echo "Server is running latest ${installChannel} version"
   exit 0
+fi
+
+if [ -z "${remoteVersion}" ] || [ -z "${remoteFile}" ]; then
+  echo "Could not get update version"
+  exit 1
 fi
 
 # Do update process
 echo "Attempting to upgrade to: ${remoteVersion}"
 installFromUrl "${remoteFile}"
-
-# Update ownership of dirs we need to write
-if [ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]; then
-  if [ -f "${prefFile}" ]; then
-    if [ ! "$(stat -c %u "${prefFile}")" = "$(id -u plex)" ]; then
-      chown -R plex:plex /config
-    fi
-  else
-    chown -R plex:plex /config
-  fi
-  chown -R plex:plex /transcode
-fi
