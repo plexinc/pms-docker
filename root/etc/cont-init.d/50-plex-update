@@ -7,6 +7,9 @@ fi
 
 . /plex-common.sh
 
+# Ensure proper transcode directory ownership
+chown -R plex:plex /transcode
+
 function getPref {
   local key="$1"
 
