@@ -2,7 +2,7 @@
 
 . /plex-common.sh
 
-echo "${TAG}" > /version.txt
+echo "${TAG}" > /channel.txt
 if [ ! -z "${URL}" ]; then
   echo "Attempting to install from URL: ${URL}"
   installFromRawUrl "${URL}"
