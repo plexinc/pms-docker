@@ -160,6 +160,10 @@ plex    | s6-supervise avahi: warning: unable to spawn ./run - waiting 10 second
 ```
 As a workaround you can add `- /run` to volumes in your docker-compose.yml or `-v /run` to the docker create command.
 
+## Windows (Not Recommended)
+
+Docker on Windows works differently than it does on Linux; it uses a VM to run a stripped-down Linux and then runs docker within that.  The volume mounts are exposed to the docker in this VM via SMB mounts.  While this is fine for media, it is unacceptable for the `/config` directory because SMB does not support file locking.  This **will** eventually corrupt your database which can lead to slow behavior and crashes.  If you must run in docker on Windows, you should put the `/config` directory mount inside the VM and not on the Windows host.  It's worth noting that this warning also extends to other containers which use SQLite databases.
+
 ## Running on a headless server with container using host networking
 
 If the claim token is not added during initial configuration you will need to use ssh tunneling to gain access and setup the server for first run. During first run you setup the server to make it available and configurable. However, this setup option will only be triggered if you access it over http://localhost:32400/web, it will not be triggered if you access it over http://ip_of_server:32400/web. If you are setting up PMS on a headless server, you can use a SSH tunnel to link http://localhost:32400/web (on your current computer) to http://localhost:32400/web (on the headless server running PMS):
