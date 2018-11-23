@@ -15,6 +15,7 @@ RUN \
       xmlstarlet \
       uuid-runtime \
       unrar \
+      p7zip \
     && \
 
 # Fetch and extract S6 overlay
