@@ -54,4 +54,4 @@ RUN \
 # Save version and install
     /installBinary.sh
 
-HEALTHCHECK --interval=200s --timeout=100s CMD /healthcheck.sh || exit 1
+HEALTHCHECK --interval=5s --timeout=2s --retries=20 CMD /healthcheck.sh || exit 1
