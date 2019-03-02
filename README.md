@@ -163,7 +163,7 @@ As a workaround you can add `- /run` to volumes in your docker-compose.yml or `-
 ## Intel Quick Sync Hardware Transcoding Support
 If your Docker host has access to a supported CPU with the Intel Quick Sync feature set and you are a current Plex Pass subscriber, you can enable hardware transcoding within your Plex Docker container.
 
-A list of current and previous Intel CPU's supporting Quick Sync is available on the Intel [website].(https://ark.intel.com/content/www/us/en/ark/search/featurefilter.html?productType=873&0_QuickSyncVideo=True) 
+A list of current and previous Intel CPU's supporting Quick Sync is available on the Intel [website](https://ark.intel.com/content/www/us/en/ark/search/featurefilter.html?productType=873&0_QuickSyncVideo=True).
 
 Hardware transcoding is a Plex Pass feature that can be added to your Docker container by bind mounting the relevant kernel device to the container. To confirm your host kernel supports the Intel Quick Sync feature, the following command can be executed on the host:
 
