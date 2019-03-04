@@ -167,7 +167,7 @@ A list of current and previous Intel CPU's supporting Quick Sync is available on
 
 Hardware transcoding is a Plex Pass feature that can be added to your Docker container by bind mounting the relevant kernel device to the container. To confirm your host kernel supports the Intel Quick Sync feature, the following command can be executed on the host:
 
-`sudo lspci -v -s $(lspci | grep VGA | cut -d" " -f 1)`
+`lspci -v -s $(lspci | grep VGA | cut -d" " -f 1)`
 
 which should output `Kernel driver in use: i915` if Quick Sync is available. To pass the kernel device through to the container, add the device parameter like so:
 
@@ -181,7 +181,7 @@ docker run \
 -v <path/to/plex/database>:/config \
 -v <path/to/transcode/temp>:/transcode \
 -v <path/to/media>:/data \
---device=/dev/dri:/dev/dri
+--device=/dev/dri:/dev/dri \
 plexinc/pms-docker
 ```
 
