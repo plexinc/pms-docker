@@ -1,29 +1,26 @@
 #!/usr/bin/with-contenv bash
 
-# Check for the existence of the Intel video device and stash the GID of 
-# the device, otherwise exit as the device was not mapped to the container
-if [ -e /dev/dri ]; then
-	VIDEO_GID=$(stat -c '%g' /dev/dri/* | head -n 1)
-else
+# Check to make sure the device exists.  If it doesn't exit as there is nothing for us to do
+if [ ! -e /dev/dri ]; then
 	exit 0
 fi
 
-# Check if the device GID matches the current plex user, otherwise exit as 
-# we have previously mapped this to the Plex user group
-PLEX_GID=$(getent group plex | awk -F: '{print $3}')
-if [ "${PLEX_GID}" == "${VIDEO_GID}" ]; then
+# Get the group IDs for the dri devices and the video group
+DEVICE_GID=$(stat -c '%g' /dev/dri/* | head -n 1)
+VIDEO_GID=$(getent group video | awk -F: '{print $3}')
+
+# If the video group's ID matches the group ID of the device, exit as permissions are already setup.
+if [ "${DEVICE_GID}" == "${VIDEO_GID}" ]; then
 	exit 0
 fi
 
-# Check if the GID is taken and swap to an arbitrary high GID to 
-# nominally prevent GID collisions and add the Plex user and device
-# GID to the video usergroup
-CURRENT=$(getent group ${VIDEO_GID} | awk -F: '{print $1}')
-if [ -z "${CURRENT}" ] || [ "${CURRENT}" == 'video' ]; then
-	groupmod -g ${VIDEO_GID} video
-	usermod -a -G video plex
+# Get the current group name for the device's group ID
+CURRENT_GROUP=$(getent group ${DEVICE_GID} | awk -F: '{print $1}')
+
+if [ -z "${CURRENT_GROUP}" ]; then
+	# If there is no group name for the device's group ID, change the video group to that ID.
+	groupmod -g ${DEVICE_GID} video
 else
-	groupmod -g 65533 ${CURRENT}
-	groupmod -g ${VIDEO_GID} video
-	usermod -a -G video plex
+	# There is a group name, so add it to the plex user's list of groups
+	usermod -a -G ${CURRENT_GROUP} plex
 fi
