@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:latest
 
 ARG S6_OVERLAY_VERSION=v1.17.2.0
 ARG DEBIAN_FRONTEND="noninteractive"
