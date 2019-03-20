@@ -46,7 +46,7 @@ ENV CHANGE_CONFIG_DIR_OWNERSHIP="true" \
     HOME="/config"
 
 ARG TAG=beta
-ARG URL=
+ARG URL=https://downloads.plex.tv/plex-media-server-new/1.15.1.791-8bec0f76c/debian/plexmediaserver_1.15.1.791-8bec0f76c_amd64.deb
 
 COPY root/ /
 
