@@ -6,7 +6,7 @@ if [ ! -e /dev/dri ]; then
 fi
 
 # Get the group IDs for the dri devices and the video group
-DEVICE_GID=$(stat -c '%g' /dev/dri/* | head -n 1)
+DEVICE_GID=$(stat -c '%g' /dev/dri/* | grep -v '^0$' | head -n 1)
 VIDEO_GID=$(getent group video | awk -F: '{print $3}')
 
 # If the video group's ID matches the group ID of the device, exit as permissions are already setup.
