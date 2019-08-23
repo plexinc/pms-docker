@@ -160,6 +160,43 @@ plex    | s6-supervise avahi: warning: unable to spawn ./run - waiting 10 second
 ```
 As a workaround you can add `- /run` to volumes in your docker-compose.yml or `-v /run` to the docker create command.
 
+## Intel Quick Sync Hardware Transcoding Support
+If your Docker host has access to a supported CPU with the Intel Quick Sync feature set and you are a current Plex Pass subscriber, you can enable hardware transcoding within your Plex Docker container.
+
+A list of current and previous Intel CPU's supporting Quick Sync is available on the Intel [website](https://ark.intel.com/content/www/us/en/ark/search/featurefilter.html?productType=873&0_QuickSyncVideo=True).
+
+Hardware transcoding is a Plex Pass feature that can be added to your Docker container by bind mounting the relevant kernel device to the container. To confirm your host kernel supports the Intel Quick Sync feature, the following command can be executed on the host:
+
+`lspci -v -s $(lspci | grep VGA | cut -d" " -f 1)`
+
+which should output `Kernel driver in use: i915` if Quick Sync is available. To pass the kernel device through to the container, add the device parameter like so:
+
+```
+docker run \
+-d \
+--name plex \
+--network=host \
+-e TZ="<timezone>" \
+-e PLEX_CLAIM="<claimToken>" \
+-v <path/to/plex/database>:/config \
+-v <path/to/transcode/temp>:/transcode \
+-v <path/to/media>:/data \
+--device=/dev/dri:/dev/dri \
+plexinc/pms-docker
+```
+
+In the example above, the `--device=/dev/dri:/dev/dri` was added to the `docker run` command to pass through the kernel device. Once the Plex Media Server container is running, the following steps will turn on the Hardware Transcoding option:
+
+1. Open the Plex Web app.
+2. Navigate to Settings > Server > Transcoder to access the server settings.
+3. Turn on Show Advanced in the upper-right corner to expose advanced settings.
+4. Turn on Use hardware acceleration when available.
+5. Click Save Changes at the bottom.
+
+**NOTE:** Intel Quick Sync support also requires newer _64-bit versions of the Ubuntu or Fedora Linux operating system_ to make use of this feature. If your Docker host also has a dedicated graphics card, the video encoding acceleration of Intel Quick Sync Video may become unavailable when the GPU is in use. _If your computer has an NVIDIA GPU_, please install the latest Latest NVIDIA drivers for Linux to make sure that Plex can use your NVIDIA graphics card for video encoding (only) when Intel Quick Sync Video becomes unavailable._
+
+Your mileage may vary when enabling hardware transcoding as newer generations of Intel CPU's provide transcoding of higher resolution video and newer codecs. There is a useful Wikipedia page [here](https://en.wikipedia.org/wiki/Intel_Quick_Sync_Video#Hardware_decoding_and_encoding) which provides a handy matrix for each CPU generation's support of on-chip video decoding.
+
 ## Windows (Not Recommended)
 
 Docker on Windows works differently than it does on Linux; it uses a VM to run a stripped-down Linux and then runs docker within that.  The volume mounts are exposed to the docker in this VM via SMB mounts.  While this is fine for media, it is unacceptable for the `/config` directory because SMB does not support file locking.  This **will** eventually corrupt your database which can lead to slow behavior and crashes.  If you must run in docker on Windows, you should put the `/config` directory mount inside the VM and not on the Windows host.  It's worth noting that this warning also extends to other containers which use SQLite databases.
