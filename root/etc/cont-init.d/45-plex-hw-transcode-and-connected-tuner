@@ -1,12 +1,18 @@
 #!/usr/bin/with-contenv bash
 
-# Check to make sure the device exists.  If it doesn't exit as there is nothing for us to do
-if [ ! -e /dev/dri ]; then
+# Check to make sure the devices exists.  If not, exit as there is nothing for us to do
+if [ ! -e /dev/dri ] && [ ! -e /dev/dvb ]; then
 	exit 0
 fi
 
-# Get the group IDs for the dri devices and the video group
-DEVICE_GID=$(stat -c '%g' /dev/dri/* | grep -v '^0$' | head -n 1)
+# Get the group ID for the dri or dvb devices.
+if [ -e /dev/dri ]; then
+  DEVICE_GID=$(stat -c '%g' /dev/dri/* | grep -v '^0$' | head -n 1)
+else
+  DEVICE_GID=$(stat -c '%g' /dev/dvb/adapter*/* | grep -v '^0$' | head -n 1)
+fi
+
+# Get the group ID for the video group
 VIDEO_GID=$(getent group video | awk -F: '{print $3}')
 
 # If the video group's ID matches the group ID of the device, exit as permissions are already setup.
