@@ -19,7 +19,9 @@ function getVersionInfo {
     channel=8
   fi
   
-  local url="https://plex.tv/downloads/details/1?build=linux-ubuntu-x86_64&channel=${channel}&distro=ubuntu"
+  local plexBuild="$(cat /plex-build.txt)"
+  local plexDistro="$(cat /plex-distro.txt)"
+  local url="https://plex.tv/downloads/details/5?build=${plexBuild}&channel=${channel}&distro=${plexDistro}"
   if [ ${tokenNeeded} -gt 0 ]; then
     url="${url}&X-Plex-Token=${token}"
   fi

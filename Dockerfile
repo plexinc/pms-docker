@@ -1,6 +1,9 @@
 FROM ubuntu:16.04
 
-ARG S6_OVERLAY_VERSION=v1.17.2.0
+ARG S6_OVERLAY_VERSION=v1.22.1.0
+ARG S6_OVERLAY_ARCH=amd64
+ARG PLEX_BUILD=linux-x86_64
+ARG PLEX_DISTRO=debian
 ARG DEBIAN_FRONTEND="noninteractive"
 ENV TERM="xterm" LANG="C.UTF-8" LC_ALL="C.UTF-8"
 
@@ -15,11 +18,12 @@ RUN \
       xmlstarlet \
       uuid-runtime \
       unrar \
+      udev \
     && \
 
 # Fetch and extract S6 overlay
-    curl -J -L -o /tmp/s6-overlay-amd64.tar.gz https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-amd64.tar.gz && \
-    tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
+    curl -J -L -o /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.gz https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}.tar.gz && \
+    tar xzf /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.gz -C / && \
 
 # Add user
     useradd -U -d /config -s /bin/false plex && \
@@ -45,7 +49,7 @@ VOLUME /config /transcode
 ENV CHANGE_CONFIG_DIR_OWNERSHIP="true" \
     HOME="/config"
 
-ARG TAG=beta
+ARG TAG=public
 ARG URL=
 
 COPY root/ /
