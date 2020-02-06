@@ -2,6 +2,7 @@
 
 . /plex-common.sh
 
+## TODO : Make a file with these 3 variables ##
 echo "${TAG}" > /version.txt
 echo "${PLEX_BUILD}" > /plex-build.txt
 echo "${PLEX_DISTRO}" > /plex-distro.txt

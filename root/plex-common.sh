@@ -19,6 +19,7 @@ function getVersionInfo {
     channel=8
   fi
   
+  ## TODO : Read values from the new file ##
   local plexBuild="$(cat /plex-build.txt)"
   local plexDistro="$(cat /plex-distro.txt)"
   local url="https://plex.tv/downloads/details/5?build=${plexBuild}&channel=${channel}&distro=${plexDistro}"

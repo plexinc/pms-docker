@@ -27,6 +27,7 @@ else
 fi
 
 # Read set version
+## TODO : Read version value from the new file ##
 versionToInstall="$(cat /version.txt)"
 if [ -z "${versionToInstall}" ]; then
   echo "No version specified in install.  Broken image"

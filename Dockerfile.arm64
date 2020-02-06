@@ -49,7 +49,7 @@ VOLUME /config /transcode
 ENV CHANGE_CONFIG_DIR_OWNERSHIP="true" \
     HOME="/config"
 
-ARG TAG=public
+ARG TAG=beta
 ARG URL=
 
 COPY root/ /
