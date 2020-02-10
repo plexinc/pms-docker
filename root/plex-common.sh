@@ -1,5 +1,25 @@
 #!/bin/bash
 
+CONT_CONF_FILE="/version.txt"
+
+function addVarToConf {
+  local variable="$1"
+  local value="$2"
+  if [ ! -z "${variable}" ]; then
+    echo ${variable}=${value} >> ${CONT_CONF_FILE}
+  fi
+}
+
+function readVarFromConf {
+  local variable="$1"
+  declare -n value=$2
+  if [ ! -z "${variable}" ]; then
+    value="$(grep -w ${variable} ${CONT_CONF_FILE} | cut -d'=' -f2 | tail -n 1)"
+  else
+    value=NULL
+  fi
+}
+
 function getVersionInfo {
   local version="$1"
   local token="$2"
@@ -19,9 +39,10 @@ function getVersionInfo {
     channel=8
   fi
   
-  ## TODO : Read values from the new file ##
-  local plexBuild="$(cat /plex-build.txt)"
-  local plexDistro="$(cat /plex-distro.txt)"
+  # Read container architecture info from file created when building Docker image
+  readVarFromConf "plex_build" plexBuild
+  readVarFromConf "plex_distro" plexDistro
+
   local url="https://plex.tv/downloads/details/5?build=${plexBuild}&channel=${channel}&distro=${plexDistro}"
   if [ ${tokenNeeded} -gt 0 ]; then
     url="${url}&X-Plex-Token=${token}"

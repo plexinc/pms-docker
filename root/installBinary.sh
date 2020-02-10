@@ -2,10 +2,10 @@
 
 . /plex-common.sh
 
-## TODO : Make a file with these 3 variables ##
-echo "${TAG}" > /version.txt
-echo "${PLEX_BUILD}" > /plex-build.txt
-echo "${PLEX_DISTRO}" > /plex-distro.txt
+addVarToConf "version" "${TAG}"
+addVarToConf "plex_build" "${PLEX_BUILD}"
+addVarToConf "plex_distro" "${PLEX_DISTRO}"
+
 if [ ! -z "${URL}" ]; then
   echo "Attempting to install from URL: ${URL}"
   installFromRawUrl "${URL}"
