@@ -27,7 +27,7 @@ else
 fi
 
 # Read set version
-versionToInstall="$(cat /version.txt)"
+readVarFromConf "version" versionToInstall
 if [ -z "${versionToInstall}" ]; then
   echo "No version specified in install.  Broken image"
   exit 1
