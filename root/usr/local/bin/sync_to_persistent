@@ -1,0 +1,13 @@
+#!/usr/bin/with-contenv bash
+
+echo "Syncing local config data to persistent storage."
+
+last_uuid="$(cat "$HOME_PERSISTENT/.last_clean")"
+new_uuid="$(uuidgen)"
+echo "$new_uuid" > "$HOME_PERSISTENT/.purge_${new_uuid}" && \
+    rsync -a "$HOME/" "$HOME_PERSISTENT/$new_uuid" && \
+    rm -f "$HOME_PERSISTENT/.purge_${new_uuid}" && \
+    echo "$new_uuid" > "$HOME_PERSISTENT/.last_clean" && \
+    echo "$last_uuid" > "$HOME_PERSISTENT/.purge_${last_uuid}"
+
+echo "Sync complete; new persistent config data directory is ${new_uuid}."

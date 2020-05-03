@@ -1,0 +1,18 @@
+#!/usr/bin/with-contenv bash
+
+echo "Stopping Plex Media Server."
+
+pid=$(ps ax | awk '{ if ( $5$6$7 == "/usr/lib/plexmediaserver/PlexMediaServer" ) print $1 }')
+if [ ! -z ${pid+x} ]; then
+  echo "Killing Plex Media Server (PID ${pid})."
+  kill -s SIGTERM $pid
+  while [ ! -z $(ps ax | awk -v pid=$pid '{ if ( $1 == pid ) print $1 }')  ]; do
+    sleep 1s
+  done
+  sleep 3s
+fi
+
+if /usr/local/bin/home_persistent_mounted; then
+  flock "$SYNC_STATUS_FILE" /usr/local/bin/sync_to_persistent
+  flock "$SYNC_STATUS_FILE" /usr/local/bin/purge_persistent &
+fi
