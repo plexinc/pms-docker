@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv bash
+
+if curl -sGd X-Plex-Token=${X_PLEX_TOKEN} http://localhost:${PLEX_PORT}/status/sessions | grep '<MediaContainer size="0">' &> /dev/null; then
+  echo "Restarting Plex Media Server for periodic sync."
+  s6-svc -r "$(ps ax | awk '{ if ( $1 == 1 ) print $NF }')/plex"
+else
+  echo "Plex Media Server is active; no periodic sync."
+fi

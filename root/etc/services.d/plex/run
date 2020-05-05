@@ -4,8 +4,19 @@ if /usr/local/bin/home_persistent_mounted; then
   if [ ! -f "$HOME_PERSISTENT/.last_clean" ]; then
     flock "$SYNC_STATUS_FILE" /usr/local/bin/initial_storage
   fi
+
   flock "$SYNC_STATUS_FILE" /usr/local/bin/sync_to_local
   flock "$SYNC_STATUS_FILE" /usr/local/bin/purge_persistent &
+
+  > "/etc/cron.d/persistent_config"
+  IFS=':'
+  read -ra persistent_config_cron <<< "$PERSISTENT_CONFIG_CRON"
+  for i in "${persistent_config_cron[@]}"; do
+    echo "$i root /usr/local/bin/periodic_sync" >> "/etc/cron.d/persistent_config"
+  done
+  IFS=' '
+
+  s6-svc -u "$(ps ax | awk '{ if ( $1 == 1 ) print $NF }')/cron"
 fi
 
 echo "Starting Plex Media Server."

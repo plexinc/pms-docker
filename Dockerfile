@@ -9,6 +9,9 @@ ENV TERM="xterm" LANG="C.UTF-8" LC_ALL="C.UTF-8"
 ENV HOME="/config" \
     HOME_PERSISTENT="/config_persistent" \
     SYNC_STATUS_FILE="/etc/services.d/plex/data/syncing"
+ENV PLEX_PORT=32400 \
+    X_PLEX_TOKEN= \
+    PERSISTENT_CONFIG_CRON="0 4 * * *"
 
 ENTRYPOINT ["/init"]
 
@@ -22,6 +25,7 @@ RUN \
       uuid-runtime \
       unrar \
       rsync \
+      cron \
     && \
 
 # Fetch and extract S6 overlay
