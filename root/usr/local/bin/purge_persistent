@@ -1,0 +1,19 @@
+#!/usr/bin/with-contenv bash
+
+echo "Purging old persistent config data directory(ies)."
+
+shopt -s dotglob nullglob
+for f in "$HOME_PERSISTENT/.purge_"*
+do
+  current_uuid="$(cat "$f")"
+  if [ -d "$HOME_PERSISTENT/$current_uuid" ]; then
+    echo "Purging persistent config data directory ${current_uuid}."
+    rm -rf "$HOME_PERSISTENT/$current_uuid" && \
+        rm -f "$f"
+  else
+    rm -f "$f"
+  fi
+done
+shopt -u dotglob nullglob
+
+echo "Purge complete."

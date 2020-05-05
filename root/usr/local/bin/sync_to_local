@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv bash
+
+echo "Syncing persistent config data to local installation."
+
+persistent_uuid="$(cat "$HOME_PERSISTENT/.last_clean")"
+rsync -a "$HOME_PERSISTENT/$persistent_uuid/" "$HOME"
+
+echo "Sync complete; persistant config data synced from ${persistent_uuid} directory." 

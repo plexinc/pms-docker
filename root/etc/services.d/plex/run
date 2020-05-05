@@ -1,8 +1,16 @@
 #!/usr/bin/with-contenv bash
 
+if /usr/local/bin/home_persistent_mounted; then
+  if [ ! -f "$HOME_PERSISTENT/.last_clean" ]; then
+    flock "$SYNC_STATUS_FILE" /usr/local/bin/initial_storage
+  fi
+  flock "$SYNC_STATUS_FILE" /usr/local/bin/sync_to_local
+  flock "$SYNC_STATUS_FILE" /usr/local/bin/purge_persistent &
+fi
+
 echo "Starting Plex Media Server."
-home="$(echo ~plex)"
-export PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${home}/Library/Application Support}"
+
+export PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${HOME}/Library/Application Support}"
 export PLEX_MEDIA_SERVER_HOME=/usr/lib/plexmediaserver
 export PLEX_MEDIA_SERVER_MAX_PLUGIN_PROCS=6
 export PLEX_MEDIA_SERVER_INFO_VENDOR=Docker
