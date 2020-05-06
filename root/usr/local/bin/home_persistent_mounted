@@ -1,7 +1,14 @@
 #!/usr/bin/with-contenv bash
 
-# Compare some info from df to see if the /config_persistent exists and is mounted on the same filesystem as root.
-root_info=$(df | awk -v path="/" '{ if ( $6 == path ) print $2 ";" $3 ";" $4 }')
-home_persistent_info=$(df | awk -v path="$HOME_PERSISTENT" '{ if ( $6 == path ) print $2 ";" $3 ";" $4 }')
-[ ! -z ${home_persistent_info+x} ] && [ "$root_info" != "$home_persistent_info" ]
-exit $?
+# If variable FORCE_PERSISTENT is set and not empty, it overrides all; otherwise, FORCE_NO_PERSISTENT can override all.
+if [ ! -z ${FORCE_PERSISTENT+x} ]; then
+  exit 0
+elif [ ! -z ${FORCE_NO_PERSISTENT+x} ]; then
+  exit 1
+else
+  # Compare some info from df to see if the /config_persistent exists and is mounted on the same filesystem as root.
+  root_info=$(df | awk -v path="/" '{ if ( $6 == path ) print $2 ";" $3 ";" $4 }')
+  home_persistent_info=$(df | awk -v path="$HOME_PERSISTENT" '{ if ( $6 == path ) print $2 ";" $3 ";" $4 }')
+  [ ! -z ${home_persistent_info+x} ] && [ "$root_info" != "$home_persistent_info" ]
+  exit $?
+fi
