@@ -5,7 +5,7 @@ echo "Initializing persistent config data directory."
 new_uuid="$(uuidgen)"
 mkdir -p "$HOME_PERSISTENT/.incomplete" && \
     shopt -s extglob dotglob nullglob && \
-    for f in !(.incomplete); do mv -f "$f" "$HOME_PERSISTENT/.incomplete/"; done && \
+    for f in "$HOME_PERSISTENT/"!(.incomplete|.|..); do mv -f "$f" "$HOME_PERSISTENT/.incomplete/"; done && \
     shopt -u extglob dotglob nullglob && \
     mv -f "$HOME_PERSISTENT/.incomplete" "$HOME_PERSISTENT/$new_uuid"
     echo "$new_uuid" > "$HOME_PERSISTENT/.last_clean"
