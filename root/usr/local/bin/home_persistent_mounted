@@ -1,4 +1,9 @@
 #!/usr/bin/with-contenv bash
+#
+# Used by other scripts to decide of persistent config sync should be performed.
+# Determines whether the directory specified by $HOME_PERSISTENT is mounted on a different filesystem than root.
+# Returns 0 if it is on a different filesystem, and non-0 if the same filesystem.
+# Can be forced with $FORCE_PERSISTENT or $FORCE_NO_PERSISTENT.
 
 # If variable FORCE_PERSISTENT is set and not empty, it overrides all; otherwise, FORCE_NO_PERSISTENT can override all.
 if [ ! -z ${FORCE_PERSISTENT+x} ]; then

@@ -1,4 +1,8 @@
 #!/usr/bin/with-contenv bash
+#
+# Copies the current config files from $HOME to $HOME_PERSISTENT, in a subdirectory.
+# The subdirectory name is a UUID; no previously-good data is overwritten so that an interrupted transfer doesn't result in data loss.
+# Only after the transfer is complete is will the new subdirectory be marked as the latest clean data, and the previous one marked for deletion.
 
 echo "Syncing local config data to persistent storage."
 

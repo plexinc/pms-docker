@@ -1,4 +1,11 @@
 #!/usr/bin/with-contenv bash
+#
+# Determines if syncing config to/from persistent storage should be performed; if so:
+#   Initialize the persistent storage if it's not already done,
+#   then synchronize it to local storage ($HOME),
+#   then delete previous persistent storage subdirectories,
+#   then starts the cron service unless it is specifically deactivated by env variable.
+# Finally, actually start Plex Media Server; it runs asynchronously, and this script will exit.
 
 if /usr/local/bin/home_persistent_mounted; then
   if [ ! -f "$HOME_PERSISTENT/.last_clean" ]; then
@@ -17,6 +24,8 @@ if /usr/local/bin/home_persistent_mounted; then
     done
     IFS=' '
 
+    # The line below is used to determine the s6 service directory by snagging it from PID 1.
+    # It's a bit messy, but it works.
     s6-svc -u "$(ps ax | awk '{ if ( $1 == 1 ) print $NF }')/cron"
   fi
 fi

@@ -1,4 +1,10 @@
 #!/usr/bin/with-contenv bash
+#
+# Takes an existing data directory at $HOME_PERSISTENT and prepares it to be a maintained, clean, and safe persistent directory.
+# First moves everything in the directory into a ".incomplete" subdirectory,
+# then creates a UUID and renames ".incomplete" subdirectory to that UUID,
+# then finally writes the UUID to a ".last_clean" file to signify the operation is complete.
+# If interrupted before the transfer is complete, it can be resumed cleanly.
 
 echo "Initializing persistent config data directory."
 
