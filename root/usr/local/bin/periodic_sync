@@ -1,6 +1,6 @@
 #!/usr/bin/with-contenv bash
 
-for i in {0..3}; do
+for (( i=0; i<="$PERSISTENT_RETRIES"; i++ )); do
   if (( i > 0 )); then
     echo "Retrying periodic sync; attempt #${i}."
   fi
@@ -14,7 +14,7 @@ for i in {0..3}; do
     exit 0
   else
     echo "Plex Media Server is active; no periodic sync at this time."
-    sleep 30m
+    sleep "$PERSISTENT_RETRY_DELAY"
   fi
 done
 echo "Periodic sync aborted; Plex Media Server was busy for all $(i) retries."
