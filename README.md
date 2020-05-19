@@ -212,8 +212,8 @@ If the claim token is not added during initial configuration you will need to us
 As mentioned above, mounting an NFS share or certain other types of filesystems (especially those that don't support file locking) on /config can result in instability and/or data corruption. There is now a (highly experimental!) method to mount persistent storage shares on a separate directory - /config_persistent - and maintain data integrity by synchronizing data on server startup, shutdown, and a set schedule during operation. To take advantage of this feature, mount the config data volume on /config_persistent and then specify the variables below:
 
 * X_PLEX_TOKEN: (required) Your X-PLEX-TOKEN, used so that the script can check the server's status before restarting it to synchronize the files.
-* PLEX_PORT: (optionsl; defaults to 32400) The server management port, used to check the server's status.
-* PERSISTENT_CONFIG_CRON: (optiona; defaults to "0 4 * * *") A colon-separated list of cron-formatted schedule definitions specifying when the periodic sync-to-persistent processes should run. The server will be restarted at these times if it is idle.
+* PLEX_PORT: (optional; defaults to 32400) The server management port, used to check the server's status.
+* PERSISTENT_CONFIG_CRON: (optional; defaults to "0 4 * * *") A colon-separated list of cron-formatted schedule definitions specifying when the periodic sync-to-persistent processes should run. The server will be restarted at these times if it is idle.
 * FORCE_PERSISTENT (optional; defaults to "") Set to non-blank to force the persistent sync process to on (should only be necessary if it doesn't automatically start for some reason).
 * FORCE_NO_PERSISTENT (optional; defaults to "") Set to non-blank to force the persistent sync process to off (should only be necessary if it erroneously starts automatically for some reason).
 * PERSISTENT_RETRIES (optional; defaults to 3) The number of retries to attempt if the server is active (has active streams) when a periodic resync event is triggered.
