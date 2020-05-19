@@ -4,7 +4,11 @@ for i in {0..3}; do
   if (( i > 0 )); then
     echo "Retrying periodic sync; attempt #${i}."
   fi
-  if curl -sGd X-Plex-Token=${X_PLEX_TOKEN} http://localhost:${PLEX_PORT}/status/sessions | grep '<MediaContainer size="0">' &> /dev/null; then
+  if [ -z ${X_PLEX_TOKEN+x} ]; then
+    echo "Variable X_PLEX_TOKEN not provided; cannot check server status."
+    ehco "Periodic sync aborted."
+    exit 2
+  elif curl -sGd X-Plex-Token=${X_PLEX_TOKEN} http://localhost:${PLEX_PORT}/status/sessions | grep '<MediaContainer size="0">' &> /dev/null; then
     echo "Restarting Plex Media Server for periodic sync."
     s6-svc -r "$(ps ax | awk '{ if ( $1 == 1 ) print $NF }')/plex"
     exit 0
@@ -14,3 +18,4 @@ for i in {0..3}; do
   fi
 done
 echo "Periodic sync aborted; Plex Media Server was busy for all $(i) retries."
+exit 1
