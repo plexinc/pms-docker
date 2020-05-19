@@ -1,4 +1,7 @@
 #!/usr/bin/with-contenv bash
+#
+# Check server status (whether there are any active streams); restart the Plex Media Server if it's idle.
+# If not idle, retry every $PERSISTENT_RETRY_DELAY until the maximum number of $PERSISTENT_RETRIES is reached.
 
 for (( i=0; i<="$PERSISTENT_RETRIES"; i++ )); do
   if (( i > 0 )); then
@@ -10,6 +13,8 @@ for (( i=0; i<="$PERSISTENT_RETRIES"; i++ )); do
     exit 2
   elif curl -sGd X-Plex-Token=${X_PLEX_TOKEN} http://localhost:${PLEX_PORT}/status/sessions | grep '<MediaContainer size="0">' &> /dev/null; then
     echo "Restarting Plex Media Server for periodic sync."
+    # The line below is used to determine the s6 service directory by snagging it from PID 1.
+    # It's a bit messy, but it works.
     s6-svc -r "$(ps ax | awk '{ if ( $1 == 1 ) print $NF }')/plex"
     exit 0
   else

@@ -1,4 +1,6 @@
 #!/usr/bin/with-contenv bash
+#
+# Copies (using `rsync -a`) the latest "clean" (uninterrupted transfer) persistent directory to $HOME.
 
 echo "Syncing persistent config data to local installation."
 

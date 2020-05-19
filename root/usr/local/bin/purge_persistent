@@ -1,4 +1,7 @@
 #!/usr/bin/with-contenv bash
+#
+# Delete old subdirectories of $HOME_PERSISTENT.
+# Anything which is specified in a file matching $HOME_PERSISTENT/.purge_* will be deleted recurseively.
 
 echo "Purging old persistent config data directory(ies)."
 

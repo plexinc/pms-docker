@@ -1,7 +1,15 @@
 #!/usr/bin/with-contenv bash
+#
+# Stops Plex Media Server by sending TERM to its main PID,
+# then waits and loops until it's dead,
+# then waits 3 more seconds just to be sure all child processes are also dead,
+# then syncs config to persistent storage,
+# then purges old persistent data.
 
 echo "Stopping Plex Media Server."
 
+# This is a ridiculous way to get the PID, especially when it exists in the Plex config data directory when the server is running.
+# However, it's unknown if the pid file will change at some later date.
 pid=$(ps ax | awk '{ if ( $5$6$7 == "/usr/lib/plexmediaserver/PlexMediaServer" ) print $1 }')
 if [ ! -z ${pid+x} ]; then
   echo "Killing Plex Media Server (PID ${pid})."
