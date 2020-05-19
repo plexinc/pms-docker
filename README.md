@@ -222,3 +222,4 @@ As mentioned above, mounting an NFS share or certain other types of filesystems 
 Important notes:
 * Although this feature was developed to prevent data corruption, its experimental nature means that issues can arise. It's recommended that you backup your config data before starting the server the first time, and maintain periodic backups as possible.
 * The peak storage size, RAM usage, and the size of the container itself will all be significantly higher when this feature is in use. CPU usage is also relatively high during synchronization events. A modest media library without video thumbnails can easily be 1GB, and this must all be transferred at each sync event.
+* So far, this has only been tested with an NFSv4 share where the container has root permissions (and there is no root squash on the NFS server). Behavior on other setups is unknown.
