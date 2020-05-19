@@ -215,7 +215,7 @@ As mentioned above, mounting an NFS share or certain other types of filesystems 
 * PLEX_PORT: (optional; defaults to 32400) The server management port, used to check the server's status.
 * PERSISTENT_CONFIG_CRON: (optional; defaults to "0 4 * * *") A colon-separated list of cron-formatted schedule definitions specifying when the periodic sync-to-persistent processes should run. The server will be restarted at these times if it is idle.
 * FORCE_PERSISTENT (optional; defaults to "") Set to non-blank to force the persistent sync process to on (should only be necessary if it doesn't automatically start for some reason).
-* FORCE_NO_PERSISTENT (optional; defaults to "") Set to non-blank to force the persistent sync process to off (should only be necessary if it erroneously starts automatically for some reason).
+* FORCE_NO_PERSISTENT (optional; defaults to "") Set to non-blank to force the persistent sync process to off (should only be necessary if it erroneously starts automatically for some reason). If both are non-empty, then FORCE_PERSISTENT overrides FORCE_NO_PERSISTENT.
 * PERSISTENT_RETRIES (optional; defaults to 3) The number of retries to attempt if the server is active (has active streams) when a periodic resync event is triggered.
 * PERSISTENT_RETRY_DELAY (optional; defaults to 30m) The time between retries if the server is active (has active streams) when a periodic resync event is triggered.
 
