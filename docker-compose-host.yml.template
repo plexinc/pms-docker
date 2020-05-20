@@ -1,12 +1,14 @@
-version: '2'
+version: '3.6'
 services:
   plex:
     container_name: plex
     image: plexinc/pms-docker
     restart: unless-stopped
+    env_file:
+      - ./.env
     environment:
-      - TZ=<timezone>
-      - PLEX_CLAIM=<claimToken>
+      - TZ=${TIMEZONE}
+      - PLEX_CLAIM=${CLAIM_TOKEN}
     network_mode: host
     volumes:
       - <path/to/plex/database>:/config
