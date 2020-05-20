@@ -1,16 +1,17 @@
-version: '3.6'
+version: '3.3'
 services:
   plex:
     container_name: plex
     image: plexinc/pms-docker
+    ports:
+      - "32400"
     restart: unless-stopped
-    env_file:
-      - ./.env
     environment:
       - TZ=${TIMEZONE}
       - PLEX_CLAIM=${CLAIM_TOKEN}
+      - PLEX_HOME=${PLEX_HOME}
     network_mode: host
     volumes:
-      - <path/to/plex/database>:/config
-      - <path/to/transcode/temp>:/transcode
-      - <path/to/media>:/data
+      - ${PLEX_HOME}/config:/config
+      - ${PLEX_HOME}/transcode:/transcode
+      - ${PLEX_HOME}/data:/data
