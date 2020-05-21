@@ -3,15 +3,15 @@ services:
   plex:
     container_name: plex
     image: plexinc/pms-docker
-    ports:
-      - "32400"
     restart: unless-stopped
     environment:
-      - TZ=${TIMEZONE}
-      - PLEX_CLAIM=${CLAIM_TOKEN}
-      - PLEX_HOME=${PLEX_HOME}
+      - TZ
+      - PLEX_CLAIM
+      - PLEX_CONFIG=./volume/config
+      - PLEX_TRANSCODE=./volume/transcode
+      - PLEX_DATA=./volume/data
     network_mode: host
     volumes:
-      - ${PLEX_HOME}/config:/config
-      - ${PLEX_HOME}/transcode:/transcode
-      - ${PLEX_HOME}/data:/data
+      - ${PLEX_CONFIG}:/config
+      - ${PLEX_TRANSCODE}:/transcode
+      - ${PLEX_DATA}/data:/data
