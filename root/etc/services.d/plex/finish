@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv bash
+
+echo "Stopping Plex Media Server."
+pid_file="$(echo ~plex)/Library/Application Support/Plex Media Server/plexmediaserver.pid"
+
+# Terminate the process.
+kill -SIGTERM "$(cat "$pid_file")"
+
+# Make sure all plex processes die.
+ps aux | awk '{ if ( $0 ~ /[Pp]lex/ && $0 !~ /s6-supervise/ ) system("tail --pid="$2" -f /dev/null") }'
