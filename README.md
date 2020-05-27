@@ -90,27 +90,10 @@ Note: In this configuration, you must do some additional configuration:
 
 The provided `docker-compose` templates use the `plexinc/pms-docker` image which is the amd64 build and won't work on ARM devices.
 
-To use `docker-compose` with ARM devices, you must first build one of the ARM images locally and make a small modification to your chosen template, as shown below.
+To use `docker-compose` with ARM devices, you must first build one of the ARM images locally.
 
 ```sh
-docker build -f Dockerfile.armv7 # or arm64
-```
-
-Then, remove the `image: plexinc/pms-docker` line from your chosen compose template, and add the line `build: .` in its place.
-
-E.g.
-
-```diff
-@@ -2,7 +2,7 @@
- version: '2'
- services:
-   plex:
-     container_name: plex
--    image: plexinc/pms-docker
-+    build: .
-     restart: unless-stopped
-     ports:
-       - 32400:32400/tcp
+docker build -t plexinc/pms-docker:latest -f Dockerfile.armv7 # or arm64
 ```
 
 Then you can `docker-compose up`.
