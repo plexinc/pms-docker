@@ -1,0 +1,18 @@
+#!/usr/bin/with-contenv bash
+# Copied from the init.d stop method from non-Dockerized Plex.
+
+echo "Stopping Plex Media Server."
+
+# Ask nicely
+pids="$(ps -ef | grep 'Plex Media Server' | grep -v grep | awk '{print $2}')"
+kill -15 $pids
+
+sleep 5
+
+# Stuck
+pids="$(ps -ef | grep /usr/lib/plexmediaserver | grep -v grep | awk '{print $2}')"
+
+if [ "$pids" != "" ]; then
+  kill -9 $pids
+  sleep 2
+fi
