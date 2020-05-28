@@ -1,10 +1,18 @@
 #!/usr/bin/with-contenv bash
+# Copied from the init.d stop method from non-Dockerized Plex.
 
 echo "Stopping Plex Media Server."
-pid_file="$(echo ~plex)/Library/Application Support/Plex Media Server/plexmediaserver.pid"
 
-# Terminate the process.
-kill -SIGTERM "$(cat "$pid_file")"
+# Ask nicely
+pids="$(ps -ef | grep 'Plex Media Server' | grep -v grep | awk '{print $2}')"
+kill -15 $pids
 
-# Make sure all plex processes die.
-ps aux | awk '{ if ( $0 ~ /[Pp]lex/ && $0 !~ /s6-supervise/ ) system("tail --pid="$2" -f /dev/null") }'
+sleep 5
+
+# Stuck
+pids="$(ps -ef | grep /usr/lib/plexmediaserver | grep -v grep | awk '{print $2}')"
+
+if [ "$pids" != "" ]; then
+  kill -9 $pids
+  sleep 2
+fi
