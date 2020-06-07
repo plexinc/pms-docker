@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM debian:stable-slim
 
 ARG S6_OVERLAY_VERSION=v1.22.1.0
 ARG S6_OVERLAY_ARCH=amd64
@@ -17,7 +17,7 @@ RUN \
       curl \
       xmlstarlet \
       uuid-runtime \
-      unrar \
+      unrar-free \
     && \
 
 # Fetch and extract S6 overlay
