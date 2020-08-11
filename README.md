@@ -93,7 +93,7 @@ The provided `docker-compose` templates use the `plexinc/pms-docker` image which
 To use `docker-compose` with ARM devices, you must first build one of the ARM images locally.
 
 ```sh
-docker build -t plexinc/pms-docker:latest -f Dockerfile.armv7 # or arm64
+docker build -t plexinc/pms-docker:latest -f Dockerfile.armv7 . # or arm64
 ```
 
 Then you can `docker-compose up`.
