@@ -18,6 +18,8 @@ RUN \
       xmlstarlet \
       uuid-runtime \
       unrar \
+      beignet-opencl-icd \
+      ocl-icd-libopencl1 \
     && \
 
 # Fetch and extract S6 overlay
