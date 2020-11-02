@@ -13,11 +13,13 @@ RUN \
     # Update and get dependencies
     apt-get update && \
     apt-get install -y \
-    tzdata \
-    curl \
-    xmlstarlet \
-    uuid-runtime \
-    unrar \
+      tzdata \
+      curl \
+      xmlstarlet \
+      uuid-runtime \
+      unrar \
+      beignet-opencl-icd \
+      ocl-icd-libopencl1 \
     && \
 
     # Fetch and extract S6 overlay
