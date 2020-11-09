@@ -67,10 +67,10 @@ fi
 if [ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]; then
   if [ -f "${prefFile}" ]; then
     if [ ! "$(stat -c %u "${prefFile}")" = "$(id -u plex)" ]; then
-      chown -R plex:plex /config
+      find /config \! \( -uid $(id -u plex) -gid $(id -g plex) \) -exec chown plex:plex {} \;
     fi
   else
-    chown -R plex:plex /config
+    find /config \! \( -uid $(id -u plex) -gid $(id -g plex) \) -exec chown plex:plex {} \;
   fi
   chown -R plex:plex /transcode
 fi
