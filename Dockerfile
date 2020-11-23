@@ -1,6 +1,6 @@
-FROM ubuntu:16.04
+FROM ubuntu:20.04
 
-ARG S6_OVERLAY_VERSION=v1.22.1.0
+ARG S6_OVERLAY_VERSION=v2.1.0.0
 ARG S6_OVERLAY_ARCH=amd64
 ARG PLEX_BUILD=linux-x86_64
 ARG PLEX_DISTRO=debian
@@ -21,22 +21,23 @@ RUN \
       beignet-opencl-icd \
       ocl-icd-libopencl1 \
     && \
-
+    \
 # Fetch and extract S6 overlay
     curl -J -L -o /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.gz https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}.tar.gz && \
-    tar xzf /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.gz -C / && \
-
+    tar xzf /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.gz -C / --exclude='./bin' && \
+    tar xzf /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.gz -C /usr ./bin && \
+    \
 # Add user
     useradd -U -d /config -s /bin/false plex && \
     usermod -G users plex && \
-
+    \
 # Setup directories
     mkdir -p \
       /config \
       /transcode \
       /data \
     && \
-
+    \
 # Cleanup
     apt-get -y autoremove && \
     apt-get -y clean && \
