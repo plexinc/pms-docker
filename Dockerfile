@@ -21,6 +21,8 @@ RUN \
       beignet-opencl-icd \
       ocl-icd-libopencl1 \
     && \
+    echo "127.0.0.1 localhost" >> /etc/hosts
+    && \
     \
 # Fetch and extract S6 overlay
     curl -J -L -o /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.gz https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}.tar.gz && \
