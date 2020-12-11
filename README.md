@@ -33,6 +33,8 @@ docker run \
 plexinc/pms-docker
 ```
 
+Note: If your `/etc/hosts` file is missing an entry for `localhost`, you should add one before using host networking.
+
 ### Macvlan Networking
 
 ```
