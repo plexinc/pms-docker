@@ -18,6 +18,7 @@ services:
       - TZ=<timezone>
       - PLEX_CLAIM=<claimToken>
       - ADVERTISE_IP=http://<hostIPAddress>:32400/
+      - ALLOWED_NETWORKS=<hostIPAddressCIDRRange>
     hostname: <hostname>
     volumes:
       - <path/to/plex/database>:/config
