@@ -71,6 +71,6 @@ function installFromRawUrl {
     exit 1
   fi
 
-  dpkg -i --force-confold /tmp/plexmediaserver.deb
+  dpkg -i --force-confold --force-architecture  /tmp/plexmediaserver.deb
   rm -f /tmp/plexmediaserver.deb
 }
