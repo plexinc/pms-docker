@@ -12,20 +12,20 @@ function addVarToConf {
 
 function readVarFromConf {
   local variable="$1"
-  declare -n value=$2
+  local -n readVarFromConf_value=$2
   if [ ! -z "${variable}" ]; then
-    value="$(grep -w ${variable} ${CONT_CONF_FILE} | cut -d'=' -f2 | tail -n 1)"
+    readVarFromConf_value="$(grep -w ${variable} ${CONT_CONF_FILE} | cut -d'=' -f2 | tail -n 1)"
   else
-    value=NULL
+    readVarFromConf_value=NULL
   fi
 }
 
 function getVersionInfo {
   local version="$1"
   local token="$2"
-  declare -n remoteVersion=$3
-  declare -n remoteFile=$4
-  
+  local -n getVersionInfo_remoteVersion=$3
+  local -n getVersionInfo_remoteFile=$4
+
   local channel
   local tokenNeeded=1
   if [ ! -z "${PLEX_UPDATE_CHANNEL}" ] && [ "${PLEX_UPDATE_CHANNEL}" > 0 ]; then
@@ -38,7 +38,7 @@ function getVersionInfo {
   else
     channel=8
   fi
-  
+
   # Read container architecture info from file created when building Docker image
   readVarFromConf "plex_build" plexBuild
   readVarFromConf "plex_distro" plexDistro
@@ -47,12 +47,12 @@ function getVersionInfo {
   if [ ${tokenNeeded} -gt 0 ]; then
     url="${url}&X-Plex-Token=${token}"
   fi
-  
+
   local versionInfo="$(curl -s "${url}")"
-  
+
   # Get update info from the XML.  Note: This could countain multiple updates when user specifies an exact version with the lowest first, so we'll use first always.
-  remoteVersion=$(echo "${versionInfo}" | sed -n 's/.*Release.*version="\([^"]*\)".*/\1/p')
-  remoteFile=$(echo "${versionInfo}" | sed -n 's/.*file="\([^"]*\)".*/\1/p')
+  getVersionInfo_remoteVersion=$(echo "${versionInfo}" | sed -n 's/.*Release.*version="\([^"]*\)".*/\1/p')
+  getVersionInfo_remoteFile=$(echo "${versionInfo}" | sed -n 's/.*file="\([^"]*\)".*/\1/p')
 }
 
 
