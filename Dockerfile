@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM debian:bullseye
 
 ARG S6_OVERLAY_VERSION=v2.2.0.3
 ARG S6_OVERLAY_ARCH=amd64
@@ -20,7 +20,6 @@ RUN \
       curl \
       xmlstarlet \
       uuid-runtime \
-      unrar \
       beignet-opencl-icd \
       ocl-icd-libopencl1 \
     && \
