@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# verify conenctivity and sleep until established with backoff
+SLEEP_SECS=10
+echo "Verifying connectivity to https://plex.tv."
+until curl https://plex.tv -s -o /dev/null; do
+  echo "Can not connect to https://plex.tv, sleeping $SLEEP_SECS seconds."
+  sleep $SLEEP_SECS
+  SLEEP_SECS=$(($SLEEP_SECS*2))
+done
