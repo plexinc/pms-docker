@@ -100,6 +100,8 @@ fi
 
 # Get server token and only turn claim token into server token if we have former but not latter.
 token="$(getPref "PlexOnlineToken")"
+if [ -z "${PLEX_CLAIM}" ] && [ ! -z "${PLEX_CLAIM_FILE}" ]; then
+  PLEX_CLAIM=$(cat ${PLEX_CLAIM_FILE})
 if [ ! -z "${PLEX_CLAIM}" ] && [ -z "${token}" ]; then
   echo "Attempting to obtain server token from claim token"
   loginInfo="$(curl -X POST \
