@@ -102,6 +102,7 @@ fi
 token="$(getPref "PlexOnlineToken")"
 if [ -z "${PLEX_CLAIM}" ] && [ -f "${PLEX_CLAIM_FILE}" ]; then
   PLEX_CLAIM=$(cat ${PLEX_CLAIM_FILE})
+fi
 if [ ! -z "${PLEX_CLAIM}" ] && [ -z "${token}" ]; then
   echo "Attempting to obtain server token from claim token"
   loginInfo="$(curl -X POST \
