@@ -1,0 +1,208 @@
+# Default values for pms-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# The docker image information for the pms application
+
+image:
+  registry: index.docker.io
+  repository: plexinc/pms-docker
+  # If unset use "latest"
+  tag: "latest"
+  sha: ""
+  pullPolicy: IfNotPresent
+
+global:
+  # Allow parent charts to override registry hostname
+  imageRegistry: ""
+
+ingress:
+  # Specify if an ingress resource for the pms server should be created or not
+  enabled: false
+
+  # The ingress class that should be used
+  ingressClassName: "ingress-nginx"
+
+  # The url to use for the ingress reverse proxy to point at this pms instance
+  url: ""
+
+  # Custom annotations to put on the ingress resource
+  annotations: {}
+
+pms:
+  # The storage class to use when provisioning the pms config volume
+  # this needs to be created manually, null will use the default
+  storageClassName: null
+
+  # the volume size to provision for the PMS database
+  configStorage: 2Gi
+
+  resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+
+# A basic image that will convert the configmap to a file in the rclone config volume
+# this is ignored if rclone is not enabled
+initContainer:
+  image:
+    registry: index.docker.io
+    repository: alpine
+    # If unset use latest
+    tag: 3.18.0
+    sha: ""
+    pullPolicy: IfNotPresent
+
+  # A custom script that will be run in an init container to do any setup before the PMS service starts up
+  # This will be run everytime the pod starts, make sure that some mechanism is included to prevent
+  # this from running more than once if it should only be run on the first startup.
+  script: ""
+  ###
+  ### Example init script that will import a pre-existing pms database if one has not already been setup
+  ### This pms database must be available through a URL (or some other mechanism to be pulled into the container)
+  # script: |-
+  #   #!/bin/sh
+  #   echo "fetching pre-existing pms database to import..."
+  #
+  #   if [ -d "/config/Library" ]; then
+  #     echo "PMS library already exists, exiting."
+  #     exit 0
+  #   fi
+  #
+  #   apk --update add curl
+  #   curl http://example.com/pms.tgz -o pms.tgz
+  #   tar -xvzf pms.tgz -C /config
+  #   cp -r /config/data/Library /config/Library
+  #   rm -rf /config/data pms.tgz
+  #
+  #   echo "Done."
+
+# the settings specific to rclone
+rclone:
+  # if the rclone sidecar should be created
+  enabled: false
+
+  # the rclone image that should be used
+  image:
+    registry: index.docker.io
+    repository: rclone/rclone
+    # If unset use latest
+    tag: 1.62.2
+    sha: ""
+    pullPolicy: IfNotPresent
+
+  # The name of the secret that contains the rclone configuration file.
+  # The key must be called `rclone.conf` in the secret
+  configSecret: ""
+
+
+  # the remote drive that should be mounted using rclone
+  # this must be in the form of `name:[/optional/path]`
+  # this remote will be mounted at `/data/name` in the PMS container
+  remotes: []
+
+  # if the remote volumes should be mounted as read only
+  readOnly: true
+
+  # additional arguments to give to rclone when mounting the volume
+  additionalArgs: []
+
+  resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # If the service account token should be auto mounted
+  automountServiceAccountToken: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+statefulSet:
+  # optional extra annotations to add to the service resource
+  annotations: {}
+
+service:
+  type: ClusterIP
+  port: 32400
+
+  # optional extra annotations to add to the service resource
+  annotations: {}
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Common Labels for all resources created by this chart.
+commonLabels: {}
+
+extraEnv: {}
+# extraEnv:
+  # This claim is optional, and is only used for the first startup of PMS
+  # The claim is obtained from https://www.plex.tv/claim/ is is only valid for a few minutes
+#   PLEX_CLAIM: "claim"
+#   HOSTNAME: "PlexServer"
+#   TZ: "Etc/UTC"
+#   PLEX_UPDATE_CHANNEL: "5"
+#   PLEX_UID: "uid of plex user"
+#   PLEX_GID: "group id of plex user"
+  # a list of CIDRs that can use the server without authentication
+  # this is only used for the first startup of PMS
+#   ALLOWED_NETWORKS: "0.0.0.0/0"
+
+
+# Optionally specify additional volume mounts for the PMS and init containers.
+extraVolumeMounts: []
+# extraVolumeMounts:
+#   - name: some-volume-name
+#     mountPath: /path/in/container
+
+
+# Optionally specify additional volumes for the pod.
+extraVolumes: []
+# extraVolumes:
+#   - name: some-volume-name
+#     emptyDir: {}
+
+extraContainers: []
+# extraContainers:
+#  - name: <container name>
+#    args:
+#      - ...
+#    image: <docker images>
+#    imagePullPolicy: IfNotPresent
+#    resources:
+#      limits:
+#        memory: 128Mi
+#      requests:
+#        cpu: 100m
+#        memory: 128Mi
+#    volumeMounts:
+#      - ...

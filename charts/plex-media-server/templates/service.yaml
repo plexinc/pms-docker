@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "pms-chart.fullname" . }}
+  labels:
+    {{- include "pms-chart.labels" . | nindent 4 }}
+  {{- with .Values.service.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 32400
+      protocol: TCP
+      name: pms
+  selector:
+    {{- include "pms-chart.selectorLabels" . | nindent 4 }}

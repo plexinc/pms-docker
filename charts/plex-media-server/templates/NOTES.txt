@@ -1,0 +1,12 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }}.
+
+To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }}
+  $ helm get all {{ .Release.Name }}
+
+
+Mount path for remote is available at {{ .Values.rclone.path }}
+You can use this as a volume within your other pods to view the file system for your remote.

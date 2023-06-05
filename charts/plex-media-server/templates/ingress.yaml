@@ -1,0 +1,32 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "pms-chart.fullname" . }}-ingress
+  labels:
+    name: {{ include "pms-chart.fullname" . }}-ingress
+{{ include "pms-chart.labels" . | indent 4 }}
+{{- with .Values.ingress.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+{{- if .Values.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
+{{- end }}
+  rules:
+  - host: {{ trimPrefix "https://" .Values.ingress.url }}
+    http:
+      paths:
+      - path: '/'
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "pms-chart.fullname" . }}
+            port:
+              number: 32400
+  tls:
+  - hosts:
+    - {{ trimPrefix "https://" .Values.ingress.url }}
+    secretName: {{ include "pms-chart.fullname" . }}-ingress-lets-encrypt
+{{- end -}}
