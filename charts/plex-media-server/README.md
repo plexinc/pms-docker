@@ -57,6 +57,14 @@ rm pms.tgz
 echo "Done."
 ```
 
+## Contributing
+
+Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md).
+
+## License
+
+[GNU GPLv3](./LICENSE)
+
 ## Configuration
 
 The following table lists the configurable parameters of the Pms-chart chart and their default values.
