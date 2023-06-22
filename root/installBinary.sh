@@ -6,7 +6,7 @@ addVarToConf "version" "${TAG}"
 addVarToConf "plex_build" "${PLEX_BUILD}"
 addVarToConf "plex_distro" "${PLEX_DISTRO}"
 
-if [ ! -z "${URL}" ]; then
+if [ -n "${URL}" ]; then
   echo "Attempting to install from URL: ${URL}"
   installFromRawUrl "${URL}"
 elif [ "${TAG}" != "beta" ] && [ "${TAG}" != "public" ]; then

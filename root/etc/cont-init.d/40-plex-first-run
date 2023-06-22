@@ -21,21 +21,21 @@ function setPref {
   local value="$2"
   
   count="$(xmlstarlet sel -t -v "count(/Preferences/@${key})" "${prefFile}")"
-  count=$(($count + 0))
-  if [[ $count > 0 ]]; then
+  if [[ $count -gt 0 ]]; then
     xmlstarlet ed --inplace --update "/Preferences/@${key}" -v "${value}" "${prefFile}"
   else
     xmlstarlet ed --inplace --insert "/Preferences"  --type attr -n "${key}" -v "${value}" "${prefFile}"
   fi
 }
 
-home="$(echo ~plex)"
+home=~plex
+# shellcheck source=/dev/null
 [ -f /etc/default/plexmediaserver ] && . /etc/default/plexmediaserver
 pmsApplicationSupportDir="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${home}/Library/Application Support}"
 prefFile="${pmsApplicationSupportDir}/Plex Media Server/Preferences.xml"
 
 # Setup user/group ids
-if [ ! -z "${PLEX_UID}" ]; then
+if [ -n "${PLEX_UID}" ]; then
   if [ ! "$(id -u plex)" -eq "${PLEX_UID}" ]; then
     
     # usermod likes to chown the home directory, so create a new one and use that
@@ -57,7 +57,7 @@ if [ ! -z "${PLEX_UID}" ]; then
   fi
 fi
 
-if [ ! -z "${PLEX_GID}" ]; then
+if [ -n "${PLEX_GID}" ]; then
   if [ ! "$(id -g plex)" -eq "${PLEX_GID}" ]; then
     groupmod -o -g "${PLEX_GID}" plex
   fi
@@ -67,10 +67,10 @@ fi
 if [ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]; then
   if [ -f "${prefFile}" ]; then
     if [ ! "$(stat -c %u "${prefFile}")" = "$(id -u plex)" ]; then
-      find /config \! \( -uid $(id -u plex) -gid $(id -g plex) \) -print0 | xargs -0 chown -h plex:plex
+      find /config \! \( -uid "$(id -u plex)" -gid "$(id -g plex)" \) -print0 | xargs -0 chown -h plex:plex
     fi
   else
-    find /config \! \( -uid $(id -u plex) -gid $(id -g plex) \) -print0 | xargs -0 chown -h plex:plex
+    find /config \! \( -uid "$(id -u plex)" -gid "$(id -g plex)" \) -print0 | xargs -0 chown -h plex:plex
   fi
   chown -R plex:plex /transcode
 fi
@@ -101,12 +101,12 @@ fi
 # Get server token and only turn claim token into server token if we have former but not latter.
 token="$(getPref "PlexOnlineToken")"
 if [ -z "${PLEX_CLAIM}" ] && [ -f "${PLEX_CLAIM_FILE}" ]; then
-  PLEX_CLAIM=$(cat ${PLEX_CLAIM_FILE})
+  PLEX_CLAIM=$(cat "${PLEX_CLAIM_FILE}")
 fi
-if [ ! -z "${PLEX_CLAIM}" ] && [ -z "${token}" ]; then
+if [ -n "${PLEX_CLAIM}" ] && [ -z "${token}" ]; then
   echo "Attempting to obtain server token from claim token"
   loginInfo="$(curl -X POST \
-        -H 'X-Plex-Client-Identifier: '${clientId} \
+        -H 'X-Plex-Client-Identifier: '"${clientId}" \
         -H 'X-Plex-Product: Plex Media Server'\
         -H 'X-Plex-Version: 1.1' \
         -H 'X-Plex-Provides: server' \
@@ -123,11 +123,11 @@ if [ ! -z "${PLEX_CLAIM}" ] && [ -z "${token}" ]; then
   fi
 fi
 
-if [ ! -z "${ADVERTISE_IP}" ]; then
+if [ -n "${ADVERTISE_IP}" ]; then
   setPref "customConnections" "${ADVERTISE_IP}"
 fi
 
-if [ ! -z "${ALLOWED_NETWORKS}" ]; then
+if [ -n "${ALLOWED_NETWORKS}" ]; then
   setPref "allowedNetworks" "${ALLOWED_NETWORKS}"
 fi
 
