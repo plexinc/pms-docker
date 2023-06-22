@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv bash
+#!/bin/bash
 
 echo "Starting Plex Media Server."
 home="$(echo ~plex)"
