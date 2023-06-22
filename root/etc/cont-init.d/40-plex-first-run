@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv bash
+#!/bin/bash
 
 # If we are debugging, enable trace
 if [ "${DEBUG,,}" = "true" ]; then
