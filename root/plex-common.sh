@@ -1,4 +1,8 @@
 #!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+PLEX_UPDATE_CHANNEL=${PLEX_UPDATE_CHANNEL:-}
 
 CONT_CONF_FILE="/version.txt"
 

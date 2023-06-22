@@ -1,4 +1,9 @@
 #!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+DEBUG=${DEBUG:-}
+TAG=${TAG:-}
 
 # If we are debugging, enable trace
 if [ "${DEBUG,,}" = "true" ]; then
