@@ -1,0 +1,1 @@
+docker buildx build --progress=plain --push --security-opt seccomp:unconfined  --platform linux/amd64,linux/386,linux/arm/v7,linux/arm64   --build-arg AUTOUPDATE=TRUE -f ../Dockerfile --tag INSERT_TAG_HERE:autoupdate ..
