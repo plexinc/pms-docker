@@ -1,4 +1,16 @@
 #!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# set defaults
+DEBUG=${DEBUG:-}
+PLEX_UID=${PLEX_UID:-}
+PLEX_GID=${PLEX_GID:-}
+CHANGE_CONFIG_DIR_OWNERSHIP=${CHANGE_CONFIG_DIR_OWNERSHIP:-}
+PLEX_CLAIM=${PLEX_CLAIM:-}
+PLEX_CLAIM_FILE=${PLEX_CLAIM_FILE:-}
+ADVERTISE_IP=${ADVERTISE_IP:-}
+ALLOWED_NETWORKS=${ALLOWED_NETWORKS:-}
 
 # If we are debugging, enable trace
 if [ "${DEBUG,,}" = "true" ]; then

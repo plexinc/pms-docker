@@ -1,4 +1,6 @@
 #!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
 
 . /plex-common.sh
 
@@ -10,6 +12,8 @@ if [ -n "${URL}" ]; then
   echo "Attempting to install from URL: ${URL}"
   installFromRawUrl "${URL}"
 elif [ "${TAG}" != "beta" ] && [ "${TAG}" != "public" ]; then
+  remoteVersion=
+  remoteFile=
   getVersionInfo "${TAG}" "" remoteVersion remoteFile
 
   if [ -z "${remoteVersion}" ] || [ -z "${remoteFile}" ]; then
