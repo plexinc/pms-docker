@@ -5,4 +5,4 @@ IFS=$'\n\t'
 # This is just a helper script to quickly test local Dockerfile builds, please run setup-build-env.sh once
 
 # https://github.com/tianon/docker-brew-ubuntu-core/issues/183 explains why need to use --security-opt seccomp:unconfined
-docker buildx build --security-opt seccomp:unconfined -o type=docker,name=pms-armv7 --load --platform linux/arm/v7 --build-arg AUTOUPDATE=TRUE -f ../Dockerfile.armv7 ..
+docker buildx build --progress=plain --security-opt seccomp:unconfined -o type=docker,name=pms-armv7 --load --platform linux/arm/v7 --build-arg AUTOUPDATE=TRUE -f ../Dockerfile ..
