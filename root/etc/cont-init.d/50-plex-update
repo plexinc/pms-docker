@@ -4,7 +4,7 @@
 if [ "${DEBUG,,}" = "true" ]; then
   set -x
 fi
-
+# shellcheck source=../../plex-common.sh
 . /plex-common.sh
 
 function getPref {
@@ -14,6 +14,7 @@ function getPref {
 }
 
 # Get token
+# shellcheck source=/dev/null
 [ -f /etc/default/plexmediaserver ] && . /etc/default/plexmediaserver
 pmsApplicationSupportDir="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${HOME}/Library/Application Support}"
 prefFile="${pmsApplicationSupportDir}/Plex Media Server/Preferences.xml"

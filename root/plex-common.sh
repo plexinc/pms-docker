@@ -5,17 +5,18 @@ CONT_CONF_FILE="/version.txt"
 function addVarToConf {
   local variable="$1"
   local value="$2"
-  if [ ! -z "${variable}" ]; then
-    echo ${variable}=${value} >> ${CONT_CONF_FILE}
+  if [ -n "${variable}" ]; then
+    echo "$variable"="$value" >> $CONT_CONF_FILE
   fi
 }
 
 function readVarFromConf {
   local variable="$1"
   local -n readVarFromConf_value=$2
-  if [ ! -z "${variable}" ]; then
-    readVarFromConf_value="$(grep -w ${variable} ${CONT_CONF_FILE} | cut -d'=' -f2 | tail -n 1)"
+  if [ -n "${variable}" ]; then
+    readVarFromConf_value="$(grep -w "$variable" $CONT_CONF_FILE | cut -d'=' -f2 | tail -n 1)"
   else
+    # shellcheck disable=SC2034
     readVarFromConf_value=NULL
   fi
 }
@@ -26,9 +27,9 @@ function getVersionInfo {
   local -n getVersionInfo_remoteVersion=$3
   local -n getVersionInfo_remoteFile=$4
 
-  local channel
+  local channel=
   local tokenNeeded=1
-  if [ ! -z "${PLEX_UPDATE_CHANNEL}" ] && [ "${PLEX_UPDATE_CHANNEL}" > 0 ]; then
+  if [ -n "${PLEX_UPDATE_CHANNEL}" ] && [ "${PLEX_UPDATE_CHANNEL}" -gt 0 ]; then
     channel="${PLEX_UPDATE_CHANNEL}"
   elif [ "${version,,}" = "beta" ]; then
     channel=8
@@ -40,6 +41,8 @@ function getVersionInfo {
   fi
 
   # Read container architecture info from file created when building Docker image
+  local plexBuild=
+  local plexDistro=
   readVarFromConf "plex_build" plexBuild
   readVarFromConf "plex_distro" plexDistro
 
@@ -48,10 +51,13 @@ function getVersionInfo {
     url="${url}&X-Plex-Token=${token}"
   fi
 
-  local versionInfo="$(curl -s "${url}")"
+  local versionInfo=
+  versionInfo="$(curl -s "${url}")"
 
   # Get update info from the XML.  Note: This could countain multiple updates when user specifies an exact version with the lowest first, so we'll use first always.
+  # shellcheck disable=SC2034
   getVersionInfo_remoteVersion=$(echo "${versionInfo}" | sed -n 's/.*Release.*version="\([^"]*\)".*/\1/p')
+  # shellcheck disable=SC2034
   getVersionInfo_remoteFile=$(echo "${versionInfo}" | sed -n 's/.*file="\([^"]*\)".*/\1/p')
 }
 

@@ -22,10 +22,10 @@ do
     fi
 
     # If plex user isn't part of this group, add them
-    if [ ! $(getent group "${CURRENT_GROUP}" | grep &>/dev/null plex) ]; then
+    if ! getent group "${CURRENT_GROUP}" | grep -q plex; then
       usermod -a -G "${CURRENT_GROUP}" plex
     fi
 
-    GROUP_COUNT=$(($GROUP_COUNT + 1))
+    GROUP_COUNT=$((GROUP_COUNT + 1))
 done
 
