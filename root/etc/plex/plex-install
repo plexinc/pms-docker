@@ -1,0 +1,23 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+DEBUG=${DEBUG:-}
+
+# If we are debugging, enable trace
+if [ "${DEBUG,,}" = "true" ]; then
+  set -x
+fi
+
+# shellcheck source=../../plex-common.sh
+. /plex-common.sh
+
+CACHED_URL=
+[[ -r /config/install/plexmediaserver.url ]] && CACHED_URL=$(< /config/install/plexmediaserver.url)
+if [ -n "$CACHED_URL" ] && [ -f  /config/install/plexmediaserver.deb ]; then
+  echo "Installing previously downloaded plex version..."
+  installFromRawUrl "$CACHED_URL"
+else
+  echo "Downloading latest plex version..."
+  exec /etc/plex/plex-update
+fi

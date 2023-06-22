@@ -16,6 +16,7 @@ RUN \
       xmlstarlet \
       uuid-runtime \
       unrar \
+      cron \
     && \
     \
 # Fetch and extract S6 overlay
@@ -47,7 +48,12 @@ RUN \
 EXPOSE 32400/tcp 8324/tcp 32469/tcp 1900/udp 32410/udp 32412/udp 32413/udp 32414/udp
 VOLUME /config /transcode
 
-ENV CHANGE_CONFIG_DIR_OWNERSHIP="true" \
+ARG AUTOUPDATE=false
+ARG TAG=beta
+ARG URL=
+
+ENV TAG=${TAG} \
+    CHANGE_CONFIG_DIR_OWNERSHIP="true" \
     HOME="/config" \
     \
     TERM="xterm" \
@@ -59,9 +65,6 @@ ENV CHANGE_CONFIG_DIR_OWNERSHIP="true" \
     S6_KILL_GRACETIME=5000 \
     S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0 \
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2
-
-ARG TAG=beta
-ARG URL=
 
 COPY root/ /
 

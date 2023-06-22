@@ -8,8 +8,7 @@ IFS=$'\n\t'
 # the container with "-it" rather, run it in background (so we get log output) then
 # exec a bash process to enter the container. 
 
-trap "trap - SIGTERM && docker stop pms-armv7" SIGINT SIGTERM EXIT
+trap "trap - SIGTERM && docker stop pms-arm64" SIGINT SIGTERM EXIT
 docker run --rm --name pms-arm64 --platform linux/arm64 -e DEBUG=true pms-arm64:latest &
 sleep 5
 docker exec -it pms-arm64 bash
-
