@@ -1,0 +1,15 @@
+#!/bin/bash 
+set -euo pipefail
+IFS=$'\n\t'
+
+DEBUG=${DEBUG:-}
+
+# If we are debugging, enable trace
+if [ "${DEBUG,,}" = "true" ]; then
+  set -x
+fi
+
+# shellcheck source=../../plex-envvars
+. /plex-envvars
+printenv > /etc/environment
+exec cron -f

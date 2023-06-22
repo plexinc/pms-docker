@@ -63,24 +63,50 @@ function getVersionInfo {
   getVersionInfo_remoteVersion=$(echo "${versionInfo}" | sed -n 's/.*Release.*version="\([^"]*\)".*/\1/p')
   # shellcheck disable=SC2034
   getVersionInfo_remoteFile=$(echo "${versionInfo}" | sed -n 's/.*file="\([^"]*\)".*/\1/p')
+  # shellcheck disable=SC2034
+  getVersionInfo_remoteFileHashSha256=$(echo "${versionInfo}" | sed -n 's/.*fileHashSha256="\([^"]*\)".*/\1/p')
 }
 
 
 function installFromUrl {
-  installFromRawUrl "https://plex.tv/${1}"
+  installFromRawUrl "https://plex.tv/${1}" "${2}"
 }
 
 function installFromRawUrl {
   local remoteFile="$1"
-  curl -J -L -o /tmp/plexmediaserver.deb "${remoteFile}"
-  local last=$?
+  local expectedSha256="${2:-}"
 
+  # if download url matches and donwload is cached, then install it without download
+  [[ -r /config/install/plexmediaserver.url ]] && oldurl=$(< /config/install/plexmediaserver.url)
+  if [ "$remoteFile" = "${oldurl:-}" ] && [ -f /config/install/plexmediaserver.deb ]; then
+     install "$remoteFile"
+     return $?
+  fi
+
+  curl --create-dirs -J -L -o /config/install/tmp/plexmediaserver.deb "${remoteFile}"
+  local last=$?
+  local sha256;
+  sha256=$(sha256sum  /config/install/tmp/plexmediaserver.deb | awk '{ print $1 }')
+  echo "$sha256" > /config/install/tmp/plexmediaserver.sha256
+  echo "$remoteFile" > /config/install/tmp/plexmediaserver.url
   # test if deb file size is ok, or if download failed
-  if [[ "$last" -gt "0" ]] || [[ $(stat -c %s /tmp/plexmediaserver.deb) -lt 10000 ]]; then
-    echo "Failed to fetch update"
+  if [[ "$last" -gt "0" ]] || [[ $(stat -c %s /config/install/tmp/plexmediaserver.deb) -lt 10000 ]]; then
+    rm -rf /config/install/tmp
+    echo "Failed to fetch update: curl returned $last"
+    exit 1
+  fi
+  # compare sha256, if provided
+  if [ -n "$expectedSha256" ] && [ ! "$expectedSha256" = "$sha256" ]; then
+    rm -rf /config/install/tmp
+    echo "Failed to fetch update: sha256sum does not match: expected=$expectedSha256 actual=$sha256"
     exit 1
   fi
 
-  dpkg -i --force-confold --force-architecture  /tmp/plexmediaserver.deb
-  rm -f /tmp/plexmediaserver.deb
+  # looks good, move tmp into position
+  mv /config/install/tmp/* /config/install && rm -rf /config/install/tmp
+  install "$remoteFile"
+}
+
+function install {
+  dpkg -i --force-confold --force-architecture  /config/install/plexmediaserver.deb
 }

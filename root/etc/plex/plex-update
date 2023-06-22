@@ -32,20 +32,12 @@ else
   installedVersion="none"
 fi
 
-# Read set version
-readVarFromConf "version" versionToInstall
-if [ -z "${versionToInstall}" ]; then
-  echo "No version specified in install.  Broken image"
-  exit 1
-fi
-
-# Short-circuit test of version before remote check to see if it's already installed.
-if [ "${versionToInstall}" = "${installedVersion}" ]; then
-  exit 0
-fi
 
 # Get updated version number
-getVersionInfo "${versionToInstall}" "${token}" remoteVersion remoteFile
+remoteVersion=
+remoteFile=
+remoteFileHashSha256=
+getVersionInfo "${TAG}" "${token}" remoteVersion remoteFile remoteFileHashSha256
 
 if [ -z "${remoteVersion}" ] || [ -z "${remoteFile}" ]; then
   echo "Could not get update version"
@@ -54,9 +46,22 @@ fi
 
 # Check if there's no update required
 if [ "${remoteVersion}" = "${installedVersion}" ]; then
+  echo "$(date) Update check: no updates found."
   exit 0
 fi
 
 # Do update process
-echo "Attempting to upgrade to: ${remoteVersion}"
-installFromUrl "${remoteFile}"
+wasrunning=false
+echo "$(date) Attempting to upgrade to: ${remoteVersion}"
+if [ -d "/run/s6/legacy-services/plex" ]; then
+  wasrunning=true
+  echo "$(date) Bringing down Plex Media Server..."
+  s6-svc -wD -d /run/s6/legacy-services/plex
+fi
+echo "$(date) Downloading and installing..."
+installFromUrl "${remoteFile}" "${remoteFileHashSha256}"
+if [ "$wasrunning" = true ]; then
+  echo "$(date) Bringing up Plex Media Server..."
+  s6-svc -wU -u /run/s6/legacy-services/plex
+fi
+echo "$(date) Plex Successfully Updated!"
