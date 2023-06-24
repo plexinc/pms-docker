@@ -39,6 +39,7 @@ RUN \
       uuid-runtime \
       unrar \
       cron \
+      multitail \
     && \
     \
 # Fetch and extract S6 overlay
