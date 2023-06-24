@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 DEBUG=${DEBUG:-}
-TAG=${TAG:-}
+AUTO_UPDATE_CHANNEL=${AUTO_UPDATE_CHANNEL:-}
 
 # If we are debugging, enable trace
 if [ "${DEBUG,,}" = "true" ]; then
@@ -32,12 +32,11 @@ else
   installedVersion="none"
 fi
 
-
 # Get updated version number
 remoteVersion=
 remoteFile=
 remoteFileHashSha256=
-getVersionInfo "${TAG}" "${token}" remoteVersion remoteFile remoteFileHashSha256
+getVersionInfo "${AUTO_UPDATE_CHANNEL}" "${token}" remoteVersion remoteFile remoteFileHashSha256
 
 if [ -z "${remoteVersion}" ] || [ -z "${remoteFile}" ]; then
   echo "Could not get update version"

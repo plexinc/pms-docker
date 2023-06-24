@@ -69,7 +69,7 @@ function getVersionInfo {
 
 
 function installFromUrl {
-  installFromRawUrl "https://plex.tv/${1}" "${2}"
+  installFromRawUrl "https://plex.tv/${1}" "${2:-}"
 }
 
 function installFromRawUrl {
@@ -108,5 +108,5 @@ function installFromRawUrl {
 }
 
 function install {
-  dpkg -i --force-confold --force-architecture  /config/install/plexmediaserver.deb
+  dpkg -i --force-confold /config/install/plexmediaserver.deb
 }
