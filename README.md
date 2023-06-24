@@ -148,7 +148,7 @@ Since containers lose their state every time they are restarted, the binary is c
 This container will automatically check for new updates every day between 4:00am - 4:30am (according to timezone in `TZ`).
 
 - **AUTO_UPDATE_CHANNEL** This variable can only be `public` or `beta` (default). The `public` value restricts this check to public versions only whereas `beta` value will fetch beta versions.  If the server is not logged in or you do not have Plex Pass on your account, the `beta` tagged images will be restricted to publicly available versions only.
-
+- **FORCE_UPDATE** Set this variable to `true` in order to ignore previously cached binaries in `/config/install` upon startup. This is generally not required, but provided just-in-case. You can also manually force an update by simply deleting the `/config/install` directory.
 
 To view the Docker images head over to [https://hub.docker.com/r/plexinc/pms-docker/tags/](https://hub.docker.com/r/plexinc/pms-docker/tags/)
 

@@ -2,7 +2,10 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+# This script is called by the autoupdate, beta, and public tags only
+
 DEBUG=${DEBUG:-}
+FORCE_UPDATE=${FORCE_UPDATE:-}
 
 # If we are debugging, enable trace
 if [ "${DEBUG,,}" = "true" ]; then
@@ -14,7 +17,7 @@ fi
 
 CACHED_URL=
 [[ -r /config/install/plexmediaserver.url ]] && CACHED_URL=$(< /config/install/plexmediaserver.url)
-if [ -n "$CACHED_URL" ] && [ -f  /config/install/plexmediaserver.deb ]; then
+if [ ! "${FORCE_UPDATE,,}" = "true" ] && [ -n "$CACHED_URL" ] && [ -f  /config/install/plexmediaserver.deb ]; then
   echo "Installing previously downloaded plex version..."
   installFromRawUrl "$CACHED_URL"
 else

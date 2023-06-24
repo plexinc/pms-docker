@@ -3,6 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 PLEX_UPDATE_CHANNEL=${PLEX_UPDATE_CHANNEL:-}
+FORCE_UPDATE=${FORCE_UPDATE:-}
 
 CONT_CONF_FILE="/version.txt"
 
@@ -76,11 +77,11 @@ function installFromRawUrl {
   local remoteFile="$1"
   local expectedSha256="${2:-}"
 
-  # if download url matches and donwload is cached, then install it without download
+  # if download url matches and download is cached, then install it without download
   [[ -r /config/install/plexmediaserver.url ]] && oldurl=$(< /config/install/plexmediaserver.url)
-  if [ "$remoteFile" = "${oldurl:-}" ] && [ -f /config/install/plexmediaserver.deb ]; then
-     install "$remoteFile"
-     return $?
+  if [ ! "${FORCE_UPDATE,,}" = "true" ] && [ "$remoteFile" = "${oldurl:-}" ] && [ -f /config/install/plexmediaserver.deb ]; then
+    install "$remoteFile"
+    return $?
   fi
 
   curl --create-dirs -J -L -o /config/install/tmp/plexmediaserver.deb "${remoteFile}"
