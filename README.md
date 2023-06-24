@@ -174,6 +174,8 @@ If you wish to migrate an existing directory to the docker config directory:
   - `docker exec -it plex /bin/bash`
 - See the logs given by the startup script in real time:
   - `docker logs -f plex`
+- Monitor all Plex Media Server logs:
+  - `docker exec -it plex /plex-logs.sh`
 - Restart the application:
   - `docker restart plex`
 
