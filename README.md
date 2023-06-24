@@ -94,7 +94,10 @@ The provided `docker-compose` templates use the `plexinc/pms-docker` image which
 To use `docker-compose` with ARM devices, you must first build one of the ARM images locally.
 
 ```sh
-docker build -t plexinc/pms-docker:latest -f Dockerfile.armv7 . # or arm64
+# arm 32 bit
+docker build --platform linux/arm/v7 -t plexinc/pms-docker:latest  .
+# arm 64 bit
+docker build --platform linux/arm64 -t plexinc/pms-docker:latest  .
 ```
 
 Then you can `docker-compose up`.
@@ -138,9 +141,14 @@ uid=1001(myuser) gid=1001(myuser) groups=1001(myuser)
 In the above case, if you set the `PLEX_UID` and `PLEX_GID` to `1001`, then the permissions will match that of your own user.
 
 ## Tags
-In addition to the standard version and `latest` tags, two other tags exist: `beta` and `public`. These two images behave differently than your typical containers.  These two images do **not** have any Plex Media Server binary installed.  Instead, when these containers are run, they will perform an update check and fetch the latest version, install it, and then continue execution.  They also run the update check whenever the container is restarted.  To update the version in the container, simply stop the container and start container again when you have a network connection. The startup script will automatically fetch the appropriate version and install it before starting the Plex Media Server.
+In addition to the standard version and `latest` tags, there is a special `autoupdate` tag. This container behave differently than your typical containers.  The `autoupdate` container does **not** have any Plex Media Server binary installed.  Instead, every time this container is run, it will fetch the latest version, install it and then start the Plex Media Server.
 
-The `public` restricts this check to public versions only where as `beta` will fetch beta versions.  If the server is not logged in or you do not have Plex Pass on your account, the `beta` tagged images will be restricted to publicly available versions only.
+Since containers lose their state every time they are restarted, the binary is cached in `/config/install` so it won't need to be downloaded again, but it will need to be installed every time this container starts.
+
+This container will automatically check for new updates every day between 4:00am - 4:30am (according to timezone in `TZ`).
+
+- **AUTO_UPDATE_CHANNEL** This variable can only be `public` or `beta` (default). The `public` value restricts this check to public versions only whereas `beta` value will fetch beta versions.  If the server is not logged in or you do not have Plex Pass on your account, the `beta` tagged images will be restricted to publicly available versions only.
+
 
 To view the Docker images head over to [https://hub.docker.com/r/plexinc/pms-docker/tags/](https://hub.docker.com/r/plexinc/pms-docker/tags/)
 
@@ -158,11 +166,16 @@ If you wish to migrate an existing directory to the docker config directory:
 - Note: by default Plex will claim ownership of the entire contents of the `config` dir (see CHANGE_CONFIG_DIR_OWNERSHIP for more information).  As such, there should be nothing in that dir that you do not wish for Plex to own.
 
 ## Useful information
-- Start the container: `docker start plex`
-- Stop the container: `docker stop plex`
-- Shell access to the container while it is running: `docker exec -it plex /bin/bash`
-- See the logs given by the startup script in real time: `docker logs -f plex`
-- Restart the application and upgrade to the latest version: `docker restart plex`
+- Start the container:
+  - `docker start plex`
+- Stop the container:
+  - `docker stop plex`
+- Shell access to the container while it is running:
+  - `docker exec -it plex /bin/bash`
+- See the logs given by the startup script in real time:
+  - `docker logs -f plex`
+- Restart the application:
+  - `docker restart plex`
 
 ## Fedora, CentOS, Red Hat
 
