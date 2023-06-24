@@ -2,6 +2,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+# This script is called by cron, or by plex-startup
+
 DEBUG=${DEBUG:-}
 AUTO_UPDATE_CHANNEL=${AUTO_UPDATE_CHANNEL:-}
 
@@ -33,10 +35,16 @@ else
 fi
 
 # Get updated version number
+tag=
+readVarFromConf "tag" tag
+channel=$AUTO_UPDATE_CHANNEL
+if [ "${tag,,}" = 'beta' ] || [ "${tag,,}" = 'public' ]; then
+  channel=$tag
+fi
 remoteVersion=
 remoteFile=
 remoteFileHashSha256=
-getVersionInfo "${AUTO_UPDATE_CHANNEL}" "${token}" remoteVersion remoteFile remoteFileHashSha256
+getVersionInfo "${channel}" "${token}" remoteVersion remoteFile remoteFileHashSha256
 
 if [ -z "${remoteVersion}" ] || [ -z "${remoteFile}" ]; then
   echo "Could not get update version"
