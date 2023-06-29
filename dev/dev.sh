@@ -6,9 +6,12 @@ IFS=$'\n\t'
 # Assumes this is running on Linux (any distro) using (intel/amd).
 
 # This bakes the specific binary into the image, you can override these vars on command line
-# DOCKERHUB_IMAGE=myorg/mycontainer ./dev/sh bake
+# prompt> DOCKERHUB_IMAGE=myorg/mycontainer ./dev/sh bake
 VERSION_TO_BUILD=${VERSION_TO_BUILD:-"1.32.4.7195-7c8f9d3b6"}
 DOCKERHUB_IMAGE=${DOCKERHUB_IMAGE:-"plexinc/pms-docker"}
+# launch with KEEP=true to keep the container after starting/running it - manual cleanup required when done
+# prompt> KEEP=true ./dev.sh debug arm64v8 autoupdate
+KEEP=${KEEP:-}
 
 setup() {
     # Create a multi-arch buildx builder named PlexBuilder (if it doesn't exist)
@@ -49,19 +52,33 @@ debug() {
     platform=$1
     name=$2
     autoupdate=$3
-    if [ "$autoupdate" = "autoupdate" ]; then
-        name=$name:autoupdate
-    else
-        name=$name:latest
-    fi
+    [ "$autoupdate" = "autoupdate" ] &&  name=$name:autoupdate ||  name=$name:latest
     if [[ $platform == linux/arm* ]]; then
         # shellcheck disable=SC2064
-        trap "trap - SIGTERM && docker stop debug-plex" SIGINT SIGTERM EXIT
-        docker run --rm --name debug-plex --platform "$platform" -e DEBUG=true "$name" &
+        trap "trap - SIGTERM && docker stop debug-${name/:/_}" SIGINT SIGTERM EXIT
+        if [ "${KEEP,,}" = "true" ]; then
+            if docker start "debug-${name/:/_}"; then
+                docker attach "debug-${name/:/_}" &
+            else
+                docker run --name "debug-${name/:/_}" --platform "$platform" -e DEBUG=true "$name" &
+            fi
+        else
+            docker run -rm --name "debug-${name/:/_}" --platform "$platform" -e DEBUG=true "$name" &
+        fi
         sleep 5
-        docker exec -it debug-plex bash
+        docker exec -it "debug-${name/:/_}" bash
     else
-        docker run --rm --name debug-plex --platform "$platform" -e DEBUG=true -it "$name" bash
+        if [ "${KEEP,,}" = "true" ]; then
+            if docker start "debug-${name/:/_}"; then
+                # shellcheck disable=SC2064
+                trap "trap - SIGTERM && docker stop debug-${name/:/_}" SIGINT SIGTERM EXIT
+                docker attach "debug-${name/:/_}"
+            else
+                docker run --name "debug-${name/:/_}" --platform "$platform" -e DEBUG=true -it "$name" bash
+            fi
+        else
+            docker run -rm --name "debug-${name/:/_}" --platform "$platform" -e DEBUG=true -it "$name" bash
+        fi
     fi
 }
 

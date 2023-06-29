@@ -38,7 +38,8 @@ else
   # This pre-installs the specified version in TAG into this docker image.
   remoteVersion=
   remoteFile=
-  getVersionInfo "${TAG}" "" remoteVersion remoteFile
+  remoteFileHashSha256=
+  getVersionInfo "${TAG}" "" remoteVersion remoteFile remoteFileHashSha256
 
   if [ -z "${remoteVersion}" ] || [ -z "${remoteFile}" ]; then
     echo "Could not get install version"
@@ -46,7 +47,5 @@ else
   fi
   
   echo "Attempting to install: ${remoteVersion}"
-  installFromUrl "${remoteFile}"
-  # delete unnecessary installer
-  rm -rf /config/install
+  installFromUrl "${remoteFile}" "${remoteFileHashSha256}"
 fi

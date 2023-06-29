@@ -141,14 +141,14 @@ uid=1001(myuser) gid=1001(myuser) groups=1001(myuser)
 In the above case, if you set the `PLEX_UID` and `PLEX_GID` to `1001`, then the permissions will match that of your own user.
 
 ## Tags
-In addition to the standard version and `latest` tags, there is a special `autoupdate` tag. This container behave differently than your typical containers.  The `autoupdate` container does **not** have any Plex Media Server binary installed.  Instead, every time this container is run, it will fetch the latest version, install it and then start the Plex Media Server.
+In addition to the standard version and `latest` tags, there is a special `autoupdate` tag. This container behaves differently than typical containers.  The `autoupdate` container does **not** have any Plex Media Server binary installed.  Instead, every time this container is run, it checks to see if the server is installed. If it is (because you've already started this container before) it starts the server. If it wasn't installed (because this is the first time the server is starting) it will install it, then start the server.
 
-Since containers lose their state every time they are restarted, the binary is cached in `/config/install` so it won't need to be downloaded again, but it will need to be installed every time this container starts.
-
-This container will automatically check for new updates every day between 4:00am - 4:30am (according to timezone in `TZ`).
+The `autoupdate` container will automatically check for new updates every day between 4:00am - 4:30am (according to timezone set in `TZ`).
 
 - **AUTO_UPDATE_CHANNEL** This variable can only be `public` or `beta` (default). The `public` value restricts this check to public versions only whereas `beta` value will fetch beta versions.  If the server is not logged in or you do not have Plex Pass on your account, the `beta` tagged images will be restricted to publicly available versions only.
-- **FORCE_UPDATE** Set this variable to `true` in order to ignore previously cached binaries in `/config/install` upon startup. This is generally not required, but provided just-in-case. You can also manually force an update by simply deleting the `/config/install` directory.
+
+### Forcing an update/install on startup
+- Create an empty file called `_force_` in the `/config` directory. (i.e. `touch /config/_force_`) You can also manually force an update by simply recreating the image. Just restarting the container (or stopping and starting) will not normally update the existing installation within the container.
 
 To view the Docker images head over to [https://hub.docker.com/r/plexinc/pms-docker/tags/](https://hub.docker.com/r/plexinc/pms-docker/tags/)
 
