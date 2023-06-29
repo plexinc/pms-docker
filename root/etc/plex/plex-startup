@@ -5,22 +5,14 @@ IFS=$'\n\t'
 # This script is called by the autoupdate, beta, and public tags only
 
 DEBUG=${DEBUG:-}
-FORCE_UPDATE=${FORCE_UPDATE:-}
 
 # If we are debugging, enable trace
 if [ "${DEBUG,,}" = "true" ]; then
   set -x
 fi
 
-# shellcheck source=../../plex-common.sh
-. /plex-common.sh
 
-CACHED_URL=
-[[ -r /config/install/plexmediaserver.url ]] && CACHED_URL=$(< /config/install/plexmediaserver.url)
-if [ ! "${FORCE_UPDATE,,}" = "true" ] && [ -n "$CACHED_URL" ] && [ -f  /config/install/plexmediaserver.deb ]; then
-  echo "Installing previously downloaded plex version..."
-  installFromRawUrl "$CACHED_URL"
-else
+if [ -f /config/_force_ ] || ! dpkg --get-selections plexmediaserver 2> /dev/null | grep -wq "install"; then
   echo "Downloading latest plex version..."
   exec /etc/plex/plex-update
 fi

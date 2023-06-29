@@ -3,7 +3,6 @@ set -euo pipefail
 IFS=$'\n\t'
 
 PLEX_UPDATE_CHANNEL=${PLEX_UPDATE_CHANNEL:-}
-FORCE_UPDATE=${FORCE_UPDATE:-}
 
 CONT_CONF_FILE="/version.txt"
 
@@ -31,6 +30,7 @@ function getVersionInfo {
   local token="$2"
   local -n getVersionInfo_remoteVersion=$3
   local -n getVersionInfo_remoteFile=$4
+  local -n getVersionInfo_remoteFileHashSha256=$5
 
   local channel=
   local tokenNeeded=1
@@ -77,37 +77,40 @@ function installFromRawUrl {
   local remoteFile="$1"
   local expectedSha256="${2:-}"
 
-  # if download url matches and download is cached, then install it without download
-  [[ -r /config/install/plexmediaserver.url ]] && oldurl=$(< /config/install/plexmediaserver.url)
-  if [ ! "${FORCE_UPDATE,,}" = "true" ] && [ "$remoteFile" = "${oldurl:-}" ] && [ -f /config/install/plexmediaserver.deb ]; then
+  rm -rf /tmp/plexmediaserver.deb
+  if curl --create-dirs -J -L -o /tmp/plexmediaserver.deb "${remoteFile}" ; then
+    if [ -n "$expectedSha256" ]; then
+      sha256=$(sha256sum  /tmp/plexmediaserver.deb | awk '{ print $1 }')
+      # compare sha256, if provided
+      if [ ! "$expectedSha256" = "$sha256" ]; then
+        cleanup "Download failed: sha256sum does not match: expected=$expectedSha256 actual=$sha256"
+      fi
+    else
+      # no sha256, check if size appears ok
+      if [[ $(stat -c %s /tmp/plexmediaserver.deb) -lt 10000 ]]; then
+        # shellcheck disable=SC2119
+        cleanup "Download failed: size appears wrong"
+      fi
+    fi
+    # looks good, move tmp into position
+
     install "$remoteFile"
-    return $?
+  else
+    # shellcheck disable=SC2119
+    cleanup
   fi
+}
 
-  curl --create-dirs -J -L -o /config/install/tmp/plexmediaserver.deb "${remoteFile}"
-  local last=$?
-  local sha256;
-  sha256=$(sha256sum  /config/install/tmp/plexmediaserver.deb | awk '{ print $1 }')
-  echo "$sha256" > /config/install/tmp/plexmediaserver.sha256
-  echo "$remoteFile" > /config/install/tmp/plexmediaserver.url
-  # test if deb file size is ok, or if download failed
-  if [[ "$last" -gt "0" ]] || [[ $(stat -c %s /config/install/tmp/plexmediaserver.deb) -lt 10000 ]]; then
-    rm -rf /config/install/tmp
-    echo "Failed to fetch update: curl returned $last"
-    exit 1
-  fi
-  # compare sha256, if provided
-  if [ -n "$expectedSha256" ] && [ ! "$expectedSha256" = "$sha256" ]; then
-    rm -rf /config/install/tmp
-    echo "Failed to fetch update: sha256sum does not match: expected=$expectedSha256 actual=$sha256"
-    exit 1
-  fi
-
-  # looks good, move tmp into position
-  mv /config/install/tmp/* /config/install && rm -rf /config/install/tmp
-  install "$remoteFile"
+function cleanup {
+  local msg="${1:-"Download failed"}"
+  rm -rf /tmp/plexmediaserver.deb
+  echo "$msg"
+  exit 1
 }
 
 function install {
-  dpkg -i --force-confold /config/install/plexmediaserver.deb
+  dpkg -i --force-confold /tmp/plexmediaserver.deb
+  rm -rf /tmp/plexmediaserver.deb
+  # clean up _force_ flag, if exists
+  rm -rf /config/_force_
 }
