@@ -31,7 +31,7 @@ elif [ "${TAG,,}" = "autoupdate" ] || [ "${TAG,,}" = "beta" ] || [ "${TAG,,}" = 
   echo "SHELL=/bin/bash" > /etc/crontab
   echo "$(env | grep PATH):/command" >> /etc/crontab
   # Specify cron job: be nice to Plex servers - space out updates at 4:00am over 30m window
-  echo "0 4 * * * root perl -le 'sleep rand 30' ; /etc/plex/plex-update > /proc/1/fd/1 2>&1" >> /etc/crontab
+  echo "0 4 * * * root perl -le 'sleep rand 1800' ; /etc/plex/plex-update > /proc/1/fd/1 2>&1" >> /etc/crontab
   echo "Adding plex-startup to cont-init.d"
   ln -s /etc/plex/plex-startup /etc/cont-init.d/099-plex-startup
 else
