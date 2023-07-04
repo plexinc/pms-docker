@@ -1,0 +1,11 @@
+{{- if .Values.initContainer.script -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name:  {{ include "pms-chart.fullname" . }}-init-script
+  labels:
+{{- include "pms-chart.labels" . | nindent 4 }}
+data:
+  init.sh: |
+{{ .Values.initContainer.script | indent 4 }}
+{{- end -}}

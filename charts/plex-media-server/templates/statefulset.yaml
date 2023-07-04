@@ -1,0 +1,173 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "pms-chart.fullname" . }}
+  labels:
+    name: {{ include "pms-chart.fullname" . }}
+{{ include "pms-chart.labels" . | indent 4 }}
+  {{- with .Values.statefulSet.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+  {{- end }}
+spec:
+  serviceName: {{ include "pms-chart.fullname" . }}
+  selector:
+    matchLabels:
+      {{- include "pms-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "pms-chart.labels" . | nindent 8 }}
+    spec:
+      volumes:
+      - name: pms-transcode
+        emptyDir: {}
+      {{- if and .Values.rclone.enabled .Values.rclone.configSecret }}
+      {{- range .Values.rclone.remotes }}
+      - name: rclone-media-{{ (split ":" .)._0 }}
+        emptyDir: {}
+      {{- end }}
+      - name: rclone-config
+        emptyDir: {}
+      - name: rclone-config-data
+        secret:
+          secretName: {{ .Values.rclone.configSecret }}
+      {{- end }}
+      {{- if .Values.initContainer.script }}
+      - name: init-script-configmap
+        configMap:
+          defaultMode: 0700
+          name: {{ include "pms-chart.fullname" . }}-init-script
+      {{- end }}
+      {{- if .Values.extraVolumes }}
+{{ toYaml .Values.extraVolumes | indent 6 }}
+      {{- end }}
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      terminationGracePeriodSeconds: 120
+      initContainers:
+      {{- if .Values.initContainer.script }}
+      - name: {{ include "pms-chart.fullname" . }}-pms-init
+        image: {{ include "pms-chart.init_image" . }}
+        command: ["/init/init.sh"]
+        volumeMounts:
+        - name: pms-config
+          mountPath: /config
+        - name: init-script-configmap
+          mountPath: /init
+      {{- if .Values.extraVolumeMounts }}
+{{ toYaml .Values.extraVolumeMounts | indent 8}}
+      {{- end }}
+      {{- end }}
+      {{- if and .Values.rclone.enabled .Values.rclone.configSecret }}
+      - name: {{ include "pms-chart.fullname" . }}-config
+        image: {{ include "pms-chart.init_image" . }}
+        command:
+          - cp
+        args:
+          - -v
+          - /in/rclone.conf
+          - /out/rclone.conf
+        volumeMounts:
+        - name: rclone-config-data
+          mountPath: /in
+          readOnly: true
+        - name: rclone-config
+          mountPath: /out
+      {{- end }}
+      containers:
+      - name: {{ include "pms-chart.fullname" . }}-pms
+        image: {{ include "pms-chart.image" . }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 32400
+          name: pms
+        env:
+        {{- if .Values.ingress.enabled }}
+        - name: ADVERTISE_IP
+          value: {{ trimPrefix "https://" .Values.ingress.url }}
+        {{- end }}
+        {{- range $key, $value := .Values.extraEnv }}
+        - name: {{ $key }}
+          value: {{ $value }}
+        {{- end }}
+        {{- with .Values.pms.resources }}
+        resources:
+{{ toYaml . | indent 10 }}
+      {{- end }}
+        volumeMounts:
+        - name: pms-config
+          mountPath: /config
+        - name: pms-transcode
+          mountPath: /transcode
+      {{- if and .Values.rclone.enabled .Values.rclone.configSecret }}
+      {{- range .Values.rclone.remotes }}
+        - name: rclone-media-{{ (split ":" .)._0 }}
+          mountPath: "/data/{{ (split ":" .)._0 }}"
+          mountPropagation: HostToContainer
+      {{- end }}
+      {{- end }}
+      {{- if .Values.extraVolumeMounts }}
+{{ toYaml .Values.extraVolumeMounts | indent 8 }}
+      {{- end }}
+    {{- if and .Values.rclone.enabled .Values.rclone.configSecret }}
+    {{- range .Values.rclone.remotes }}
+      - name: {{ include "pms-chart.fullname" $ }}-rclone-{{ (split ":" .)._0 }}
+        image: {{ include "pms-chart.rclone_image" $ }}
+        imagePullPolicy: {{ $.Values.rclone.image.pullPolicy }}
+        args:
+          - mount
+          - "{{ . }}"
+          - "/data/{{ (split ":" .)._0 }}"
+          - --config=/etc/rclone/rclone.conf
+          - --allow-non-empty
+          - --allow-other
+        {{- if $.Values.rclone.readOnly }}
+          - --read-only
+        {{- end }}
+        {{- range $.Values.rclone.additionalArgs }}
+          - {{ . }}
+        {{- end }}
+        {{- with $.Values.rclone.resources }}
+        resources:
+{{ toYaml . | indent 10 }}
+      {{- end }}
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh","-c","fusermount -uz /data/{{ (split ":" .)._0 }}"]
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+              - SYS_ADMIN
+        volumeMounts:
+        - name: rclone-config
+          mountPath: /etc/rclone
+        - name: rclone-media-{{ (split ":" .)._0 }}
+          mountPath: "/data/{{ (split ":" .)._0 }}"
+          mountPropagation: Bidirectional
+      {{- end }}
+      {{- end }}
+      {{- with .Values.extraContainers }}
+{{- toYaml . | nindent 6 }}
+      {{- end }}
+  nodeSelector:
+    {{- toYaml .Values.nodeSelector | nindent 4 }}
+  affinity:
+    {{- toYaml .Values.affinity | nindent 4 }}
+  tolerations:
+    {{- toYaml .Values.tolerations | nindent 4 }}
+  volumeClaimTemplates:
+  - metadata:
+      name: pms-config
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      {{- if .Values.pms.storageClassName }}
+      storageClassName: {{ .Values.pms.storageClassName }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.pms.configStorage }}
