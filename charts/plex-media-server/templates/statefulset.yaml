@@ -171,4 +171,3 @@ spec:
       resources:
         requests:
           storage: {{ .Values.pms.configStorage }}
-
