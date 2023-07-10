@@ -1,7 +1,7 @@
 # plex-media-server Chart
 ===========
 
-A Helm chart for deploying the a Plex Personal Media Server(PMS) server.
+A Helm chart for deploying the Plex Personal Media Server(PMS) server.
 
 While Plex is responsible for maintaining this Helm chart, we cannot provide support for troubleshooting related to its usage. For community assistance, please visit our [support forums](https://forums.plex.tv/).
 
