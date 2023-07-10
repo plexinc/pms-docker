@@ -1,9 +1,4 @@
-# Default values for pms-chart.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
 # The docker image information for the pms application
-
 image:
   registry: index.docker.io
   repository: plexinc/pms-docker
@@ -48,7 +43,6 @@ pms:
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-
 
 # A basic image that will convert the configmap to a file in the rclone config volume
 # this is ignored if rclone is not enabled
