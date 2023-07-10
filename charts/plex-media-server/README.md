@@ -39,6 +39,7 @@ However, this one _does_ require that two commands are run manually once the ini
 2. Once the file is uploaded copy rename it on the pod to the correct name that will be processed `kubectl exec -n <namespace> --stdin --tty <pod>  -c <release name>-pms-chart-pms-init h  -- mv /pms.tgz.up /pms.tgz`
 
 The file is being uploaded with a temporary name so that the script does not start trying to unpack the database until it has finished uploading.
+
 ```sh
 #!/bin/sh
 echo "waiting for pre-existing pms database to uploaded..."
