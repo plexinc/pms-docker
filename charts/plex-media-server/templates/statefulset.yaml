@@ -20,11 +20,11 @@ spec:
         {{- include "pms-chart.labels" . | nindent 8 }}
     spec:
       tolerations:
-      {{- toYaml .Values.tolerations | nindent 6 }}
+        {{- toYaml .Values.tolerations | nindent 8 }}
       nodeSelector:
-      {{- toYaml .Values.nodeSelector | nindent 6 }}
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
       affinity:
-      {{- toYaml .Values.affinity | nindent 8 }}
+        {{- toYaml .Values.affinity | nindent 8 }}
       volumes:
       - name: pms-transcode
         emptyDir: {}
