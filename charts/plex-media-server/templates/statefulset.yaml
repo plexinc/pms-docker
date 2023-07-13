@@ -19,6 +19,12 @@ spec:
       labels:
         {{- include "pms-chart.labels" . | nindent 8 }}
     spec:
+      tolerations:
+      {{- toYaml .Values.tolerations | nindent 6 }}
+      nodeSelector:
+      {{- toYaml .Values.nodeSelector | nindent 6 }}
+      affinity:
+      {{- toYaml .Values.affinity | nindent 6 }}
       volumes:
       - name: pms-transcode
         emptyDir: {}
@@ -154,12 +160,6 @@ spec:
       {{- with .Values.extraContainers }}
 {{- toYaml . | nindent 6 }}
       {{- end }}
-  nodeSelector:
-    {{- toYaml .Values.nodeSelector | nindent 4 }}
-  affinity:
-    {{- toYaml .Values.affinity | nindent 4 }}
-  tolerations:
-    {{- toYaml .Values.tolerations | nindent 4 }}
   volumeClaimTemplates:
   - metadata:
       name: pms-config
