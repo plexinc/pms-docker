@@ -24,7 +24,7 @@ spec:
       nodeSelector:
       {{- toYaml .Values.nodeSelector | nindent 6 }}
       affinity:
-      {{- toYaml .Values.affinity | nindent 6 }}
+      {{- toYaml .Values.affinity | nindent 8 }}
       volumes:
       - name: pms-transcode
         emptyDir: {}
