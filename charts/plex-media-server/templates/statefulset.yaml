@@ -94,7 +94,7 @@ spec:
         env:
         {{- if .Values.ingress.enabled }}
         - name: ADVERTISE_IP
-          value: {{ trimPrefix "https://" .Values.ingress.url }}
+          value: {{ .Values.ingress.url }}:443
         {{- end }}
         {{- range $key, $value := .Values.extraEnv }}
         - name: {{ $key }}
