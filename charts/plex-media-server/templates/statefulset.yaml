@@ -19,6 +19,7 @@ spec:
       labels:
         {{- include "pms-chart.labels" . | nindent 8 }}
     spec:
+      serviceAccountName: {{ include "pms-chart.serviceAccountName" . }}
       tolerations:
         {{- toYaml .Values.tolerations | nindent 8 }}
       nodeSelector:
