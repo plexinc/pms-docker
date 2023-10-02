@@ -116,6 +116,7 @@ The following table lists the configurable parameters of the Pms-chart chart and
 | `nodeSelector` |  | `{}` |
 | `tolerations` |  | `[]` |
 | `affinity` |  | `{}` |
+| `priorityClassName` |  | `""` |
 | `commonLabels` | Labels that will be added to all resources created by the chart  | `{}` |
 | `extraEnv` | Environment variables that will be added to the PMS container | `{}` |
 | `extraVolumeMounts` | Additional volume mount configuration blocks for the pms container | `[]` |
