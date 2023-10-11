@@ -154,6 +154,8 @@ tolerations: []
 
 affinity: {}
 
+priorityClassName: ""
+
 # Common Labels for all resources created by this chart.
 commonLabels: {}
 
