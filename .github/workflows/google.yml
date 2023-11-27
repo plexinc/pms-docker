@@ -24,7 +24,7 @@ env:
   DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
   REPOSITORY: samples # TODO: update to Artifact Registry docker repository
   IMAGE: static-site
-            - name: Setup Node.js environment
+  name: Setup Node.js environment
   uses: actions/setup-node@v4.0.0
   with:
     # Set always-auth in npmrc.
