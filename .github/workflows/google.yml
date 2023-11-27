@@ -28,7 +28,7 @@ on:
   uses: actions/setup-node@v4.0.0
   with: string
     # Set always-auth in npmrc.
-    always-auth: # optional, default is false
+    always-auth: # optional, default is False
     # Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.
     node-version: # optional
     # File containing the version Spec of the version to use.  Examples: .nvmrc, .node-version, .tool-versions.
