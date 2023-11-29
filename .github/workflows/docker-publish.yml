@@ -4,7 +4,7 @@ name: Docker
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
-
+[![Docker](https://github.com/Servingmen69/pms-docker/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/Servingmen69/pms-docker/actions/workflows/docker-publish.yml)
 on:
   schedule:
     - cron: '38 11 * * *'
