@@ -1,14 +1,23 @@
 version: '2'
+
 services:
   plex:
     container_name: plex
     image: plexinc/pms-docker
     restart: unless-stopped
+
     environment:
       - TZ=America/Detroit
       - PLEX_CLAIM=<claimToken>
+
     network_mode: host
+
     volumes:
-      - plex_db:/config
-      - <path/to/transcode/temp>:/transcode
-      - <path/to/media>:/data
+      - type: volume
+          source: plex_db
+          target: /config
+      - type: tmpfs
+        target: /data
+
+volumes:
+  plex_db:
