@@ -19,6 +19,8 @@ services:
       - type: volume
         source: plex_db
         target: /config
+        volue:
+          nocopy: true
       - type: tmpfs
         target: /transcode
 
