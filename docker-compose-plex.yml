@@ -13,11 +13,14 @@ services:
     network_mode: host
 
     volumes:
-      - type: volume
-          source: plex_db
-          target: /config
-      - type: tmpfs
+      - type: bind
+        source: /media
         target: /data
+      - type: volume
+        source: plex_db
+        target: /config
+      - type: tmpfs
+        target: /transcode
 
 volumes:
   plex_db:
