@@ -21,11 +21,32 @@ services:
       - type: volume
         source: plex_db
         target: /config
-        volue:
+        volume:
           nocopy: true
 
       - type: tmpfs
         target: /transcode
 
+## Overseer
+  overseerr:
+    image: sctx/overseerr
+    container_name: overseerr
+    restart: unless-stopped
+
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=America/Detroit
+
+    ports:
+      - 5055:5055
+
+    volumes:
+      - type: volume
+        source: overseer_config
+        target: /app/config
+        volume:
+          nocopy: true
+
+## Volumes
 volumes:
   plex_db:
