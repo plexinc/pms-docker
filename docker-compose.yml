@@ -4,7 +4,14 @@ services:
   plex:
     container_name: plex
     image: plexinc/pms-docker
-    # runtime: nvidia
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+
     restart: unless-stopped
 
     environment:
