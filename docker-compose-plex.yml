@@ -12,10 +12,12 @@ services:
       - PLEX_CLAIM=<claimToken>
 
     network_mode: host
+    ports:
+    - 32400:32400/tcp
 
     volumes:
       - type: bind
-        source: /media
+        source: /data
         target: /data
 
       - type: volume
