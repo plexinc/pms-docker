@@ -4,6 +4,7 @@ services:
   plex:
     container_name: plex
     image: plexinc/pms-docker
+    command: nvidia-smi
     runtime: nvidia
     deploy:
       resources:
