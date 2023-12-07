@@ -9,7 +9,7 @@ services:
 
     environment:
       - TZ=America/Detroit
-      - PLEX_CLAIM=<claimToken>
+      # - PLEX_CLAIM=<claimToken>
 
     network_mode: host
     ports:
