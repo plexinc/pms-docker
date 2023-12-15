@@ -1,8 +1,4 @@
 #!/bin/bash
-set -euo pipefail
-IFS=$'\n\t'
-
-DEBUG=${DEBUG:-}
 
 # Check to make sure the devices exists.  If not, exit as there is nothing for us to do
 if [ ! -e /dev/dri ] && [ ! -e /dev/dvb ]; then
