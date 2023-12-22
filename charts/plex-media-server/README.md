@@ -5,6 +5,28 @@ A Helm chart for deploying the Plex Personal Media Server(PMS) server.
 
 While Plex is responsible for maintaining this Helm chart, we cannot provide support for troubleshooting related to its usage. For community assistance, please visit our [support forums](https://forums.plex.tv/).
 
+### Installation via Helm
+
+1. Add the Helm chart repo
+
+```bash
+helm repo add plex https://raw.githubusercontent.com/plexinc/pms-docker/gh-pages
+```
+
+2. Inspect & modify the default values (optional)
+
+```bash
+helm show values plex/plex-media-server > values.yaml
+```
+
+3. Install the chart
+
+```bash
+helm upgrade --install plex plex/plex-media-server --values values.yaml
+```
+
+[Additional details available here](https://www.plex.tv/blog/plex-pro-week-23-a-z-on-k8s-for-plex-media-server/)
+
 ### Sample init Container scripts
 
 If you already have a different PMS server running elsewhere and wish to migrate it to be running in Kubernetes
