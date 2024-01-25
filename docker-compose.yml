@@ -16,6 +16,7 @@ services:
     environment:
       - TZ=America/Detroit
       - HOSTNAME=plex
+      - PLEX_CLAIM=claim-6F_g5fXNGN3auGL8uJRF
       - ADVERTISE_IP=http://192.168.1.65:32400
 
     network_mode: bridge
