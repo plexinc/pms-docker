@@ -19,17 +19,17 @@ services:
       - PLEX_CLAIM=claim-6F_g5fXNGN3auGL8uJRF
       - ADVERTISE_IP=http://192.168.1.65:32400
 
-    network_mode: bridge
-    ports:
-      - "32400:32400/tcp"
-      - "3005:3005/tcp"
-      - "8324:8324/tcp"
-      - "32469:32469/tcp"
-      - "1900:1900/udp"
-      - "32410:32410/udp"
-      - "32412:32412/udp"
-      - "32413:32413/udp"
-      - "32414:32414/udp"
+    network_mode: host
+    # ports:
+    #   - "32400:32400/tcp"
+    #   - "3005:3005/tcp"
+    #   - "8324:8324/tcp"
+    #   - "32469:32469/tcp"
+    #   - "1900:1900/udp"
+    #   - "32410:32410/udp"
+    #   - "32412:32412/udp"
+    #   - "32413:32413/udp"
+    #   - "32414:32414/udp"
 
     volumes:
       - type: bind
@@ -65,11 +65,11 @@ services:
         source: /data/torrents
         target: /data/torrents
 
-    network_mode: bridge
-    ports:
-      - 8080:8080
-      - 6881:6881
-      - 6881:6881/udp
+    network_mode: host
+    # ports:
+    #   - 8080:8080
+    #   - 6881:6881
+    #   - 6881:6881/udp
 
 ## Volumes
 volumes:
