@@ -17,7 +17,7 @@ services:
       - TZ=America/Detroit
       - HOSTNAME=plex
       - PLEX_CLAIM=claim-6F_g5fXNGN3auGL8uJRF
-      - ADVERTISE_IP=http://192.168.1.65:32400
+      # - ADVERTISE_IP=http://192.168.1.65:32400
 
     network_mode: host
     # ports:
@@ -65,11 +65,11 @@ services:
         source: /data/torrents
         target: /data/torrents
 
-    network_mode: host
-    # ports:
-    #   - 8080:8080
-    #   - 6881:6881
-    #   - 6881:6881/udp
+    network_mode: bridge
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
 
 ## Volumes
 volumes:
