@@ -17,7 +17,6 @@ services:
       - TZ=America/Detroit
       - HOSTNAME=plex
       - ADVERTISE_IP=http://192.168.1.65:32400
-      # - PLEX_CLAIM=<claimToken>
 
     network_mode: bridge
     ports:
@@ -45,27 +44,34 @@ services:
       - type: tmpfs
         target: /transcode
 
-## Overseer
-  # overseerr:
-  #   image: sctx/overseerr
-  #   container_name: overseerr
-  #   restart: unless-stopped
+  qbittorrent:
+    container_name: qbittorrent
+    image: lscr.io/linuxserver/qbittorrent:latest
+    restart: unless-stopped
 
-  #   environment:
-  #     - LOG_LEVEL=debug
-  #     - TZ=America/Detroit
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Detroit
+      - WEBUI_PORT=8080
 
-  #   ports:
-  #     - 5055:5055
+    volumes:
+      - type: volume
+        source: qbittorrent_config
+        target: /config
 
-  #   volumes:
-  #     - type: volume
-  #       source: overseer_config
-  #       target: /app/config
-  #       volume:
-  #         nocopy: true
+      - type: bind
+        source: /data/torrents
+        target: /data/torrents
+
+    network_mode: bridge
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
 
 ## Volumes
 volumes:
   plex_db:
+  qbittorrent_config:
   # overseer_config:
