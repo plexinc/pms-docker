@@ -71,8 +71,33 @@ services:
       - 6881:6881
       - 6881:6881/udp
 
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Detroit
+      
+    volumes:
+      - type: volume
+        source: radarr_config
+        target: /config
+
+      - type: bind
+        source: /data
+        target: /data
+
+    network_mode: bridge
+    ports:
+      - 7878:7878
+
+
+
 ## Volumes
 volumes:
   plex_db:
   qbittorrent_config:
+  radarr_config:
   # overseer_config:
