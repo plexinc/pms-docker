@@ -144,6 +144,9 @@ service:
   type: ClusterIP
   port: 32400
 
+  # Port to use when type of service is "NodePort" (32400 by default)
+  #nodePort: 32400
+
   # optional extra annotations to add to the service resource
   annotations: {}
 
