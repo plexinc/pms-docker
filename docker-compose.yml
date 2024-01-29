@@ -4,13 +4,13 @@ services:
   plex:
     container_name: plex
     image: plexinc/pms-docker
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [utility, video]
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [utility, video]
 
     restart: unless-stopped
 
