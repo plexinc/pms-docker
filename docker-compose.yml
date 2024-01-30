@@ -151,6 +151,7 @@ services:
 volumes:
   plex_db:
   qbittorrent_config:
+  sabnzbd_config:
   radarr_config:
   prowlarr_config:
   # overseer_config:
