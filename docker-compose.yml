@@ -89,7 +89,7 @@ services:
     
     network_mode: bridge
     ports:
-      - 8181:8181
+      - 8181:8080
 
 
   radarr:
