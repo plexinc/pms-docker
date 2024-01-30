@@ -72,6 +72,26 @@ services:
       - 6881:6881
       - 6881:6881/udp
 
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    restart: unless-stopped
+
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Detroit
+
+    volumes:
+      - type: volume
+        source: sabnzbd_config
+        target: /config
+    
+    network_mode: bridge
+    ports:
+      - 8080:8080
+
+
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr-movies
