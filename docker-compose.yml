@@ -176,5 +176,6 @@ volumes:
   qbittorrent_config:
   sabnzbd_config:
   radarr_config:
+  sonarr_config:
   prowlarr_config:
   # overseer_config:
