@@ -20,7 +20,6 @@ services:
       - PLEX_CLAIM=claim-6F_g5fXNGN3auGL8uJRF
       - ADVERTISE_IP=http://192.168.1.65:32400
 
-    network_mode: bridge
     ports:
       - "32400:32400/tcp"
       - "3005:3005/tcp"
@@ -66,7 +65,6 @@ services:
         source: /data/torrents
         target: /data/torrents
 
-    network_mode: bridge
     ports:
       - 8080:8080
       - 6881:6881
@@ -87,7 +85,6 @@ services:
         source: sabnzbd_config
         target: /config
     
-    network_mode: bridge
     ports:
       - 8181:8080
 
@@ -110,7 +107,6 @@ services:
         source: /data
         target: /data
 
-    network_mode: bridge
     ports:
       - 7878:7878
 
@@ -130,7 +126,6 @@ services:
         source: /data
         target: /data
 
-    network_mode: bridge   
     ports:
       - 8989:8989
     
@@ -151,7 +146,6 @@ services:
         source: prowlarr_config
         target: /config
 
-    network_mode: bridge
     ports:
       - 9696:9696
 
@@ -168,7 +162,11 @@ services:
     ports:
       - "${PORT:-8191}:8191"
 
-
+## networks:
+networks:
+  default:
+    name: plex-stack
+    enable_ipv6: false
 
 ## Volumes
 volumes:
