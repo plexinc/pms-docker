@@ -30,6 +30,11 @@ spec:
       priorityClassName: {{ .Values.priorityClassName | quote }}
       {{- end }}
       volumes:
+      {{- if .Values.pms.configExistingClaim }}
+      - name: pms-config
+        persistentVolumeClaim:
+          claimName: {{ .Values.pms.configExistingClaim | quote }}
+      {{- end }}
       - name: pms-transcode
         emptyDir: {}
       {{- if and .Values.rclone.enabled .Values.rclone.configSecret }}
@@ -164,6 +169,7 @@ spec:
       {{- with .Values.extraContainers }}
 {{- toYaml . | nindent 6 }}
       {{- end }}
+  {{- if not .Values.pms.configExistingClaim }}
   volumeClaimTemplates:
   - metadata:
       name: pms-config
@@ -175,3 +181,4 @@ spec:
       resources:
         requests:
           storage: {{ .Values.pms.configStorage }}
+  {{- end }}
