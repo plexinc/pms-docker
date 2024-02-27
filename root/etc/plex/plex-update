@@ -1,0 +1,74 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# This script is called by cron, or by plex-startup
+
+DEBUG=${DEBUG:-}
+AUTO_UPDATE_CHANNEL=${AUTO_UPDATE_CHANNEL:-}
+
+# If we are debugging, enable trace
+if [ "${DEBUG,,}" = "true" ]; then
+  set -x
+fi
+# shellcheck source=../../plex-common.sh
+. /plex-common.sh
+
+function getPref {
+  local key="$1"
+
+  xmlstarlet sel -T -t -m "/Preferences" -v "@${key}" -n "${prefFile}"
+}
+
+# Get token
+# shellcheck source=/dev/null
+[ -f /etc/default/plexmediaserver ] && . /etc/default/plexmediaserver
+pmsApplicationSupportDir="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${HOME}/Library/Application Support}"
+prefFile="${pmsApplicationSupportDir}/Plex Media Server/Preferences.xml"
+token="$(getPref "PlexOnlineToken")"
+
+# Determine current version
+if (dpkg --get-selections plexmediaserver 2> /dev/null | grep -wq "install"); then
+  installedVersion=$(dpkg-query -W -f='${Version}' plexmediaserver 2> /dev/null)
+else
+  installedVersion="none"
+fi
+
+# Get updated version number
+tag=
+readVarFromConf "tag" tag
+channel=$AUTO_UPDATE_CHANNEL
+if [ "${tag,,}" = 'beta' ] || [ "${tag,,}" = 'public' ]; then
+  channel=$tag
+fi
+remoteVersion=
+remoteFile=
+remoteFileHashSha256=
+getVersionInfo "${channel}" "${token}" remoteVersion remoteFile remoteFileHashSha256
+
+if [ -z "${remoteVersion}" ] || [ -z "${remoteFile}" ]; then
+  echo "Could not get update version"
+  exit 0
+fi
+
+# Check if there's no update required
+if [ "${remoteVersion}" = "${installedVersion}" ]; then
+  echo "$(date) Update check: no updates found."
+  exit 0
+fi
+
+# Do update process
+wasrunning=false
+echo "$(date) Attempting to upgrade to: ${remoteVersion}"
+if [ -d "/run/s6/legacy-services/plex" ]; then
+  wasrunning=true
+  echo "$(date) Bringing down Plex Media Server..."
+  s6-svc -wD -d /run/s6/legacy-services/plex
+fi
+echo "$(date) Downloading and installing..."
+installFromUrl "${remoteFile}" "${remoteFileHashSha256}"
+if [ "$wasrunning" = true ]; then
+  echo "$(date) Bringing up Plex Media Server..."
+  s6-svc -wU -u /run/s6/legacy-services/plex
+fi
+echo "$(date) Plex Successfully Updated!"

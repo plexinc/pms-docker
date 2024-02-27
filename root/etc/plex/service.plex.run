@@ -1,0 +1,23 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+DEBUG=${DEBUG:-}
+
+# If we are debugging, enable trace
+if [ "${DEBUG,,}" = "true" ]; then
+  set -x
+fi
+
+# shellcheck source=../../plex-envvars
+. /plex-envvars
+
+if [ ! -d "${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}" ]; then
+  /bin/mkdir -p "${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}"
+  chown plex:plex "${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}"
+fi
+
+echo "$(date) Starting Plex Media Server $(dpkg-query -W -f='${Version}' plexmediaserver)"
+echo
+
+exec s6-setuidgid plex /usr/lib/plexmediaserver/Plex\ Media\ Server
