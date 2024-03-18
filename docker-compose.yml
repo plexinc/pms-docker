@@ -87,6 +87,10 @@ services:
       - type: volume
         source: sabnzbd_config
         target: /config
+
+      - type: bind
+        source: /data
+        target: /data
     
     ports:
       - 8181:8080
