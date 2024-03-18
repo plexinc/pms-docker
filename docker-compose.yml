@@ -45,6 +45,9 @@ services:
       - type: tmpfs
         target: /transcode
 
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+
   qbittorrent:
     container_name: qbittorrent
     image: lscr.io/linuxserver/qbittorrent:latest
