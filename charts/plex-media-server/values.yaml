@@ -143,6 +143,8 @@ serviceAccount:
 statefulSet:
   # optional extra annotations to add to the service resource
   annotations: {}
+  # optional extra annotations to add to the pods in the statefulset
+  podAnnotations: {}
 
 service:
   type: ClusterIP

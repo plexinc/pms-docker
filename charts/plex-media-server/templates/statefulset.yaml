@@ -18,6 +18,8 @@ spec:
     metadata:
       labels:
         {{- include "pms-chart.labels" . | nindent 8 }}
+      annotations:
+        {{- toYaml .Values.statefulSet.podAnnotations | nindent 8 }}
     spec:
       serviceAccountName: {{ include "pms-chart.serviceAccountName" . }}
       tolerations:
