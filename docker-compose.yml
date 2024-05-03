@@ -165,9 +165,24 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - LOG_HTML=${LOG_HTML:-false}
       - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
-      - TZ=Europe/London
+      - TZ=America/Detroit
     ports:
       - "${PORT:-8191}:8191"
+
+  overseerr:
+    image: sctx/overseerr:latest
+    container_name: overseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=America/Detroit
+      - PORT=5055 #optional
+    ports:
+      - 5055:5055
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: overseerr_config
+        target: /config
 
 ## networks:
 networks:
@@ -183,4 +198,5 @@ volumes:
   radarr_config:
   sonarr_config:
   prowlarr_config:
+  overseerr_config:
   # overseer_config:
