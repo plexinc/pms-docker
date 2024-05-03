@@ -182,7 +182,7 @@ services:
     volumes:
       - type: volume
         source: overseerr_config
-        target: /config
+        target: /app/config
 
 ## networks:
 networks:
