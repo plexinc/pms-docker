@@ -4,21 +4,13 @@ services:
   plex:
     container_name: plex
     image: plexinc/pms-docker
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - driver: nvidia
-    #           count: 1
-    #           capabilities: [utility, video]
-
     restart: unless-stopped
 
     environment:
       - TZ=America/Detroit
       - HOSTNAME=plex
       - PLEX_CLAIM=claim-6F_g5fXNGN3auGL8uJRF
-      - ADVERTISE_IP=http://192.168.1.65:32400
+      - ADVERTISE_IP=http://192.168.50.65:32400
 
     ports:
       - "32400:32400/tcp"
@@ -170,19 +162,20 @@ services:
       - "${PORT:-8191}:8191"
 
   overseerr:
-    image: sctx/overseerr:latest
+    image: lscr.io/linuxserver/overseerr:latest
     container_name: overseerr
     environment:
       - LOG_LEVEL=debug
       - TZ=America/Detroit
-      - PORT=5055 #optional
+
     ports:
       - 5055:5055
+
     restart: unless-stopped
     volumes:
       - type: volume
         source: overseerr_config
-        target: /app/config
+        target: /config
 
 ## networks:
 networks:
