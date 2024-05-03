@@ -177,6 +177,21 @@ services:
         source: overseerr_config
         target: /config
 
+  tautulli:
+    image: lscr.io/linuxserver/tautulli:latest
+    container_name: tautulli
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Detroit
+    volumes:
+      - type: volume
+        source: tautulli_config
+        target: /config
+    ports:
+      - 6969:8181
+    restart: unless-stopped
+
 ## networks:
 networks:
   default:
@@ -192,4 +207,4 @@ volumes:
   sonarr_config:
   prowlarr_config:
   overseerr_config:
-  # overseer_config:
+  tautulli_config:
