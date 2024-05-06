@@ -188,8 +188,30 @@ services:
       - type: volume
         source: tautulli_config
         target: /config
+
     ports:
       - 6969:8181
+
+    restart: unless-stopped
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Detroit
+
+    volumes:
+      - type: volume
+        source: bazarr_config
+        target: /config
+      - /data/media/movies:/movies
+      - /data/media/tv:/tv
+
+    ports:
+      - 6767:6767
+
     restart: unless-stopped
 
 ## networks:
@@ -208,3 +230,4 @@ volumes:
   prowlarr_config:
   overseerr_config:
   tautulli_config:
+  bazarr_config:
