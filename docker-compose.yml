@@ -230,6 +230,10 @@ services:
       - 80:80
       - 443:443
 
+    links:
+      - tautulli
+      - overseerr
+
     restart: unless-stopped
 
 ## networks:
