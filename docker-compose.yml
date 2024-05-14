@@ -74,6 +74,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=America/Detroit
+      - HAS_IPV6=false
 
     volumes:
       - type: volume
