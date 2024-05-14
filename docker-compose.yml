@@ -215,6 +215,23 @@ services:
 
     restart: unless-stopped
 
+  nginx:
+    image: lscr.io/linuxserver/nginx:latest
+    container_name: nginx
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Detroit
+
+    volumes:
+      - /home/ken/docker/configs/nginx:/config
+
+    ports:
+      - 80:80
+      - 443:443
+
+    restart: unless-stopped
+
 ## networks:
 networks:
   default:
