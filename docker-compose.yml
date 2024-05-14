@@ -224,7 +224,7 @@ services:
       - TZ=America/Detroit
 
     volumes:
-      - /home/ken/docker/configs/nginx:/config
+      - /home/ken/docker-volumes/nginx:/config
 
     ports:
       - 80:80
