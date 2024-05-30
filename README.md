@@ -1,4 +1,4 @@
-# Official Docker container for Plex Media Server
+http://192.168.1.1:52869/wanipcn.xml# Official Docker container for Plex Media Server
 
 # plexinc/pms-docker
 
