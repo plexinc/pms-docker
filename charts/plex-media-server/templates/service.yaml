@@ -13,6 +13,9 @@ spec:
   ports:
     - port: {{ .Values.service.port }}
       targetPort: 32400
+      {{- if eq .Values.service.type "NodePort" }}
+      nodePort: {{ default "32400" .Values.service.nodePort }}
+      {{- end }}
       protocol: TCP
       name: pms
   selector:
