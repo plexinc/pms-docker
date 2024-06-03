@@ -83,6 +83,9 @@ initContainer:
   #
   #   echo "Done."
 
+# specify your own runtime class name eg use gpu
+runtimeClassName: "" 
+
 # the settings specific to rclone
 rclone:
   # if the rclone sidecar should be created
