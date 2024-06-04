@@ -84,7 +84,7 @@ initContainer:
   #   echo "Done."
 
 # specify your own runtime class name eg use gpu
-runtimeClassName: "" 
+runtimeClassName: ""
 
 # the settings specific to rclone
 rclone:
