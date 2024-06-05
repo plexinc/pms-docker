@@ -1,0 +1,18 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# This script is called by the autoupdate, beta, and public tags only
+
+DEBUG=${DEBUG:-}
+
+# If we are debugging, enable trace
+if [ "${DEBUG,,}" = "true" ]; then
+  set -x
+fi
+
+
+if [ -f /config/_force_ ] || ! dpkg --get-selections plexmediaserver 2> /dev/null | grep -wq "install"; then
+  echo "Downloading latest plex version..."
+  exec /etc/plex/plex-update
+fi
