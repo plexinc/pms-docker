@@ -21,6 +21,9 @@ spec:
       annotations:
         {{- toYaml .Values.statefulSet.podAnnotations | nindent 8 }}
     spec:
+      {{- if .Values.runtimeClassName }}
+      runtimeClassName: {{ .Values.runtimeClassName | quote }}
+      {{- end }}
       serviceAccountName: {{ include "pms-chart.serviceAccountName" . }}
       tolerations:
         {{- toYaml .Values.tolerations | nindent 8 }}

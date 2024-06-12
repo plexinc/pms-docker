@@ -113,6 +113,7 @@ The following table lists the configurable parameters of the Pms-chart chart and
 | `initContainer.image.sha` | Optional SHA digest to specify a specific image rather than a specific tag | `""` |
 | `initContainer.image.pullPolicy` |  | `"IfNotPresent"` |
 | `initContainer.script` | An optional script that will be run by the init container, it can be used on the first run to stop pms from starting when importing a pre-exiting database | `""` |
+| `runtimeClassName` | Specify your own runtime class name eg use gpu | `""` |
 | `rclone.enabled` | If rclone should be used to mount volumes | `false` |
 | `rclone.image.registry` | The registry that should be used to pull the image from | `"index.docker.io"` |
 | `rclone.image.repository` | The docker repo that will be used for the rclone container | `"rclone/rclone"` |
