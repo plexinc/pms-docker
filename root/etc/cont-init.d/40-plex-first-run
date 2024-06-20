@@ -6,7 +6,7 @@ if [ "${DEBUG,,}" = "true" ]; then
 fi
 
 # If the first run completed successfully, we are done
-if [ -e /.firstRunComplete ]; then
+if [ -e /tmp/.firstRunComplete ]; then
   exit 0
 fi
 
@@ -136,5 +136,5 @@ if [ -z "$(getPref "TranscoderTempDirectory")" ]; then
   setPref "TranscoderTempDirectory" "/transcode"
 fi
 
-touch /.firstRunComplete
+touch /tmp/.firstRunComplete
 echo "Plex Media Server first run setup complete"
