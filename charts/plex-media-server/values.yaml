@@ -153,6 +153,9 @@ service:
   type: ClusterIP
   port: 32400
 
+  # Local is recommended for type LoadBalancer without ingress
+  # externalTrafficPolicy: Local
+
   # Port to use when type of service is "NodePort" (32400 by default)
   # nodePort: 32400
 
