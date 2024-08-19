@@ -8,7 +8,7 @@ if [ "${TARGETPLATFORM}" = 'linux/arm/v7' ]; then
 elif [ "${TARGETARCH}" = 'amd64' ]; then
   PLEX_BUILD='linux-x86_64';
 elif [ "${TARGETARCH}" = 'arm64' ]; then
-  PLEX_BUILD='aarch64' ;
+  PLEX_BUILD='linux-aarch64' ;
 fi
 
 addVarToConf "version" "${TAG}"
