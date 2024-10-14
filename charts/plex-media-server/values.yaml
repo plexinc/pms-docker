@@ -200,15 +200,16 @@ extraEnv: {}
 # Optionally specify additional volume mounts for the PMS and init containers.
 extraVolumeMounts: []
 # extraVolumeMounts:
-#   - name: some-volume-name
-#     mountPath: /path/in/container
-
+#   - name: dev-dri
+#     mountPath: /dev/dri
 
 # Optionally specify additional volumes for the pod.
 extraVolumes: []
 # extraVolumes:
-#   - name: some-volume-name
-#     emptyDir: {}
+#   - name: dev-dri
+#     hostPath:
+#       path: /dev/dri
+#       type: Directory
 
 extraContainers: []
 # extraContainers:
