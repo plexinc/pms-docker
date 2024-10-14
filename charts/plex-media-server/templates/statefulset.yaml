@@ -59,6 +59,12 @@ spec:
           defaultMode: 0700
           name: {{ include "pms-chart.fullname" . }}-init-script
       {{- end }}
+      {{- if .Values.pms.gpu.nvidia.enabled }}
+      - name: nvidia
+        hostPath:
+          path: {{ .Values.pms.gpu.nvidia.device | default "/dev/nvidia0" }}
+          type: CharDevice
+      {{- end }}
       {{- if .Values.extraVolumes }}
 {{ toYaml .Values.extraVolumes | indent 6 }}
       {{- end }}
@@ -85,11 +91,10 @@ spec:
       - name: {{ include "pms-chart.fullname" . }}-config
         image: {{ include "pms-chart.init_image" . }}
         command:
-          - cp
+          - sh
+          - -c
         args:
-          - -v
-          - /in/rclone.conf
-          - /out/rclone.conf
+          - cp -v /in/* /out/
         volumeMounts:
         - name: rclone-config-data
           mountPath: /in
@@ -113,10 +118,26 @@ spec:
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}
+        {{- if .Values.pms.gpu.nvidia.enabled }}
+        - name: NVIDIA_VISIBLE_DEVICES
+          value: all
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: compute,video,utility
+        {{- end }}
         {{- with .Values.pms.resources }}
         resources:
-{{ toYaml . | indent 10 }}
-      {{- end }}
+          limits:
+          {{- with .limits }}
+            {{ toYaml . | indent 12 | trim }}
+          {{- end }}
+          {{- if and $.Values.pms.gpu.nvidia.enabled (not (hasKey .limits "nvidia.com/gpu")) }}
+            nvidia.com/gpu: 1
+          {{- end }}
+          {{- if .requests }}
+          requests:
+            {{ toYaml .requests | indent 12 | trim }}
+          {{- end }}
+        {{- end }}
         volumeMounts:
         - name: pms-config
           mountPath: /config
@@ -128,6 +149,10 @@ spec:
           mountPath: "/data/{{ (split ":" .)._0 }}"
           mountPropagation: HostToContainer
       {{- end }}
+      {{- end }}
+      {{- if .Values.pms.gpu.nvidia.enabled }}
+        - name: nvidia
+          mountPath: {{ .Values.pms.gpu.nvidia.device | default "/dev/nvidia0" }}
       {{- end }}
       {{- if .Values.extraVolumeMounts }}
 {{ toYaml .Values.extraVolumeMounts | indent 8 }}
@@ -164,7 +189,7 @@ spec:
             add:
               - SYS_ADMIN
         volumeMounts:
-        - name: rclone-config
+        - name: rclone-config-data
           mountPath: /etc/rclone
         - name: rclone-media-{{ (split ":" .)._0 }}
           mountPath: "/data/{{ (split ":" .)._0 }}"

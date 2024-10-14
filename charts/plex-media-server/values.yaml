@@ -36,6 +36,14 @@ pms:
   # NOTE: When set, 'configStorage' and 'storageClassName' are ignored.
   configExistingClaim: ""
 
+  # Enabling this will add nvidia.com/gpu: 1 to limits, will set
+  # environment for the nvidia operator, and will mount {device} into
+  # the container (default /dev/nvidia0)
+  gpu:
+    nvidia:
+      enabled: false
+      # device: /dev/nvidia0
+
   resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -101,7 +109,10 @@ rclone:
     pullPolicy: IfNotPresent
 
   # The name of the secret that contains the rclone configuration file.
-  # The key must be called `rclone.conf` in the secret
+  # The rclone config key must be called `rclone.conf` in the secret
+  #
+  # All keys in configSecret will be available in /etc/rclone/. This might
+  # be useful if other files are needed, such as a private key for sftp mode.
   configSecret: ""
 
 
