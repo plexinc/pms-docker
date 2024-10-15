@@ -189,7 +189,7 @@ spec:
             add:
               - SYS_ADMIN
         volumeMounts:
-        - name: rclone-config-data
+        - name: rclone-config
           mountPath: /etc/rclone
         - name: rclone-media-{{ (split ":" .)._0 }}
           mountPath: "/data/{{ (split ":" .)._0 }}"
