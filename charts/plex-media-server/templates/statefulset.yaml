@@ -59,12 +59,6 @@ spec:
           defaultMode: 0700
           name: {{ include "pms-chart.fullname" . }}-init-script
       {{- end }}
-      {{- if .Values.pms.gpu.nvidia.enabled }}
-      - name: nvidia
-        hostPath:
-          path: {{ .Values.pms.gpu.nvidia.device | default "/dev/nvidia0" }}
-          type: CharDevice
-      {{- end }}
       {{- if .Values.extraVolumes }}
 {{ toYaml .Values.extraVolumes | indent 6 }}
       {{- end }}
@@ -149,10 +143,6 @@ spec:
           mountPath: "/data/{{ (split ":" .)._0 }}"
           mountPropagation: HostToContainer
       {{- end }}
-      {{- end }}
-      {{- if .Values.pms.gpu.nvidia.enabled }}
-        - name: nvidia
-          mountPath: {{ .Values.pms.gpu.nvidia.device | default "/dev/nvidia0" }}
       {{- end }}
       {{- if .Values.extraVolumeMounts }}
 {{ toYaml .Values.extraVolumeMounts | indent 8 }}
