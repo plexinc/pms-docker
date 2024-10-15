@@ -36,13 +36,11 @@ pms:
   # NOTE: When set, 'configStorage' and 'storageClassName' are ignored.
   configExistingClaim: ""
 
-  # Enabling this will add nvidia.com/gpu: 1 to limits, will set
-  # environment for the nvidia operator, and will mount {device} into
-  # the container (default /dev/nvidia0)
+  # Enabling this will add nvidia.com/gpu: 1 to limits, and will set
+  # environment for the nvidia operator
   gpu:
     nvidia:
       enabled: false
-      # device: /dev/nvidia0
 
   resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
