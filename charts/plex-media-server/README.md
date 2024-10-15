@@ -106,6 +106,7 @@ The following table lists the configurable parameters of the Pms-chart chart and
 | `ingress.annotations` | Extra annotations to add to the ingress.  | `{}` |
 | `pms.storageClassName` | The storage class that will be used for the PMS configuration directory, if not specified the default will be used | `null` |
 | `pms.configStorage` | The amount of storage space that is allocated to the config volume, this will probably need to be much higher if thumbnails are enabled.  | `"2Gi"` |
+| `pms.gpu.nvidia.enabled` | Enabling this will add nvidia.com/gpu: 1 to limits, and will set environment for the nvidia operator | `false` |
 | `pms.resources` |  | `{}` |
 | `initContainer.image.registry` | The registry that should be used to pull the image from | `"index.docker.io"` |
 | `initContainer.image.repository` | The docker repo that will be used for the init image to run the setup scripts| `"alpine"` |
