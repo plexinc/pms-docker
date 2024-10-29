@@ -1,0 +1,119 @@
+name: Bump Version and Generate Docs
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  changes:
+    name: Find Updated Chart
+    runs-on: ubuntu-latest
+    if: github.event.review.state == 'approved'
+    outputs:
+      apps: ${{ steps.apps.outputs.apps }}
+    steps:
+    - uses: tj-actions/changed-files@v45
+      id: changed-files
+      with:
+        dir_names: 'true'
+        dir_names_exclude_current_dir: 'true'
+        dir_names_max_depth: '2'
+        matrix: 'true'
+        files: 'charts/**'
+
+    - id: apps
+      run: |
+        echo "apps=${{ toJson(steps.changed-files.outputs.all_changed_files) }}" | sed -E 's|charts/||g' >> "$GITHUB_OUTPUT"
+
+  docs:
+    name: Bump Version and Generate Docs
+    runs-on: ubuntu-latest
+    needs: changes
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        app: ${{ fromJson(needs.approved.outputs.apps ) }}
+    env:
+      APP: ${{ matrix.app }}
+    steps:
+      - uses: gabe565/setup-helm-docs-action@v1
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: charts
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Cache binaries
+        id: cache-bin
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-semver
+        with:
+          path: bin
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('bin/semver') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Setup semver
+        if: steps.cache-bin.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p bin
+          wget -O bin/semver \
+            https://raw.githubusercontent.com/fsaintjacques/semver-tool/3.4.0/src/semver
+          chmod +x bin/semver
+
+      - name: Setup PATH
+        run: |
+          echo "$GITHUB_WORKSPACE/bin" >> "$GITHUB_PATH"
+
+      - name: Compute version
+        id: get_version
+        env:
+          PATCH_LABEL: "${{ contains(github.event.pull_request.labels.*.name, 'chart: patch') }}"
+          MINOR_LABEL: "${{ contains(github.event.pull_request.labels.*.name, 'chart: minor') }}"
+          MAJOR_LABEL: "${{ contains(github.event.pull_request.labels.*.name, 'chart: major') }}"
+        run: |
+          current_ver=$(cat "charts/${APP}/Chart.yaml" | grep 'version:' | cut -d' ' -f2)
+
+          BUMP_TYPE=''
+          if [[ $MAJOR_LABEL == 'true' ]];
+          then
+            BUMP_TYPE='major'
+          elif [[ $MINOR_LABEL == 'true' ]];
+          then
+            BUMP_TYPE='minor'
+          elif [[ $PATCH_LABEL == 'true' ]];
+          then
+            BUMP_TYPE='patch'
+          else
+            echo "::error title=Missing Label::Missing the chart versioning label"
+            exit -1
+          fi
+
+          echo "running ${BUMP_TYPE} version bump"
+          new_ver=$(semver bump "${BUMP_TYPE}" "$current_ver")
+          echo "last=${current_ver}" >> "$GITHUB_OUTPUT"
+          echo "new=${new_ver}" >> "$GITHUB_OUTPUT"
+
+      - name: Update Chart Version
+        shell: bash
+        run: |
+          sed -i "s/version: ${{ steps.get_version.outputs.last }}/version: ${{ steps.get_version.outputs.new }}/g" "charts/${APP}/Chart.yaml"
+
+      - name: Update Docs
+        shell: bash
+        run: |
+          helm-docs --chart-search-root charts --chart-to-generate charts/${APP}
+
+      - name: Commit Changes
+        run: |
+          git config user.email '<>'
+          git config user.name github-actions
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "chore: bump $APP chart to v${{ steps.get_version.outputs.new }}" --all
+            git push origin "HEAD:$GITHUB_HEAD_REF"
+          fi
+

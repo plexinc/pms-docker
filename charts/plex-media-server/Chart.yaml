@@ -1,6 +1,6 @@
 apiVersion: v2
 name: plex-media-server
-description: A Helm chart for deploying a PMS server to a kubernetes cluster
+description: A Helm chart for deploying a PMS server to a Kubernetes cluster
 
 keywords:
 - plex
