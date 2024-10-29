@@ -1,38 +1,39 @@
-# The docker image information for the pms application
+# -- The docker image information for the pms application
 image:
+  # -- The public dockerhub registry
   registry: index.docker.io
   repository: plexinc/pms-docker
-  # If unset use "latest"
+  # -- If unset use "latest"
   tag: "latest"
   sha: ""
   pullPolicy: IfNotPresent
 
 global:
-  # Allow parent charts to override registry hostname
+  # -- Allow parent charts to override registry hostname
   imageRegistry: ""
 
 ingress:
-  # Specify if an ingress resource for the pms server should be created or not
+  # -- Specify if an ingress resource for the pms server should be created or not
   enabled: false
 
-  # The ingress class that should be used
+  # -- The ingress class that should be used
   ingressClassName: "ingress-nginx"
 
-  # The url to use for the ingress reverse proxy to point at this pms instance
+  # -- The url to use for the ingress reverse proxy to point at this pms instance
   url: ""
 
-  # Custom annotations to put on the ingress resource
+  # -- Custom annotations to put on the ingress resource
   annotations: {}
 
 pms:
-  # The storage class to use when provisioning the pms config volume
+  # -- The storage class to use when provisioning the pms config volume
   # this needs to be created manually, null will use the default
   storageClassName: null
 
-  # the volume size to provision for the PMS database
+  # -- The volume size to provision for the PMS database
   configStorage: 2Gi
 
-  # Name of an existing `PersistentVolumeClaim` for the PMS database
+  # -- Name of an existing `PersistentVolumeClaim` for the PMS database
   # NOTE: When set, 'configStorage' and 'storageClassName' are ignored.
   configExistingClaim: ""
 
@@ -54,7 +55,7 @@ pms:
   #   cpu: 100m
   #   memory: 128Mi
 
-  # Add kubernetes liveness probe to pms container.
+  # -- Add kubernetes liveness probe to pms container.
   livenessProbe: {}
     # httpGet:
     #   path: /identity
@@ -64,7 +65,7 @@ pms:
     # timeoutSeconds: 1
     # failureThreshold: 3
 
-  # Add kubernetes readiness probe to pms container.
+  # -- Add kubernetes readiness probe to pms container.
   readinessProbe: {}
     # httpGet:
     #   path: /identity
@@ -74,19 +75,20 @@ pms:
     # timeoutSeconds: 1
     # failureThreshold: 3
 
-# A basic image that will convert the configmap to a file in the rclone config volume
+# -- A basic image that will convert the configmap to a file in the rclone config volume
 # this is ignored if rclone is not enabled
 initContainer:
   image:
+    # -- The public dockerhub registry
     registry: index.docker.io
     repository: alpine
-    # If unset use latest
+    # -- If unset use latest
     tag: 3.18.0
     sha: ""
     pullPolicy: IfNotPresent
 
-  # A custom script that will be run in an init container to do any setup before the PMS service starts up
-  # This will be run everytime the pod starts, make sure that some mechanism is included to prevent
+  # -- A custom script that will be run in an init container to do any setup before the PMS service starts up
+  # This will be run every time the pod starts, make sure that some mechanism is included to prevent
   # this from running more than once if it should only be run on the first startup.
   script: ""
   ###
@@ -109,24 +111,25 @@ initContainer:
   #
   #   echo "Done."
 
-# specify your own runtime class name eg use gpu
+# -- Specify your own runtime class name eg use gpu
 runtimeClassName: ""
 
-# the settings specific to rclone
+# -- The settings specific to rclone
 rclone:
-  # if the rclone sidecar should be created
+  # -- If the rclone sidecar should be created
   enabled: false
 
-  # the rclone image that should be used
+  # -- The rclone image that should be used
   image:
+    # -- The public dockerhub registry
     registry: index.docker.io
     repository: rclone/rclone
-    # If unset use latest
+    # -- If unset use latest
     tag: 1.62.2
     sha: ""
     pullPolicy: IfNotPresent
 
-  # The name of the secret that contains the rclone configuration file.
+  # -- The name of the secret that contains the rclone configuration file.
   # The rclone config key must be called `rclone.conf` in the secret
   #
   # All keys in configSecret will be available in /etc/rclone/. This might
@@ -134,15 +137,15 @@ rclone:
   configSecret: ""
 
 
-  # the remote drive that should be mounted using rclone
+  # -- The remote drive that should be mounted using rclone
   # this must be in the form of `name:[/optional/path]`
   # this remote will be mounted at `/data/name` in the PMS container
   remotes: []
 
-  # if the remote volumes should be mounted as read only
+  # -- If the remote volumes should be mounted as read only
   readOnly: true
 
-  # additional arguments to give to rclone when mounting the volume
+  # -- Additional arguments to give to rclone when mounting the volume
   additionalArgs: []
 
   resources: {}
@@ -162,20 +165,20 @@ nameOverride: ""
 fullnameOverride: ""
 
 serviceAccount:
-  # Specifies whether a service account should be created
+  # -- Specifies whether a service account should be created
   create: true
-  # If the service account token should be auto mounted
+  # -- If the service account token should be auto mounted
   automountServiceAccountToken: false
-  # Annotations to add to the service account
+  # -- Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
+  # -- The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
 statefulSet:
-  # optional extra annotations to add to the service resource
+  # -- Optional extra annotations to add to the service resource
   annotations: {}
-  # optional extra annotations to add to the pods in the statefulset
+  # -- Optional extra annotations to add to the pods in the statefulset
   podAnnotations: {}
 
 service:
@@ -194,7 +197,7 @@ service:
   # https://access.redhat.com/solutions/7028639
   # externalTrafficPolicy: Local
 
-  # optional extra annotations to add to the service resource
+  # -- Optional extra annotations to add to the service resource
   annotations: {}
 
 
@@ -206,7 +209,7 @@ affinity: {}
 
 priorityClassName: ""
 
-# Common Labels for all resources created by this chart.
+# -- Common Labels for all resources created by this chart.
 commonLabels: {}
 
 extraEnv: {}
@@ -224,13 +227,13 @@ extraEnv: {}
 #   ALLOWED_NETWORKS: "0.0.0.0/0"
 
 
-# Optionally specify additional volume mounts for the PMS and init containers.
+# -- Optionally specify additional volume mounts for the PMS and init containers.
 extraVolumeMounts: []
 # extraVolumeMounts:
 #   - name: dev-dri
 #     mountPath: /dev/dri
 
-# Optionally specify additional volumes for the pod.
+# -- Optionally specify additional volumes for the pod.
 extraVolumes: []
 # extraVolumes:
 #   - name: dev-dri
