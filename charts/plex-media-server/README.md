@@ -1,7 +1,10 @@
-# plex-media-server Chart
-===========
+# plex-media-server
 
-A Helm chart for deploying the Plex Personal Media Server(PMS) server.
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+
+**Homepage:** <https://www.plex.tv>
+
+A Helm chart for deploying a PMS server to a Kubernetes cluster
 
 While Plex is responsible for maintaining this Helm chart, we cannot provide support for troubleshooting related to its usage. For community assistance, please visit our [support forums](https://forums.plex.tv/).
 
@@ -88,63 +91,61 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 
 [GNU GPLv3](./LICENSE)
 
-## Configuration
+## Source Code
 
-The following table lists the configurable parameters of the Pms-chart chart and their default values.
+* <https://github.com/plexinc/pms-docker>
 
-| Parameter                | Description             | Default        |
-| ------------------------ | ----------------------- | -------------- |
-| `image.registry` | The registry that should be used to pull the image from | `"index.docker.io"` |
-| `image.repository` | The docker repo that will be used for the PMS image | `"plexinc/pms-docker"` |
-| `image.tag` | The tag to use | `"latest"` |
-| `image.sha` | Optional SHA digest to specify a specific image rather than a specific tag | `""` |
-| `image.pullPolicy` |  | `"IfNotPresent"` |
-| `global.imageRegistry` | The image registry that should be used for all images, this will take precedence over the per image registry.  | `""` |
-| `ingress.enabled` | If an ingress for the PMS port should be created. | `false` |
-| `ingress.ingressClassName` |  | `"ingress-nginx"` |
-| `ingress.url` | The url that will be used for the ingress, this should be manually configured as the app URL in PMS. | `""` |
-| `ingress.annotations` | Extra annotations to add to the ingress.  | `{}` |
-| `pms.storageClassName` | The storage class that will be used for the PMS configuration directory, if not specified the default will be used | `null` |
-| `pms.configStorage` | The amount of storage space that is allocated to the config volume, this will probably need to be much higher if thumbnails are enabled.  | `"2Gi"` |
-| `pms.resources` |  | `{}` |
-| `initContainer.image.registry` | The registry that should be used to pull the image from | `"index.docker.io"` |
-| `initContainer.image.repository` | The docker repo that will be used for the init image to run the setup scripts| `"alpine"` |
-| `initContainer.image.tag` | The tag to use | `"3.18.0"` |
-| `initContainer.image.sha` | Optional SHA digest to specify a specific image rather than a specific tag | `""` |
-| `initContainer.image.pullPolicy` |  | `"IfNotPresent"` |
-| `initContainer.script` | An optional script that will be run by the init container, it can be used on the first run to stop pms from starting when importing a pre-exiting database | `""` |
-| `runtimeClassName` | Specify your own runtime class name eg use gpu | `""` |
-| `rclone.enabled` | If rclone should be used to mount volumes | `false` |
-| `rclone.image.registry` | The registry that should be used to pull the image from | `"index.docker.io"` |
-| `rclone.image.repository` | The docker repo that will be used for the rclone container | `"rclone/rclone"` |
-| `rclone.image.tag` | The version of rclone to use | `"1.62.2"` |
-| `rclone.image.sha` | Optional SHA digest to specify a specific image rather than a specific tag | `""` |
-| `rclone.image.pullPolicy` |  | `"IfNotPresent"` |
-| `rclone.configSecret` | The name of the Kubernetes secret that contains the rclone config to use. This secret is not created by this chart  | `""` |
-| `rclone.remotes` | A list of remotes to mount using rclone. In the format of `"<remote-name>:<remote-path>"`, the remote-name must be in the rclone config file and its also used to determine the mount path within the PMS container | `[]` |
-| `rclone.readOnly` | If the rclone volumes should be mounted as readonly | `true` |
-| `rclone.additionalArgs` | Optional additional arguments given to the rclone mount command | `[]` |
-| `rclone.resources` |  | `{}` |
-| `imagePullSecrets` |  | `[]` |
-| `nameOverride` |  | `""` |
-| `fullnameOverride` |  | `""` |
-| `serviceAccount.create` |  | `true` |
-| `serviceAccount.automountServiceAccountToken` |  | `false` |
-| `serviceAccount.annotations` |  | `{}` |
-| `serviceAccount.name` |  | `""` |
-| `statefulSet.annotations` |  | `{}` |
-| `service.type` |  | `"ClusterIP"` |
-| `service.port` | The port number that will be used for exposing the PMS port from the service | `32400` |
-| `service.annotations` |  | `{}` |
-| `nodeSelector` |  | `{}` |
-| `tolerations` |  | `[]` |
-| `affinity` |  | `{}` |
-| `priorityClassName` |  | `""` |
-| `commonLabels` | Labels that will be added to all resources created by the chart  | `{}` |
-| `extraEnv` | Environment variables that will be added to the PMS container | `{}` |
-| `extraVolumeMounts` | Additional volume mount configuration blocks for the pms container | `[]` |
-| `extraVolumes` | Extra volume configurations | `[]` |
-| `extraContainers` | Extra contain configuration blocks that will be run alongside the PMS container _after_ the init container finishes | `[]` |
+## Values
 
----
-_Documentation generated by [Frigate](https://frigate.readthedocs.io)._
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| affinity | object | `{}` |  |
+| commonLabels | object | `{}` | Common Labels for all resources created by this chart. |
+| extraContainers | list | `[]` |  |
+| extraEnv | object | `{}` |  |
+| extraVolumeMounts | list | `[]` | Optionally specify additional volume mounts for the PMS and init containers. |
+| extraVolumes | list | `[]` | Optionally specify additional volumes for the pod. |
+| fullnameOverride | string | `""` |  |
+| global.imageRegistry | string | `""` | Allow parent charts to override registry hostname |
+| image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"plexinc/pms-docker","sha":"","tag":"latest"}` | The docker image information for the pms application |
+| image.registry | string | `"index.docker.io"` | The public dockerhub registry |
+| image.tag | string | `"latest"` | If unset use "latest" |
+| imagePullSecrets | list | `[]` |  |
+| ingress.annotations | object | `{}` | Custom annotations to put on the ingress resource |
+| ingress.enabled | bool | `false` | Specify if an ingress resource for the pms server should be created or not |
+| ingress.ingressClassName | string | `"ingress-nginx"` | The ingress class that should be used |
+| ingress.url | string | `""` | The url to use for the ingress reverse proxy to point at this pms instance |
+| initContainer | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"alpine","sha":"","tag":"3.18.0"},"script":""}` | A basic image that will convert the configmap to a file in the rclone config volume this is ignored if rclone is not enabled |
+| initContainer.image.registry | string | `"index.docker.io"` | The public dockerhub registry |
+| initContainer.image.tag | string | `"3.18.0"` | If unset use latest |
+| initContainer.script | string | `""` | A custom script that will be run in an init container to do any setup before the PMS service starts up This will be run every time the pod starts, make sure that some mechanism is included to prevent this from running more than once if it should only be run on the first startup. |
+| nameOverride | string | `""` |  |
+| nodeSelector | object | `{}` |  |
+| pms.configExistingClaim | string | `""` | Name of an existing `PersistentVolumeClaim` for the PMS database NOTE: When set, 'configStorage' and 'storageClassName' are ignored. |
+| pms.configStorage | string | `"2Gi"` | The volume size to provision for the PMS database |
+| pms.resources | object | `{}` |  |
+| pms.storageClassName | string | `nil` | The storage class to use when provisioning the pms config volume this needs to be created manually, null will use the default |
+| priorityClassName | string | `""` |  |
+| rclone | object | `{"additionalArgs":[],"configSecret":"","enabled":false,"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.62.2"},"readOnly":true,"remotes":[],"resources":{}}` | The settings specific to rclone |
+| rclone.additionalArgs | list | `[]` | Additional arguments to give to rclone when mounting the volume |
+| rclone.configSecret | string | `""` | The name of the secret that contains the rclone configuration file. The key must be called `rclone.conf` in the secret |
+| rclone.enabled | bool | `false` | If the rclone sidecar should be created |
+| rclone.image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.62.2"}` | The rclone image that should be used |
+| rclone.image.registry | string | `"index.docker.io"` | The public dockerhub registry |
+| rclone.image.tag | string | `"1.62.2"` | If unset use latest |
+| rclone.readOnly | bool | `true` | If the remote volumes should be mounted as read only |
+| rclone.remotes | list | `[]` | The remote drive that should be mounted using rclone this must be in the form of `name:[/optional/path]` this remote will be mounted at `/data/name` in the PMS container |
+| runtimeClassName | string | `""` | Specify your own runtime class name eg use gpu |
+| service.annotations | object | `{}` | Optional extra annotations to add to the service resource |
+| service.port | int | `32400` |  |
+| service.type | string | `"ClusterIP"` |  |
+| serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.automountServiceAccountToken | bool | `false` | If the service account token should be auto mounted |
+| serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
+| serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| statefulSet.annotations | object | `{}` | Optional extra annotations to add to the service resource |
+| statefulSet.podAnnotations | object | `{}` | Optional extra annotations to add to the pods in the statefulset |
+| tolerations | list | `[]` |  |
+
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)
