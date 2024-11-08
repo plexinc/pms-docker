@@ -142,9 +142,7 @@ uid=1001(myuser) gid=1001(myuser) groups=1001(myuser)
 In the above case, if you set the `PLEX_UID` and `PLEX_GID` to `1001`, then the permissions will match that of your own user.
 
 ## Tags
-In addition to the standard version and `latest` tags, two other tags exist: `beta` and `public`. These two images behave differently than your typical containers.  These two images do **not** have any Plex Media Server binary installed.  Instead, when these containers are run, they will perform an update check and fetch the latest version, install it, and then continue execution.  They also run the update check whenever the container is restarted.  To update the version in the container, simply stop the container and start container again when you have a network connection. The startup script will automatically fetch the appropriate version and install it before starting the Plex Media Server.
-
-The `public` restricts this check to public versions only where as `beta` will fetch beta versions.  If the server is not logged in or you do not have Plex Pass on your account, the `beta` tagged images will be restricted to publicly available versions only.
+In addition to the `latest` tag, with every new version release a tag is created in the format of `<version number>-<commit>` for historical tracking and version pinning.
 
 To view the Docker images head over to [https://hub.docker.com/r/plexinc/pms-docker/tags/](https://hub.docker.com/r/plexinc/pms-docker/tags/)
 
