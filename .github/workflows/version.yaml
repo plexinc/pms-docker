@@ -28,6 +28,8 @@ jobs:
     name: Bump Version and Generate Docs
     runs-on: ubuntu-latest
     needs: changes
+    permissions:
+      contents: write
     strategy:
       max-parallel: 1
       fail-fast: false
