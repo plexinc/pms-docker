@@ -46,8 +46,24 @@ jobs:
           sparse-checkout: charts
           ref: ${{ github.event.pull_request.head.ref }}
 
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2
+
+      - name: Check if version bump is needed
+        id: check_bump
+        run: |
+          ct lint  --config .github/linters/ct.yaml --source master | grep -q 'chart version not ok. Needs a version bump!'
+          needsBump=$?
+
+          if [ $needsBump -eq 0 ]; then
+            echo "needsBump=true" >> "$GITHUB_OUTPUT"
+          else
+              echo "needsBump=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Cache binaries
         id: cache-bin
+        if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
         uses: actions/cache@v4
         env:
           cache-name: cache-semver
@@ -60,7 +76,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Setup semver
-        if: steps.cache-bin.outputs.cache-hit != 'true'
+        if:  ${{ steps.check_bump.outputs.needsBump == 'true' && steps.cache-bin.outputs.cache-hit != 'true' }}
         run: |
           mkdir -p bin
           wget -O bin/semver \
@@ -68,10 +84,12 @@ jobs:
           chmod +x bin/semver
 
       - name: Setup PATH
+        if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
         run: |
           echo "$GITHUB_WORKSPACE/bin" >> "$GITHUB_PATH"
 
       - name: Compute version
+        if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
         id: get_version
         env:
           PATCH_LABEL: "${{ contains(github.event.pull_request.labels.*.name, 'chart: patch') }}"
@@ -101,6 +119,7 @@ jobs:
           echo "new=${new_ver}" >> "$GITHUB_OUTPUT"
 
       - name: Update Chart Version
+        if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
         shell: bash
         run: |
           sed -i "s/version: ${{ steps.get_version.outputs.last }}/version: ${{ steps.get_version.outputs.new }}/g" "charts/${APP}/Chart.yaml"
@@ -111,10 +130,12 @@ jobs:
           helm-docs --chart-search-root charts --chart-to-generate charts/${APP}
 
       - name: Commit Changes
+        env:
+          message: ${{ steps.check_bump.outputs.needsBump == 'true' && format('to v{0}', steps.get_version.outputs.new) || 'documentation'  }}
         run: |
           git config user.email '<>'
           git config user.name github-actions
           if ! git diff-index --quiet HEAD; then
-            git commit -m "chore: bump $APP chart to v${{ steps.get_version.outputs.new }}" --all
+            git commit -m "chore: update $APP chart $message" --all
             git push origin "HEAD:$GITHUB_HEAD_REF"
           fi
