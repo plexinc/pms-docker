@@ -165,6 +165,15 @@ service:
   # Port to use when type of service is "NodePort" (32400 by default)
   # nodePort: 32400
 
+  # when NodePort is used, plex is unable to determine user IP
+  # all traffic seems to come from within the cluster
+  # setting this to 'Local' will allow Plex to determine the actual IP of user.
+  # used to determine bitrate for remote transcoding
+  # but the pods can only be accessed by the Node IP where the pod is running
+  # Read more here: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+  # https://access.redhat.com/solutions/7028639
+  # externalTrafficPolicy: Local
+
   # optional extra annotations to add to the service resource
   annotations: {}
 
