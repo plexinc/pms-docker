@@ -119,6 +119,10 @@ spec:
           value: compute,video,utility
         {{- end }}
         {{- with .Values.pms.resources }}
+        livenessProbe:
+          {{- toYaml .Values.pms.livenessProbe | nindent 10 }}
+        readinessProbe:
+          {{- toYaml .Values.pms.readinessProbe | nindent 10 }}
         resources:
           limits:
           {{- with .limits }}
