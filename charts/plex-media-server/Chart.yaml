@@ -31,4 +31,4 @@ version: 0.7.0
 appVersion: "1.41.3"
 
 sources:
-  - https://github.com/plexinc/pms-docker
+- https://github.com/plexinc/pms-docker
