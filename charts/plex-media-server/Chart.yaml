@@ -3,9 +3,9 @@ name: plex-media-server
 description: A Helm chart for deploying a PMS server to a kubernetes cluster
 
 keywords:
-  - plex
-  - pms
-  - Personal Media Server
+- plex
+- pms
+- Personal Media Server
 
 home: https://www.plex.tv
 icon: https://www.plex.tv/wp-content/themes/plex/assets/img/favicons/plex-152.png
@@ -31,4 +31,4 @@ version: 0.7.0
 appVersion: "1.41.3"
 
 sources:
-  - https://github.com/plexinc/pms-docker
+- https://github.com/plexinc/pms-docker
