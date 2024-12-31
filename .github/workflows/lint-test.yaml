@@ -27,12 +27,14 @@ jobs:
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2
+        with:
+          version: 3.11.0
 
       - name: Check if version bump is needed
         id: check_bump
         run: |
           set +e
-          ct lint  --config .github/linters/ct.yaml --source master | grep -q 'chart version not ok. Needs a version bump!'
+          ct lint  --config .github/linters/ct.yaml --source ${{ github.event.pull_request.base.ref }} | grep -q 'chart version not ok. Needs a version bump!'
           needsBump=$?
 
           if [ $needsBump -eq 0 ]; then
@@ -127,6 +129,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
+        sparse-checkout: charts
         fetch-depth: 0
 
     - name: Set up Helm
