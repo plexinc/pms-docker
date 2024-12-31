@@ -90,41 +90,44 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 
 ## Configuration
 
-The following table lists the configurable parameters of the Pms-chart chart and their default values.
+The following table lists the configurable parameters of the Plex-media-server chart and their default values.
 
 | Parameter                | Description             | Default        |
 | ------------------------ | ----------------------- | -------------- |
-| `image.registry` | The registry that should be used to pull the image from | `"index.docker.io"` |
-| `image.repository` | The docker repo that will be used for the PMS image | `"plexinc/pms-docker"` |
-| `image.tag` | The tag to use | `"latest"` |
-| `image.sha` | Optional SHA digest to specify a specific image rather than a specific tag | `""` |
+| `image.registry` |  | `"index.docker.io"` |
+| `image.repository` |  | `"plexinc/pms-docker"` |
+| `image.tag` |  | `"latest"` |
+| `image.sha` |  | `""` |
 | `image.pullPolicy` |  | `"IfNotPresent"` |
-| `global.imageRegistry` | The image registry that should be used for all images, this will take precedence over the per image registry.  | `""` |
-| `ingress.enabled` | If an ingress for the PMS port should be created. | `false` |
+| `global.imageRegistry` |  | `""` |
+| `ingress.enabled` |  | `false` |
 | `ingress.ingressClassName` |  | `"ingress-nginx"` |
-| `ingress.url` | The url that will be used for the ingress, this should be manually configured as the app URL in PMS. | `""` |
-| `ingress.annotations` | Extra annotations to add to the ingress.  | `{}` |
-| `pms.storageClassName` | The storage class that will be used for the PMS configuration directory, if not specified the default will be used | `null` |
-| `pms.configStorage` | The amount of storage space that is allocated to the config volume, this will probably need to be much higher if thumbnails are enabled.  | `"2Gi"` |
-| `pms.gpu.nvidia.enabled` | Enabling this will add nvidia.com/gpu: 1 to limits, and will set environment for the nvidia operator | `false` |
+| `ingress.url` |  | `""` |
+| `ingress.annotations` |  | `{}` |
+| `pms.storageClassName` |  | `null` |
+| `pms.configStorage` |  | `"2Gi"` |
+| `pms.configExistingClaim` |  | `""` |
+| `pms.gpu.nvidia.enabled` |  | `false` |
 | `pms.resources` |  | `{}` |
-| `initContainer.image.registry` | The registry that should be used to pull the image from | `"index.docker.io"` |
-| `initContainer.image.repository` | The docker repo that will be used for the init image to run the setup scripts| `"alpine"` |
-| `initContainer.image.tag` | The tag to use | `"3.18.0"` |
-| `initContainer.image.sha` | Optional SHA digest to specify a specific image rather than a specific tag | `""` |
+| `pms.livenessProbe` |  | `{}` |
+| `pms.readinessProbe` |  | `{}` |
+| `initContainer.image.registry` |  | `"index.docker.io"` |
+| `initContainer.image.repository` |  | `"alpine"` |
+| `initContainer.image.tag` |  | `"3.18.0"` |
+| `initContainer.image.sha` |  | `""` |
 | `initContainer.image.pullPolicy` |  | `"IfNotPresent"` |
-| `initContainer.script` | An optional script that will be run by the init container, it can be used on the first run to stop pms from starting when importing a pre-exiting database | `""` |
-| `runtimeClassName` | Specify your own runtime class name eg use gpu | `""` |
-| `rclone.enabled` | If rclone should be used to mount volumes | `false` |
-| `rclone.image.registry` | The registry that should be used to pull the image from | `"index.docker.io"` |
-| `rclone.image.repository` | The docker repo that will be used for the rclone container | `"rclone/rclone"` |
-| `rclone.image.tag` | The version of rclone to use | `"1.62.2"` |
-| `rclone.image.sha` | Optional SHA digest to specify a specific image rather than a specific tag | `""` |
+| `initContainer.script` |  | `""` |
+| `runtimeClassName` |  | `""` |
+| `rclone.enabled` |  | `false` |
+| `rclone.image.registry` |  | `"index.docker.io"` |
+| `rclone.image.repository` |  | `"rclone/rclone"` |
+| `rclone.image.tag` |  | `"1.62.2"` |
+| `rclone.image.sha` |  | `""` |
 | `rclone.image.pullPolicy` |  | `"IfNotPresent"` |
-| `rclone.configSecret` | The name of the Kubernetes secret that contains the rclone config to use. This secret is not created by this chart  | `""` |
-| `rclone.remotes` | A list of remotes to mount using rclone. In the format of `"<remote-name>:<remote-path>"`, the remote-name must be in the rclone config file and its also used to determine the mount path within the PMS container | `[]` |
-| `rclone.readOnly` | If the rclone volumes should be mounted as readonly | `true` |
-| `rclone.additionalArgs` | Optional additional arguments given to the rclone mount command | `[]` |
+| `rclone.configSecret` |  | `""` |
+| `rclone.remotes` |  | `[]` |
+| `rclone.readOnly` |  | `true` |
+| `rclone.additionalArgs` |  | `[]` |
 | `rclone.resources` |  | `{}` |
 | `imagePullSecrets` |  | `[]` |
 | `nameOverride` |  | `""` |
@@ -134,18 +137,19 @@ The following table lists the configurable parameters of the Pms-chart chart and
 | `serviceAccount.annotations` |  | `{}` |
 | `serviceAccount.name` |  | `""` |
 | `statefulSet.annotations` |  | `{}` |
+| `statefulSet.podAnnotations` |  | `{}` |
 | `service.type` |  | `"ClusterIP"` |
-| `service.port` | The port number that will be used for exposing the PMS port from the service | `32400` |
+| `service.port` |  | `32400` |
 | `service.annotations` |  | `{}` |
 | `nodeSelector` |  | `{}` |
 | `tolerations` |  | `[]` |
 | `affinity` |  | `{}` |
 | `priorityClassName` |  | `""` |
-| `commonLabels` | Labels that will be added to all resources created by the chart  | `{}` |
-| `extraEnv` | Environment variables that will be added to the PMS container | `{}` |
-| `extraVolumeMounts` | Additional volume mount configuration blocks for the pms container | `[]` |
-| `extraVolumes` | Extra volume configurations | `[]` |
-| `extraContainers` | Extra contain configuration blocks that will be run alongside the PMS container _after_ the init container finishes | `[]` |
+| `commonLabels` |  | `{}` |
+| `extraEnv` |  | `{}` |
+| `extraVolumeMounts` |  | `[]` |
+| `extraVolumes` |  | `[]` |
+| `extraContainers` |  | `[]` |
 
 ---
 _Documentation generated by [Frigate](https://frigate.readthedocs.io)._
