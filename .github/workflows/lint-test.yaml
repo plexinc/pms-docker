@@ -47,3 +47,12 @@ jobs:
 
     - name: Run chart-testing (install)
       run: ct install --config .github/linters/ct.yaml
+
+    - name: Check if the docs should be updates
+      shell: bash
+      run: |
+        helm-docs --chart-search-root charts --chart-to-generate charts/plex-media-server
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "there are changes to the README"
+          exit -1
+        fi
