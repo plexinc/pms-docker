@@ -22,6 +22,8 @@ jobs:
       with:
         version: v3.13.1
 
+    - uses: gabe565/setup-helm-docs-action@v1
+
     - uses: actions/setup-python@v4
       with:
         python-version: 3.x
