@@ -1,13 +1,15 @@
 name: Bump Version and Generate Docs
 on:
-  pull_request_review:
-    types: [submitted]
+  pull_request:
+    branches:
+    - master
+    paths:
+    - 'charts/**'
 
 jobs:
   changes:
     name: Find Updated Chart
     runs-on: ubuntu-latest
-    if: github.event.review.state == 'approved'
     outputs:
       apps: ${{ steps.apps.outputs.apps }}
     steps:
