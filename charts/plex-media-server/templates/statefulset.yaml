@@ -118,10 +118,14 @@ spec:
         - name: NVIDIA_DRIVER_CAPABILITIES
           value: compute,video,utility
         {{- end }}
+        {{- with .Values.pms.livenessProbe }}
         livenessProbe:
-          {{- toYaml .Values.pms.livenessProbe | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.pms.readinessProbe }}
         readinessProbe:
-          {{- toYaml .Values.pms.readinessProbe | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         {{- with .Values.pms.resources }}
         resources:
           limits:
