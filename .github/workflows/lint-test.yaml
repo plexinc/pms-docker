@@ -22,7 +22,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          sparse-checkout: charts
           ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Set up chart-testing
@@ -127,7 +126,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        sparse-checkout: charts
         fetch-depth: 0
 
     - name: Set up Helm
