@@ -5,10 +5,122 @@ on:
   workflow_call:
   workflow_dispatch:
   pull_request:
+    branches:
+    - master
     paths:
-    - 'charts/**'
+    - 'charts/plex-media-server/**'
 
 jobs:
+  docs:
+    name: Bump Chart Version and Re-Generate Docs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: gabe565/setup-helm-docs-action@v1
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: charts
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2
+
+      - name: Check if version bump is needed
+        id: check_bump
+        run: |
+          set +e
+          ct lint  --config .github/linters/ct.yaml --source master | grep -q 'chart version not ok. Needs a version bump!'
+          needsBump=$?
+
+          if [ $needsBump -eq 0 ]; then
+            echo "needsBump=true" >> "$GITHUB_OUTPUT"
+          else
+              echo "needsBump=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Cache binaries
+        id: cache-bin
+        if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-semver
+        with:
+          path: bin
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('bin/semver') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Setup semver
+        if:  ${{ steps.check_bump.outputs.needsBump == 'true' && steps.cache-bin.outputs.cache-hit != 'true' }}
+        run: |
+          mkdir -p bin
+          wget -O bin/semver \
+            https://raw.githubusercontent.com/fsaintjacques/semver-tool/3.4.0/src/semver
+          chmod +x bin/semver
+
+      - name: Setup PATH
+        if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
+        run: |
+          echo "$GITHUB_WORKSPACE/bin" >> "$GITHUB_PATH"
+
+      - name: Compute version
+        if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
+        id: get_version
+        env:
+          PATCH_LABEL: "${{ contains(github.event.pull_request.labels.*.name, 'chart: patch') }}"
+          MINOR_LABEL: "${{ contains(github.event.pull_request.labels.*.name, 'chart: minor') }}"
+          MAJOR_LABEL: "${{ contains(github.event.pull_request.labels.*.name, 'chart: major') }}"
+        run: |
+          current_ver=$(cat "charts/plex-media-server/Chart.yaml" | grep 'version:' | cut -d' ' -f2)
+
+          BUMP_TYPE=''
+          if [[ $MAJOR_LABEL == 'true' ]];
+          then
+            BUMP_TYPE='major'
+          elif [[ $MINOR_LABEL == 'true' ]];
+          then
+            BUMP_TYPE='minor'
+          elif [[ $PATCH_LABEL == 'true' ]];
+          then
+            BUMP_TYPE='patch'
+          else
+            echo "::error title=Missing Label::Missing the chart versioning label"
+            exit -1
+          fi
+
+          echo "running ${BUMP_TYPE} version bump"
+          new_ver=$(semver bump "${BUMP_TYPE}" "$current_ver")
+          echo "last=${current_ver}" >> "$GITHUB_OUTPUT"
+          echo "new=${new_ver}" >> "$GITHUB_OUTPUT"
+
+      - name: Update Chart Version
+        if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
+        shell: bash
+        run: |
+          sed -i "s/version: ${{ steps.get_version.outputs.last }}/version: ${{ steps.get_version.outputs.new }}/g" "charts/plex-media-server/Chart.yaml"
+
+      - name: Update Docs
+        shell: bash
+        run: |
+          helm-docs --chart-search-root charts --chart-to-generate charts/plex-media-server
+
+      - name: Commit Changes
+        env:
+          message: ${{ steps.check_bump.outputs.needsBump == 'true' && format('to v{0}', steps.get_version.outputs.new) || 'documentation'  }}
+        run: |
+          set +e
+          git config user.email '<>'
+          git config user.name github-actions
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "chore: update $APP chart $message" --all
+            git push origin "HEAD:$GITHUB_HEAD_REF"
+          fi
+
   lint-test:
     runs-on: ubuntu-latest
     steps:
@@ -21,8 +133,6 @@ jobs:
       uses: azure/setup-helm@v3
       with:
         version: v3.13.1
-
-    - uses: gabe565/setup-helm-docs-action@v1
 
     - uses: actions/setup-python@v4
       with:
@@ -49,12 +159,3 @@ jobs:
 
     - name: Run chart-testing (install)
       run: ct install --config .github/linters/ct.yaml
-
-    - name: Check if the docs should be updates
-      shell: bash
-      run: |
-        helm-docs --chart-search-root charts --chart-to-generate charts/plex-media-server
-        if [ -n "$(git status --porcelain)" ]; then
-          echo "there are changes to the README"
-          exit -1
-        fi
