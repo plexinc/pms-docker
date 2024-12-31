@@ -54,6 +54,7 @@ jobs:
       - name: Check if version bump is needed
         id: check_bump
         run: |
+          set +e
           ct lint  --config .github/linters/ct.yaml --source master | grep -q 'chart version not ok. Needs a version bump!'
           needsBump=$?
 
