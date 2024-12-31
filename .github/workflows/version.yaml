@@ -136,6 +136,7 @@ jobs:
         env:
           message: ${{ steps.check_bump.outputs.needsBump == 'true' && format('to v{0}', steps.get_version.outputs.new) || 'documentation'  }}
         run: |
+          set +e
           git config user.email '<>'
           git config user.name github-actions
           if ! git diff-index --quiet HEAD; then
