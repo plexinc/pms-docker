@@ -28,5 +28,5 @@ spec:
   tls:
   - hosts:
     - {{ trimPrefix "https://" .Values.ingress.url }}
-    secretName: {{ include "pms-chart.fullname" . }}-ingress-lets-encrypt
+    secretName: {{ .Values.ingress.certificateSecret | default (printf "%s-ingress-lets-encrypt" (include "pms-chart.fullname" .)) }}
 {{- end -}}
