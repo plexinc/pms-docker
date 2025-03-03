@@ -115,6 +115,22 @@ initContainer:
   #
   #   echo "Done."
 
+extraInitContainers: {}
+# extraContainers:
+#  - name: <container name>
+#    args:
+#      - ...
+#    image: <docker images>
+#    imagePullPolicy: IfNotPresent
+#    resources:
+#      limits:
+#        memory: 128Mi
+#      requests:
+#        cpu: 100m
+#        memory: 128Mi
+#    volumeMounts:
+#      - ...
+
 # -- Specify your own runtime class name eg use gpu
 runtimeClassName: ""
 

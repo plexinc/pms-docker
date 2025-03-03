@@ -96,6 +96,9 @@ spec:
         - name: rclone-config
           mountPath: /out
       {{- end }}
+      {{- with .Values.extraInitContainers }}
+{{- toYaml . | nindent 6 }}
+      {{- end }}
       containers:
       - name: {{ include "pms-chart.fullname" . }}-pms
         image: {{ include "pms-chart.image" . }}
