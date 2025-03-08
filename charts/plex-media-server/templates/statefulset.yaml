@@ -126,11 +126,13 @@ spec:
         readinessProbe:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        {{- if .Values.pms.privileged }}
         securityContext:
           privileged: true
           capabilities:
             add:
               - SYS_ADMIN
+        {{- end }}
         {{- with .Values.pms.resources }}
         resources:
           limits:

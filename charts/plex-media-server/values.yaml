@@ -47,6 +47,10 @@ pms:
     nvidia:
       enabled: false
 
+  # Enabling this will run the pms container as a privileged process
+  # This may be necessary to use intel iGPU for hardware rendering
+  # privileged: true
+
   resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
