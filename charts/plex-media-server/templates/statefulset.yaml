@@ -143,6 +143,10 @@ spec:
             {{ toYaml .requests | indent 12 | trim }}
           {{- end }}
         {{- end }}
+        {{- with .Values.pms.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         volumeMounts:
         - name: pms-config
           mountPath: /config

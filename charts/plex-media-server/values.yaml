@@ -59,6 +59,9 @@ pms:
   #   cpu: 100m
   #   memory: 128Mi
 
+  # -- Security context for PMS pods
+  securityContext: {}
+
   # -- Add kubernetes liveness probe to pms container.
   livenessProbe: {}
     # httpGet:
