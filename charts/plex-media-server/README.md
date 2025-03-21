@@ -130,6 +130,7 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | pms.readinessProbe | object | `{}` | Add kubernetes readiness probe to pms container. |
 | pms.resources | object | `{}` |  |
 | pms.securityContext | object | `{}` | Security context for PMS pods |
+| pms.shareProcessNamespace | bool | `false` | enable process namespace sharing within the pod. |
 | pms.storageClassName | string | `nil` | The storage class to use when provisioning the pms config volume this needs to be created manually, null will use the default |
 | priorityClassName | string | `""` |  |
 | rclone | object | `{"additionalArgs":[],"configSecret":"","enabled":false,"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.62.2"},"readOnly":true,"remotes":[],"resources":{}}` | The settings specific to rclone |
