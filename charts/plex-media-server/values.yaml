@@ -62,6 +62,9 @@ pms:
   # -- Security context for PMS pods
   securityContext: {}
 
+  # -- enable process namespace sharing within the pod.
+  shareProcessNamespace: false
+
   # -- Add kubernetes liveness probe to pms container.
   livenessProbe: {}
     # httpGet:
