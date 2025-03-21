@@ -202,7 +202,9 @@ spec:
       {{- end }}
   {{- if not .Values.pms.configExistingClaim }}
   volumeClaimTemplates:
-  - metadata:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
       name: pms-config
     spec:
       accessModes: [ "ReadWriteOnce" ]
