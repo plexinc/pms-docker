@@ -25,7 +25,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@4
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
 
     - name: Run Artifact Hub lint
       run: |
@@ -35,7 +35,7 @@ jobs:
         ./ah lint -p charts/plex-media-server || exit 1
         rm -f ./ah ./ah_1.5.0_linux_amd64.tar.gz
 
-    - uses: dorny/paths-filter@3
+    - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36  # v3
       id: filter
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
@@ -59,7 +59,7 @@ jobs:
 
     steps:
     - name: Checkout master
-      uses: actions/checkout@4
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
       with:
         # Fetch entire history. Required for chart-releaser
         # see https://github.com/helm/chart-releaser-action/issues/13#issuecomment-602063896
@@ -72,7 +72,7 @@ jobs:
         git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
     - name: Helm Chart Releaser
-      uses: helm/chart-releaser-action@1
+      uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f  # v1
       env:
         CR_SKIP_EXISTING: "false"
         CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
