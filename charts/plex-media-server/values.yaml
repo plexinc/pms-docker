@@ -4,7 +4,7 @@ image:
   registry: index.docker.io
   repository: plexinc/pms-docker
   # -- If unset use "latest"
-  tag: "latest"
+  tag: "1.41.5.9522-a96edc606"
   sha: ""
   pullPolicy: IfNotPresent
 
@@ -156,7 +156,6 @@ rclone:
   # be useful if other files are needed, such as a private key for sftp mode.
   configSecret: ""
 
-
   # -- The remote drive that should be mounted using rclone
   # this must be in the form of `name:[/optional/path]`
   # this remote will be mounted at `/data/name` in the PMS container
@@ -220,7 +219,6 @@ service:
   # -- Optional extra annotations to add to the service resource
   annotations: {}
 
-
 nodeSelector: {}
 
 tolerations: []
@@ -245,7 +243,6 @@ extraEnv: {}
 # a list of CIDRs that can use the server without authentication
   # this is only used for the first startup of PMS
 #   ALLOWED_NETWORKS: "0.0.0.0/0"
-
 
 # -- Optionally specify additional volume mounts for the PMS and init containers.
 extraVolumeMounts: []
