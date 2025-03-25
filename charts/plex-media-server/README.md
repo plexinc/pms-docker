@@ -1,6 +1,6 @@
 # plex-media-server
 
-![Version: 0.7.2](https://img.shields.io/badge/Version-0.7.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.41.3](https://img.shields.io/badge/AppVersion-1.41.3-informational?style=flat-square)
+![Version: 0.9.1](https://img.shields.io/badge/Version-0.9.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.41.5](https://img.shields.io/badge/AppVersion-1.41.5-informational?style=flat-square)
 
 **Homepage:** <https://www.plex.tv>
 
@@ -103,15 +103,17 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | commonLabels | object | `{}` | Common Labels for all resources created by this chart. |
 | extraContainers | list | `[]` |  |
 | extraEnv | object | `{}` |  |
+| extraInitContainers | object | `{}` |  |
 | extraVolumeMounts | list | `[]` | Optionally specify additional volume mounts for the PMS and init containers. |
 | extraVolumes | list | `[]` | Optionally specify additional volumes for the pod. |
 | fullnameOverride | string | `""` |  |
 | global.imageRegistry | string | `""` | Allow parent charts to override registry hostname |
-| image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"plexinc/pms-docker","sha":"","tag":"latest"}` | The docker image information for the pms application |
+| image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"plexinc/pms-docker","sha":"","tag":"1.41.5.9522-a96edc606"}` | The docker image information for the pms application |
 | image.registry | string | `"index.docker.io"` | The public dockerhub registry |
-| image.tag | string | `"latest"` | If unset use "latest" |
+| image.tag | string | `"1.41.5.9522-a96edc606"` | If unset use "latest" |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` | Custom annotations to put on the ingress resource |
+| ingress.certificateSecret | string | `""` | Optional secret name to provide valid https connections using an existing SSL certificate |
 | ingress.enabled | bool | `false` | Specify if an ingress resource for the pms server should be created or not |
 | ingress.ingressClassName | string | `"ingress-nginx"` | The ingress class that should be used |
 | ingress.url | string | `""` | The url to use for the ingress reverse proxy to point at this pms instance |
@@ -127,6 +129,8 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | pms.livenessProbe | object | `{}` | Add kubernetes liveness probe to pms container. |
 | pms.readinessProbe | object | `{}` | Add kubernetes readiness probe to pms container. |
 | pms.resources | object | `{}` |  |
+| pms.securityContext | object | `{}` | Security context for PMS pods |
+| pms.shareProcessNamespace | bool | `false` | Enable process namespace sharing within the pod. |
 | pms.storageClassName | string | `nil` | The storage class to use when provisioning the pms config volume this needs to be created manually, null will use the default |
 | priorityClassName | string | `""` |  |
 | rclone | object | `{"additionalArgs":[],"configSecret":"","enabled":false,"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.62.2"},"readOnly":true,"remotes":[],"resources":{}}` | The settings specific to rclone |
