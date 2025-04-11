@@ -1,0 +1,20 @@
+{
+  "extends": [
+    "config:recommended",
+    ":disableDependencyDashboard",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "enabledManagers": [
+    "github-actions",
+    "helm-requirements",
+    "helm-values",
+    "helmv3",
+    "devcontainer",
+    "docker-compose"
+  ],
+  "prConcurrentLimit": 5,
+  "prCreation": "not-pending",
+  "prHourlyLimit": 1,
+  "reviewersFromCodeOwners": true,
+  "timezone": "Etc/UTC"
+}
