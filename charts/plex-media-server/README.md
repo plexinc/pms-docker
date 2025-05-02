@@ -109,9 +109,9 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | extraVolumes | list | `[]` | Optionally specify additional volumes for the pod. |
 | fullnameOverride | string | `""` |  |
 | global.imageRegistry | string | `""` | Allow parent charts to override registry hostname |
-| image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"plexinc/pms-docker","sha":"","tag":"1.41.5.9522-a96edc606"}` | The docker image information for the pms application |
+| image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"plexinc/pms-docker","sha":"","tag":"1.41.6.9685-d301f511a"}` | The docker image information for the pms application |
 | image.registry | string | `"index.docker.io"` | The public dockerhub registry |
-| image.tag | string | `"1.41.5.9522-a96edc606"` | If unset use "latest" |
+| image.tag | string | `"1.41.6.9685-d301f511a"` | If unset use "latest" |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` | Custom annotations to put on the ingress resource |
 | ingress.certificateSecret | string | `""` | Optional secret name to provide valid https connections using an existing SSL certificate |
