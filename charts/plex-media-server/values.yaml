@@ -12,6 +12,9 @@ global:
   # -- Allow parent charts to override registry hostname
   imageRegistry: ""
 
+# -- Optional DNS configuration for the Pod
+dnsConfig: {}
+
 ingress:
   # -- Specify if an ingress resource for the pms server should be created or not
   enabled: false
