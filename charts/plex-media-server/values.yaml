@@ -22,9 +22,13 @@ ingress:
   # -- The url to use for the ingress reverse proxy to point at this pms instance
   url: ""
 
-  # -- Optional secret name to provide valid https connections
+  # -- Optional TLS configuration to provide valid https connections
   # using an existing SSL certificate
-  certificateSecret: ""
+  # tls:
+  #   - hosts:
+  #       - plex.example.com
+  #     secretName: ""
+  tls: []
 
   # -- Custom annotations to put on the ingress resource
   annotations: {}

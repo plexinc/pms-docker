@@ -25,8 +25,16 @@ spec:
             name: {{ include "pms-chart.fullname" . }}
             port:
               number: 32400
-  tls:
-  - hosts:
-    - {{ trimPrefix "https://" .Values.ingress.url }}
-    secretName: {{ .Values.ingress.certificateSecret | default (printf "%s-ingress-lets-encrypt" (include "pms-chart.fullname" .)) }}
+  {{- if .Values.ingress.tls }}
+    tls:
+      {{- range .Values.ingress.tls }}
+      - hosts:
+        {{- range .hosts }}
+          - {{ tpl . $ | quote }}
+        {{- end }}
+        {{- with .secretName }}
+        secretName: {{ tpl . $ }}
+        {{- end }}
+      {{- end }}
+  {{- end }}
 {{- end -}}
