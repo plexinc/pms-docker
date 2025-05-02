@@ -1,6 +1,6 @@
 # plex-media-server
 
-![Version: 0.9.1](https://img.shields.io/badge/Version-0.9.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.41.5](https://img.shields.io/badge/AppVersion-1.41.5-informational?style=flat-square)
+![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.41.6](https://img.shields.io/badge/AppVersion-1.41.6-informational?style=flat-square)
 
 **Homepage:** <https://www.plex.tv>
 
@@ -118,9 +118,9 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | ingress.enabled | bool | `false` | Specify if an ingress resource for the pms server should be created or not |
 | ingress.ingressClassName | string | `"ingress-nginx"` | The ingress class that should be used |
 | ingress.url | string | `""` | The url to use for the ingress reverse proxy to point at this pms instance |
-| initContainer | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"alpine","sha":"","tag":3.21},"script":""}` | A basic image that will convert the configmap to a file in the rclone config volume this is ignored if rclone is not enabled |
+| initContainer | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"alpine","sha":"","tag":"3.21"},"script":""}` | A basic image that will convert the configmap to a file in the rclone config volume this is ignored if rclone is not enabled |
 | initContainer.image.registry | string | `"index.docker.io"` | The public dockerhub registry |
-| initContainer.image.tag | float | `3.21` | If unset use latest |
+| initContainer.image.tag | string | `"3.21"` | If unset use latest |
 | initContainer.script | string | `""` | A custom script that will be run in an init container to do any setup before the PMS service starts up This will be run every time the pod starts, make sure that some mechanism is included to prevent this from running more than once if it should only be run on the first startup. |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
@@ -134,13 +134,13 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | pms.shareProcessNamespace | bool | `false` | Enable process namespace sharing within the pod. |
 | pms.storageClassName | string | `nil` | The storage class to use when provisioning the pms config volume this needs to be created manually, null will use the default |
 | priorityClassName | string | `""` |  |
-| rclone | object | `{"additionalArgs":[],"configSecret":"","enabled":false,"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.69.1"},"readOnly":true,"remotes":[],"resources":{}}` | The settings specific to rclone |
+| rclone | object | `{"additionalArgs":[],"configSecret":"","enabled":false,"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.69.2"},"readOnly":true,"remotes":[],"resources":{}}` | The settings specific to rclone |
 | rclone.additionalArgs | list | `[]` | Additional arguments to give to rclone when mounting the volume |
 | rclone.configSecret | string | `""` | The name of the secret that contains the rclone configuration file. The rclone config key must be called `rclone.conf` in the secret  All keys in configSecret will be available in /etc/rclone/. This might be useful if other files are needed, such as a private key for sftp mode. |
 | rclone.enabled | bool | `false` | If the rclone sidecar should be created |
-| rclone.image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.69.1"}` | The rclone image that should be used |
+| rclone.image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.69.2"}` | The rclone image that should be used |
 | rclone.image.registry | string | `"index.docker.io"` | The public dockerhub registry |
-| rclone.image.tag | string | `"1.69.1"` | If unset use latest |
+| rclone.image.tag | string | `"1.69.2"` | If unset use latest |
 | rclone.readOnly | bool | `true` | If the remote volumes should be mounted as read only |
 | rclone.remotes | list | `[]` | The remote drive that should be mounted using rclone this must be in the form of `name:[/optional/path]` this remote will be mounted at `/data/name` in the PMS container |
 | runtimeClassName | string | `""` | Specify your own runtime class name eg use gpu |
