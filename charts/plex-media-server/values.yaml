@@ -213,6 +213,13 @@ service:
   type: ClusterIP
   port: 32400
 
+  # -- Deprecated: Pre-defined IP address of the PMS service.
+  # Used by cloud providers to connect the resulting load balancer service to a
+  # pre-existing static IP.
+  # Users are encouraged to use implementation-specific annotations when available instead.
+  # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer
+  # loadBalancerIP: ""
+
   # Port to use when type of service is "NodePort" (32400 by default)
   # nodePort: 32400
 
