@@ -119,12 +119,12 @@ spec:
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}
-        {{- if and .Values.pms.claimSecretName .Values.pms.claimSecretValue }}
+        {{- if and .Values.pms.claimSecret.name .Values.pms.claimSecret.value }}
         - name: PLEX_CLAIM
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.pms.claimSecretName }}
-              key: {{ .Values.pms.claimSecretValue }}
+              name: {{ .Values.pms.claimSecret.name }}
+              key: {{ .Values.pms.claimSecret.value }}
         {{- end }}
         {{- if .Values.pms.gpu.nvidia.enabled }}
         - name: NVIDIA_VISIBLE_DEVICES
