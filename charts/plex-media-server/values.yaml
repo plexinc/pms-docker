@@ -49,7 +49,7 @@ pms:
   # Clashes with providing PLEX_CLAIM via `extraEnv` so only provide one or the other!
   claimSecret:
     name: ""
-    value: ""
+    key: ""
 
   # Enabling this will add nvidia.com/gpu: 1 to limits, and will set
   # environment for the nvidia operator
