@@ -44,7 +44,7 @@ pms:
   # NOTE: When set, 'configStorage' and 'storageClassName' are ignored.
   configExistingClaim: ""
 
-  # Providing both name and value will add in the PLEX_CLAIM environment variable
+  # Providing both name and key will add in the PLEX_CLAIM environment variable
   # with the correct secretKeyRef configuration
   # Clashes with providing PLEX_CLAIM via `extraEnv` so only provide one or the other!
   claimSecret:
