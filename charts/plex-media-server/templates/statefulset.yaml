@@ -124,7 +124,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ .Values.pms.claimSecret.name }}
-              key: {{ .Values.pms.claimSecret.value }}
+              key: {{ .Values.pms.claimSecret.key }}
         {{- end }}
         {{- if .Values.pms.gpu.nvidia.enabled }}
         - name: NVIDIA_VISIBLE_DEVICES
