@@ -21,9 +21,6 @@ ingress:
 
 pms:
   configStorage: 1Gi
-  gpu:
-    nvidia:
-      enabled: true
 
   resources:
     limits:
@@ -37,74 +34,11 @@ pms:
 
   shareProcessNamespace: true
 
-  livenessProbe:
-    httpGet:
-      path: /identity
-      port: 32400
-    initialDelaySeconds: 60
-    periodSeconds: 60
-    timeoutSeconds: 1
-    failureThreshold: 3
-
-  readinessProbe:
-    httpGet:
-      path: /identity
-      port: 32400
-    initialDelaySeconds: 60
-    periodSeconds: 60
-    timeoutSeconds: 1
-    failureThreshold: 3
-
-initContainer:
-  image:
-    registry: index.docker.io
-    repository: alpine
-    tag: '3.21'
-
-  script: |-
-    #!/bin/sh
-    echo "fetching pre-existing pms database to import..."
-
-    if [ -d "/config/Library" ]; then
-      echo "PMS library already exists, exiting."
-      exit 0
-    fi
-
-    apk --update add curl
-    curl http://example.com/pms.tgz -o pms.tgz
-    tar -xvzf pms.tgz -C /config
-    cp -r /config/data/Library /config/Library
-    rm -rf /config/data pms.tgz
-
-    echo "Done."
-
-rclone:
-  enabled: true
-
-  image:
-    registry: index.docker.io
-    repository: rclone/rclone
-    tag: null
-
-  readOnly: true
-
-  resources:
-    limits:
-      cpu: 100m
-      memory: 128Mi
-    requests:
-      cpu: 100m
-      memory: 128Mi
-
 service:
   type: ClusterIP
   port: 32400
   annotations:
     plex.tv/description: just an annotation
-
-nodeSelector: {}
-tolerations: []
-affinity: {}
 
 priorityClassName: system-node-critical
 
@@ -112,7 +46,6 @@ commonLabels:
   plex.tv/name: pms
 
 extraEnv:
-  PLEX_CLAIM: claim
   HOSTNAME: PlexServer
   TZ: Etc/UTC
   PLEX_UPDATE_CHANNEL: '5'

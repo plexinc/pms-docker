@@ -198,7 +198,8 @@ jobs:
         app=plex-media-server
         helm template pms "charts/${app}" \
           --namespace example \
-          --values "charts/${app}/ci/ci-values.yaml" |
+          --values "charts/${app}/ci/ci-values.yaml" \
+          --set 'pms.gpu.nvidia.enabled=true' |
         kubeconform \
           -kubernetes-version=1.32.0 \
           -schema-location default \
