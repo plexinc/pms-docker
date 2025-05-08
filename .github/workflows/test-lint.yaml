@@ -10,6 +10,9 @@ on:
     paths:
     - 'charts/plex-media-server/**'
 
+env:
+  KUBECONFORM_VERSION: v0.6.7
+
 jobs:
   docs:
     name: Bump Chart Version and Re-Generate Docs
@@ -17,17 +20,18 @@ jobs:
     permissions:
       contents: write
     steps:
-    - uses: gabe565/setup-helm-docs-action@d5c35bdc9133cfbea3b671acadf50a29029e87c2 # v1
+    - uses: gabe565/setup-helm-docs-action@d5c35bdc9133cfbea3b671acadf50a29029e87c2  # v1
 
     - name: Checkout
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
       with:
         fetch-depth: 0
         ref: ${{ github.event.pull_request.head.ref }}
 
     - name: Set up chart-testing
-      uses: helm/chart-testing-action@0d28d3144d3a25ea2cc349d6e59901c4ff469b3b # v2
+      uses: helm/chart-testing-action@0d28d3144d3a25ea2cc349d6e59901c4ff469b3b  # v2
 
+    # yamllint disable rule:line-length
     - name: Check if version bump is needed
       id: check_bump
       run: |
@@ -40,11 +44,12 @@ jobs:
         else
             echo "needsBump=false" >> "$GITHUB_OUTPUT"
         fi
+    # yamllint enable rule:line-length
 
     - name: Cache binaries
       id: cache-bin
       if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
-      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684  # v4
       env:
         cache-name: cache-semver
       with:
@@ -64,7 +69,6 @@ jobs:
         chmod +x bin/semver
 
     - name: Setup PATH
-      if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
       run: |
         echo "$GITHUB_WORKSPACE/bin" >> "$GITHUB_PATH"
 
@@ -98,17 +102,20 @@ jobs:
         echo "last=${current_ver}" >> "$GITHUB_OUTPUT"
         echo "new=${new_ver}" >> "$GITHUB_OUTPUT"
 
+    # yamllint disable rule:line-length
     - name: Update Chart Version
       if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
       shell: bash
       run: |
         sed -i "s/version: ${{ steps.get_version.outputs.last }}/version: ${{ steps.get_version.outputs.new }}/g" "charts/plex-media-server/Chart.yaml"
+    # yamllint enable rule:line-length
 
     - name: Update Docs
       shell: bash
       run: |
         helm-docs --chart-search-root charts --chart-to-generate charts/plex-media-server
 
+    # yamllint disable rule:line-length
     - name: Commit Changes
       env:
         message: ${{ steps.check_bump.outputs.needsBump == 'true' && format('to v{0}', steps.get_version.outputs.new) || 'documentation'  }}
@@ -120,27 +127,26 @@ jobs:
           git commit -m "chore: update $APP chart $message" --all
           git push origin "HEAD:$GITHUB_HEAD_REF"
         fi
+    # yamllint enable rule:line-length
 
   lint-test:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
       with:
         fetch-depth: 0
 
     - name: Set up Helm
-      uses: azure/setup-helm@b9e51907a09c216f16ebe8536097933489208112 # v4
-      with:
-        version: v3.13.1
+      uses: azure/setup-helm@b9e51907a09c216f16ebe8536097933489208112  # v4
 
-    - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+    - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5
       with:
         python-version: 3.x
         check-latest: true
 
     - name: Set up chart-testing
-      uses: helm/chart-testing-action@0d28d3144d3a25ea2cc349d6e59901c4ff469b3b # v2
+      uses: helm/chart-testing-action@0d28d3144d3a25ea2cc349d6e59901c4ff469b3b  # v2
 
     - name: Run chart-testing (list-changed)
       id: list-changed
@@ -151,10 +157,52 @@ jobs:
         fi
 
     - name: Run chart-testing (lint)
+      if: steps.list-changed.outputs.changed == 'true'
       run: ct lint --config .github/linters/ct.yaml
 
+    - name: Cache kubeconform
+      id: cache-kubeconform
+      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684  # v4
+      env:
+        cache-name: cache-kubeconform
+      with:
+        path: bin
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ env.KUBECONFORM_VERSION }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    # yamllint disable rule:line-length
+    - name: Install kubeconform
+      if: steps.cache-kubeconform.outputs.cache-hit != 'true'
+      run: |
+        mkdir -p "$GITHUB_WORKSPACE/bin"
+
+        curl -sSLO \
+          "https://github.com/yannh/kubeconform/releases/download/${{ env.KUBECONFORM_VERSION }}/kubeconform-linux-amd64.tar.gz" &&
+        tar -xf "kubeconform-linux-amd64.tar.gz" &&
+        rm "kubeconform-linux-amd64.tar.gz" &&
+        mv kubeconform "$GITHUB_WORKSPACE/bin"
+    # yamllint enable rule:line-length
+
+    # yamllint disable rule:line-length
+    - name: Run kubeconform
+      id: kubeconform
+      run: |
+        app=plex-media-server
+        helm template pms "charts/${app}" \
+          --namespace example \
+          --values "charts/${app}/ci/ci-values.yaml" |
+        kubeconform \
+          -kubernetes-version=1.32.0 \
+          -schema-location default \
+          -strict \
+          -output tap
+    # yamllint enable rule:line-length
+
     - name: Create kind cluster
-      uses: helm/kind-action@a1b0e391336a6ee6713a0583f8c6240d70863de3 # v1
+      uses: helm/kind-action@a1b0e391336a6ee6713a0583f8c6240d70863de3  # v1
       if: steps.list-changed.outputs.changed == 'true'
 
     - name: Run chart-testing (install)
