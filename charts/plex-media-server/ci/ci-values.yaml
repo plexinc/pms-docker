@@ -20,7 +20,6 @@ ingress:
     plex.tv/description: just an annotation
 
 pms:
-  storageClassName: nvme
   configStorage: 1Gi
   gpu:
     nvidia:
