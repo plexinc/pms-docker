@@ -3,6 +3,24 @@ entries:
   plex-media-server:
   - apiVersion: v2
     appVersion: 1.41.6
+    created: "2025-05-08T14:50:49.453974223Z"
+    description: A Helm chart for deploying a PMS server to a Kubernetes cluster
+    digest: 69ce93c8b72739efe4ce9367872c5d1cf081a06a23dd5f5738e0885a96c4fbb2
+    home: https://www.plex.tv
+    icon: https://www.plex.tv/wp-content/themes/plex/assets/img/favicons/plex-152.png
+    keywords:
+    - plex
+    - pms
+    - Personal Media Server
+    name: plex-media-server
+    sources:
+    - https://github.com/plexinc/pms-docker
+    type: application
+    urls:
+    - https://github.com/plexinc/pms-docker/releases/download/helm-chart-1.0.1/plex-media-server-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 1.41.6
     created: "2025-05-08T09:49:11.894827374Z"
     description: A Helm chart for deploying a PMS server to a Kubernetes cluster
     digest: 9406bc0c5681028746950bf9e67fa198f0eeacf8745c648d2f267fc06ac6370d
@@ -415,4 +433,4 @@ entries:
     urls:
     - https://github.com/plexinc/pms-docker/releases/download/helm-chart-0.1.0/plex-media-server-0.1.0.tgz
     version: 0.1.0
-generated: "2025-05-08T09:49:11.894984677Z"
+generated: "2025-05-08T14:50:49.454184037Z"
