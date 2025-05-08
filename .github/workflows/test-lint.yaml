@@ -69,6 +69,7 @@ jobs:
         chmod +x bin/semver
 
     - name: Setup PATH
+      if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
       run: |
         echo "$GITHUB_WORKSPACE/bin" >> "$GITHUB_PATH"
 
@@ -185,6 +186,10 @@ jobs:
         rm "kubeconform-linux-amd64.tar.gz" &&
         mv kubeconform "$GITHUB_WORKSPACE/bin"
     # yamllint enable rule:line-length
+
+    - name: Setup PATH
+      run: |
+        echo "$GITHUB_WORKSPACE/bin" >> "$GITHUB_PATH"
 
     # yamllint disable rule:line-length
     - name: Run kubeconform
