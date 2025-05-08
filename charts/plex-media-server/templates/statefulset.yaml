@@ -21,6 +21,10 @@ spec:
       annotations:
         {{- toYaml .Values.statefulSet.podAnnotations | nindent 8 }}
     spec:
+      {{- if .Values.dnsConfig }}
+      dnsConfig:
+        {{- toYaml .Values.dnsConfig | nindent 8 }}
+      {{- end }}
       {{- if .Values.runtimeClassName }}
       runtimeClassName: {{ .Values.runtimeClassName | quote }}
       {{- end }}
@@ -114,6 +118,13 @@ spec:
         {{- range $key, $value := .Values.extraEnv }}
         - name: {{ $key }}
           value: {{ $value | quote }}
+        {{- end }}
+        {{- if and .Values.pms.claimSecret.name .Values.pms.claimSecret.value }}
+        - name: PLEX_CLAIM
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.pms.claimSecret.name }}
+              key: {{ .Values.pms.claimSecret.key }}
         {{- end }}
         {{- if .Values.pms.gpu.nvidia.enabled }}
         - name: NVIDIA_VISIBLE_DEVICES

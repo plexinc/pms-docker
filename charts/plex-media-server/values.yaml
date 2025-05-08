@@ -4,13 +4,16 @@ image:
   registry: index.docker.io
   repository: plexinc/pms-docker
   # -- If unset use "latest"
-  tag: "1.41.5.9522-a96edc606"
+  tag: "1.41.6.9685-d301f511a"
   sha: ""
   pullPolicy: IfNotPresent
 
 global:
   # -- Allow parent charts to override registry hostname
   imageRegistry: ""
+
+# -- Optional DNS configuration for the Pod
+dnsConfig: {}
 
 ingress:
   # -- Specify if an ingress resource for the pms server should be created or not
@@ -43,6 +46,13 @@ pms:
   # -- Name of an existing `PersistentVolumeClaim` for the PMS database
   # NOTE: When set, 'configStorage' and 'storageClassName' are ignored.
   configExistingClaim: ""
+
+  # Providing both name and key will add in the PLEX_CLAIM environment variable
+  # with the correct secretKeyRef configuration
+  # Clashes with providing PLEX_CLAIM via `extraEnv` so only provide one or the other!
+  claimSecret:
+    name: ""
+    key: ""
 
   # Enabling this will add nvidia.com/gpu: 1 to limits, and will set
   # environment for the nvidia operator
@@ -96,7 +106,7 @@ initContainer:
     registry: index.docker.io
     repository: alpine
     # -- If unset use latest
-    tag: 3.21
+    tag: '3.21'
     sha: ""
     pullPolicy: IfNotPresent
 
@@ -154,7 +164,7 @@ rclone:
     registry: index.docker.io
     repository: rclone/rclone
     # -- If unset use latest
-    tag: 1.69.1
+    tag: 1.69.2
     sha: ""
     pullPolicy: IfNotPresent
 
@@ -212,6 +222,13 @@ statefulSet:
 service:
   type: ClusterIP
   port: 32400
+
+  # -- Deprecated: Pre-defined IP address of the PMS service.
+  # Used by cloud providers to connect the resulting load balancer service to a
+  # pre-existing static IP.
+  # Users are encouraged to use implementation-specific annotations when available instead.
+  # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer
+  # loadBalancerIP: ""
 
   # Port to use when type of service is "NodePort" (32400 by default)
   # nodePort: 32400
