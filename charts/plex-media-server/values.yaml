@@ -24,11 +24,10 @@ ingress:
 
   # -- Optional TLS configuration to provide valid https connections
   # using an existing SSL certificate
-  # tls:
+  tls: []
   #   - hosts:
   #       - plex.example.com
-  #     secretName: ""
-  tls: []
+  #     secretName: cert-example-com
 
   # -- Custom annotations to put on the ingress resource
   annotations: {}
