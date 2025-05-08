@@ -29,6 +29,9 @@ spec:
       runtimeClassName: {{ .Values.runtimeClassName | quote }}
       {{- end }}
       serviceAccountName: {{ include "pms-chart.serviceAccountName" . }}
+      {{- if .Values.pms.shareProcessNamespace }}
+      shareProcessNamespace: {{ .Values.pms.shareProcessNamespace }}
+      {{- end }}
       tolerations:
         {{- toYaml .Values.tolerations | nindent 8 }}
       nodeSelector:
@@ -158,9 +161,6 @@ spec:
         securityContext:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-      {{- if .Values.pms.shareProcessNamespace }}
-        shareProcessNamespace: {{ .Values.pms.shareProcessNamespace }}
-      {{- end }}
         volumeMounts:
         - name: pms-config
           mountPath: /config

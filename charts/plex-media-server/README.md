@@ -1,6 +1,6 @@
 # plex-media-server
 
-![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.41.6](https://img.shields.io/badge/AppVersion-1.41.6-informational?style=flat-square)
+![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.41.6](https://img.shields.io/badge/AppVersion-1.41.6-informational?style=flat-square)
 
 **Homepage:** <https://www.plex.tv>
 
@@ -114,9 +114,9 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | image.tag | string | `"1.41.6.9685-d301f511a"` | If unset use "latest" |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` | Custom annotations to put on the ingress resource |
-| ingress.certificateSecret | string | `""` | Optional secret name to provide valid https connections using an existing SSL certificate |
 | ingress.enabled | bool | `false` | Specify if an ingress resource for the pms server should be created or not |
 | ingress.ingressClassName | string | `"ingress-nginx"` | The ingress class that should be used |
+| ingress.tls | list | `[]` | Optional TLS configuration to provide valid https connections using an existing SSL certificate |
 | ingress.url | string | `""` | The url to use for the ingress reverse proxy to point at this pms instance |
 | initContainer | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"alpine","sha":"","tag":"3.21"},"script":""}` | A basic image that will convert the configmap to a file in the rclone config volume this is ignored if rclone is not enabled |
 | initContainer.image.registry | string | `"index.docker.io"` | The public dockerhub registry |
@@ -124,6 +124,8 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | initContainer.script | string | `""` | A custom script that will be run in an init container to do any setup before the PMS service starts up This will be run every time the pod starts, make sure that some mechanism is included to prevent this from running more than once if it should only be run on the first startup. |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
+| pms.claimSecret.key | string | `""` |  |
+| pms.claimSecret.name | string | `""` |  |
 | pms.configExistingClaim | string | `""` | Name of an existing `PersistentVolumeClaim` for the PMS database NOTE: When set, 'configStorage' and 'storageClassName' are ignored. |
 | pms.configStorage | string | `"2Gi"` | The volume size to provision for the PMS database |
 | pms.gpu.nvidia.enabled | bool | `false` |  |
