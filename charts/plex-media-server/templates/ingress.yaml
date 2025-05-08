@@ -26,15 +26,15 @@ spec:
             port:
               number: 32400
   {{- if .Values.ingress.tls }}
-    tls:
-      {{- range .Values.ingress.tls }}
-      - hosts:
-        {{- range .hosts }}
-          - {{ tpl . $ | quote }}
-        {{- end }}
-        {{- with .secretName }}
-        secretName: {{ tpl . $ }}
-        {{- end }}
+  tls:
+    {{- range .Values.ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ tpl . $ | quote }}
       {{- end }}
+      {{- with .secretName }}
+      secretName: {{ tpl . $ }}
+      {{- end }}
+    {{- end }}
   {{- end }}
 {{- end -}}
