@@ -114,13 +114,23 @@ spec:
         - containerPort: 32400
           name: pms
         env:
-        {{- if .Values.ingress.enabled }}
+        {{- $url := .Values.ingress.url }}
+        {{- $ip := .Values.extraEnv.ADVERTISE_IP }}
+        {{- if or .Values.ingress.enabled $ip }}
         - name: ADVERTISE_IP
-          value: {{ .Values.ingress.url }}:80
+          value: "{{- if and .Values.ingress.enabled $ip -}}
+          {{ printf "%s:443,%s" $url $ip }}
+        {{- else if .Values.ingress.enabled -}}
+          {{ printf "%s:443" $url }}
+        {{- else -}}
+        {{ $ip }}
+        {{- end }}"
         {{- end }}
         {{- range $key, $value := .Values.extraEnv }}
+        {{- if ne $key "ADVERTISE_IP" }}
         - name: {{ $key }}
           value: {{ $value | quote }}
+        {{- end }}
         {{- end }}
         {{- if and .Values.pms.claimSecret.name .Values.pms.claimSecret.value }}
         - name: PLEX_CLAIM
