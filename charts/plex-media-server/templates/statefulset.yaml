@@ -116,7 +116,7 @@ spec:
         env:
         {{- if .Values.ingress.enabled }}
         - name: ADVERTISE_IP
-          value: {{ .Values.ingress.url }}:443
+          value: {{ .Values.ingress.url }}:80
         {{- end }}
         {{- range $key, $value := .Values.extraEnv }}
         - name: {{ $key }}
