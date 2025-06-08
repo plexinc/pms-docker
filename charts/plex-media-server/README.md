@@ -1,6 +1,6 @@
 # plex-media-server
 
-![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.41.6](https://img.shields.io/badge/AppVersion-1.41.6-informational?style=flat-square)
+![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.41.7](https://img.shields.io/badge/AppVersion-1.41.7-informational?style=flat-square)
 
 **Homepage:** <https://www.plex.tv>
 
@@ -109,9 +109,9 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | extraVolumes | list | `[]` | Optionally specify additional volumes for the pod. |
 | fullnameOverride | string | `""` |  |
 | global.imageRegistry | string | `""` | Allow parent charts to override registry hostname |
-| image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"plexinc/pms-docker","sha":"","tag":"1.41.6.9685-d301f511a"}` | The docker image information for the pms application |
+| image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"plexinc/pms-docker","sha":"","tag":"1.41.7.9823-59f304c16"}` | The docker image information for the pms application |
 | image.registry | string | `"index.docker.io"` | The public dockerhub registry |
-| image.tag | string | `"1.41.6.9685-d301f511a"` | If unset use "latest" |
+| image.tag | string | `"1.41.7.9823-59f304c16"` | If unset use "latest" |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` | Custom annotations to put on the ingress resource |
 | ingress.enabled | bool | `false` | Specify if an ingress resource for the pms server should be created or not |
