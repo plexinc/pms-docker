@@ -1,4 +1,5 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
     ":disableDependencyDashboard",
@@ -21,6 +22,17 @@
       ]
     }
   },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^\\.github/workflows/test-lint\\.yaml$"],
+      "matchStrings": ["\\sKUBECONFORM_VERSION:\\s(?<currentValue>.*?)\\n"],
+      "depNameTemplate": "yannh/kubeconform",
+      "datasourceTemplate": "github-releases"
+    }
+  ],
+  "labels": ["dependencies"],
+  "minimumReleaseAge": "2 days",
   "prConcurrentLimit": 5,
   "prCreation": "not-pending",
   "prHourlyLimit": 1,
