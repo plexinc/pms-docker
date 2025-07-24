@@ -15,140 +15,38 @@ env:
   KUBE_VERSION: 1.33.0
 
 jobs:
-  docs:
-    name: Bump Chart Version and Re-Generate Docs
+  chart-lint:
+    name: Chart | lint
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+
     steps:
-    - uses: gabe565/setup-helm-docs-action@d5c35bdc9133cfbea3b671acadf50a29029e87c2  # v1.0.4
-
-    - name: Checkout
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-      with:
-        fetch-depth: 0
-        ref: ${{ github.event.pull_request.head.ref }}
-
-    - name: Set up Helm Chart Testing
-      uses: helm/chart-testing-action@0d28d3144d3a25ea2cc349d6e59901c4ff469b3b  # v2.7.0
-
-    # yamllint disable rule:line-length
-    - name: Check if version bump is needed
-      id: check_bump
-      run: |
-        set +e
-        ct lint --config .github/linters/ct.yaml --check-version-increment  --target-branch ${{ github.event.pull_request.base.ref }} | grep -q 'chart version not ok. Needs a version bump!'
-        needsBump=$?
-
-        if [ $needsBump -eq 0 ]; then
-          echo "needsBump=true" >> "$GITHUB_OUTPUT"
-        else
-            echo "needsBump=false" >> "$GITHUB_OUTPUT"
-        fi
-    # yamllint enable rule:line-length
-
-    - name: Cache binaries
-      id: cache-bin
-      if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
-      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684  # v4.2.3
-      env:
-        cache-name: cache-semver
-      with:
-        path: bin
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('bin/semver') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
-
-    - name: Setup semver
-      if: ${{ steps.check_bump.outputs.needsBump == 'true' && steps.cache-bin.outputs.cache-hit != 'true' }}
-      run: |
-        mkdir -p bin
-        wget -O bin/semver \
-          https://raw.githubusercontent.com/fsaintjacques/semver-tool/3.4.0/src/semver
-        chmod +x bin/semver
-
-    - name: Setup PATH
-      if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
-      run: |
-        echo "$GITHUB_WORKSPACE/bin" >> "$GITHUB_PATH"
-
-    - name: Compute version
-      if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
-      id: get_version
-      env:
-        PATCH_LABEL: "${{ contains(github.event.pull_request.labels.*.name, 'chart: patch') }}"
-        MINOR_LABEL: "${{ contains(github.event.pull_request.labels.*.name, 'chart: minor') }}"
-        MAJOR_LABEL: "${{ contains(github.event.pull_request.labels.*.name, 'chart: major') }}"
-      run: |
-        current_ver=$(cat "charts/plex-media-server/Chart.yaml" | grep 'version:' | cut -d' ' -f2)
-
-        BUMP_TYPE=''
-        if [[ $MAJOR_LABEL == 'true' ]];
-        then
-          BUMP_TYPE='major'
-        elif [[ $MINOR_LABEL == 'true' ]];
-        then
-          BUMP_TYPE='minor'
-        elif [[ $PATCH_LABEL == 'true' ]];
-        then
-          BUMP_TYPE='patch'
-        else
-          echo "::error title=Missing Label::Missing the chart versioning label"
-          exit -1
-        fi
-
-        echo "running ${BUMP_TYPE} version bump"
-        new_ver=$(semver bump "${BUMP_TYPE}" "$current_ver")
-        echo "last=${current_ver}" >> "$GITHUB_OUTPUT"
-        echo "new=${new_ver}" >> "$GITHUB_OUTPUT"
-
-    # yamllint disable rule:line-length
-    - name: Update Chart Version
-      if: ${{ steps.check_bump.outputs.needsBump == 'true' }}
-      shell: bash
-      run: |
-        sed -i "s/version: ${{ steps.get_version.outputs.last }}/version: ${{ steps.get_version.outputs.new }}/g" "charts/plex-media-server/Chart.yaml"
-    # yamllint enable rule:line-length
-
-    - name: Update Docs
-      shell: bash
-      run: |
-        helm-docs --chart-search-root charts --chart-to-generate charts/plex-media-server
-
-    # yamllint disable rule:line-length
-    - name: Commit Changes
-      env:
-        message: ${{ steps.check_bump.outputs.needsBump == 'true' && format('to v{0}', steps.get_version.outputs.new) || 'documentation'  }}
-      run: |
-        set +e
-        git config user.email '<>'
-        git config user.name github-actions
-        if ! git diff-index --quiet HEAD; then
-          git commit -m "chore: update $APP chart $message" --all
-          git push origin "HEAD:$GITHUB_HEAD_REF"
-        fi
-    # yamllint enable rule:line-length
-
-  lint-test:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-      with:
-        fetch-depth: 0
-
-    - name: Set up Helm
-      uses: azure/setup-helm@b9e51907a09c216f16ebe8536097933489208112  # v4.3.0
-
-    - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
+    - name: Set up Python
+      uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
       with:
         python-version: 3.x
         check-latest: true
 
-    - name: Set up chart-testing
+    - name: Set up Helm
+      uses: azure/setup-helm@b9e51907a09c216f16ebe8536097933489208112  # v4.3.0
+
+    - name: Set up Helm Chart Testing
       uses: helm/chart-testing-action@0d28d3144d3a25ea2cc349d6e59901c4ff469b3b  # v2.7.0
+
+    - name: Set up Artifact Hub
+      run: |
+        curl --fail \
+          --location https://github.com/artifacthub/hub/releases/download/v1.21.0/ah_1.21.0_linux_amd64.tar.gz \
+          --output /tmp/ah.tar.gz
+        echo "48d6b87b60baf4ee8fd5efbfec3bf5fb3ca783ab3f1dab625e64332b95df2a84  /tmp/ah.tar.gz" | shasum --check
+        sudo tar --extract --file /tmp/ah.tar.gz --directory /usr/local/bin ah
+
+    - name: Set up helm-docs
+      uses: gabe565/setup-helm-docs-action@d5c35bdc9133cfbea3b671acadf50a29029e87c2  # v1.0.4
+
+    - name: Checkout source
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      with:
+        fetch-depth: 0
 
     - name: Run chart-testing (list-changed)
       id: list-changed
@@ -158,9 +56,18 @@ jobs:
           echo "changed=true" >> "$GITHUB_OUTPUT"
         fi
 
-    - name: Run chart-testing (lint)
+    - name: Lint chart
       if: steps.list-changed.outputs.changed == 'true'
-      run: ct lint --config .github/linters/ct.yaml
+      run: |
+        ct lint --config .github/linters/ct.yaml
+        ah lint --path charts/plex-media-server
+
+    - name: Lint Helm docs
+      if: steps.list-changed.outputs.changed == 'true'
+      shell: bash
+      run: |
+        helm-docs --chart-search-root charts
+        git diff --exit-code charts/plex-media-server/README.md
 
     - name: Cache kubeconform
       id: cache-kubeconform
@@ -192,9 +99,9 @@ jobs:
       run: |
         echo "$GITHUB_WORKSPACE/bin" >> "$GITHUB_PATH"
 
-    # yamllint disable rule:line-length
     - name: Run kubeconform
       id: kubeconform
+      if: steps.list-changed.outputs.changed == 'true'
       run: |
         app=plex-media-server
         helm template pms "charts/${app}" \
@@ -206,11 +113,33 @@ jobs:
           -schema-location default \
           -strict \
           -output tap
-    # yamllint enable rule:line-length
+
+  chart-test:
+    name: Chart | test
+    runs-on: ubuntu-latest
+    needs:
+    - chart-lint
+
+    steps:
+    - name: Set up Python
+      uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
+      with:
+        python-version: 3.x
+        check-latest: true
+
+    - name: Set up Helm
+      uses: azure/setup-helm@b9e51907a09c216f16ebe8536097933489208112  # v4.3.0
+
+    - name: Set up Helm Chart Testing
+      uses: helm/chart-testing-action@0d28d3144d3a25ea2cc349d6e59901c4ff469b3b  # v2.7.0
+
+    - name: Checkout source
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      with:
+        fetch-depth: 0
 
     - name: Create kind cluster
       uses: helm/kind-action@a1b0e391336a6ee6713a0583f8c6240d70863de3  # v1.12.0
-      if: steps.list-changed.outputs.changed == 'true'
 
     - name: Run chart-testing (install)
       run: ct install --config .github/linters/ct.yaml
