@@ -12,6 +12,15 @@
     "devcontainer",
     "docker-compose"
   ],
+  "customDatasources": {
+    "plex": {
+      "defaultRegistryUrlTemplate": "https://plex.tv/api/downloads/5.json",
+      "format": "json",
+      "transformTemplates": [
+        "{\"releases\":[{\"version\": computer.Linux.version}]}"
+      ]
+    }
+  },
   "prConcurrentLimit": 5,
   "prCreation": "not-pending",
   "prHourlyLimit": 1,
