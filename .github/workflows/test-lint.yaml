@@ -16,7 +16,7 @@ env:
 
 jobs:
   chart-lint:
-    name: Chart | lint
+    name: Chart / lint
     runs-on: ubuntu-latest
 
     steps:
@@ -115,7 +115,7 @@ jobs:
           -output tap
 
   chart-test:
-    name: Chart | test
+    name: Chart / test
     runs-on: ubuntu-latest
     needs:
     - chart-lint
