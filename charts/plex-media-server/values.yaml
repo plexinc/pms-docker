@@ -3,7 +3,7 @@ image:
   # -- The public dockerhub registry
   registry: index.docker.io
   repository: plexinc/pms-docker
-  # -- If unset use "latest"
+  # renovate: datasource=custom.plex depName=plex versioning=loose
   tag: "1.41.7.9823-59f304c16"
   sha: ""
   pullPolicy: IfNotPresent
@@ -106,7 +106,7 @@ initContainer:
     registry: index.docker.io
     repository: alpine
     # -- If unset use latest
-    tag: '3.21'
+    tag: '3.22'
     sha: ""
     pullPolicy: IfNotPresent
 
@@ -164,7 +164,7 @@ rclone:
     registry: index.docker.io
     repository: rclone/rclone
     # -- If unset use latest
-    tag: 1.69.2
+    tag: 1.70.3
     sha: ""
     pullPolicy: IfNotPresent
 

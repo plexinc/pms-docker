@@ -111,7 +111,6 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | global.imageRegistry | string | `""` | Allow parent charts to override registry hostname |
 | image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"plexinc/pms-docker","sha":"","tag":"1.41.7.9823-59f304c16"}` | The docker image information for the pms application |
 | image.registry | string | `"index.docker.io"` | The public dockerhub registry |
-| image.tag | string | `"1.41.7.9823-59f304c16"` | If unset use "latest" |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` | Custom annotations to put on the ingress resource |
 | ingress.enabled | bool | `false` | Specify if an ingress resource for the pms server should be created or not |
