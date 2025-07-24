@@ -3,7 +3,6 @@ image:
   # -- The public dockerhub registry
   registry: index.docker.io
   repository: plexinc/pms-docker
-  # -- If unset use "latest"
   # renovate: datasource=custom.plex depName=plex versioning=loose
   tag: "1.41.6.9685-d301f511a"
   sha: ""
