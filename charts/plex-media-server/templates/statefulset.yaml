@@ -116,7 +116,7 @@ spec:
         {{- if or .Values.ingress.enabled .Values.extraEnv.ADVERTISE_IP }}
         env:
         - name: ADVERTISE_IP
-          value: {{ .Values.extraEnv.ADVERTISE_IP | default (printf "%s:433" .Values.ingress.url) }}
+          value: {{ .Values.extraEnv.ADVERTISE_IP | default (printf "%s:443" .Values.ingress.url) }}
         {{- end }}
         {{- range $key, $value := .Values.extraEnv }}
         {{- if ne $key "ADVERTISE_IP" }}
