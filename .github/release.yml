@@ -1,0 +1,22 @@
+changelog:
+  exclude:
+    labels:
+    - ignore-for-release
+    authors:
+    - github-actions
+  categories:
+  - title: Breaking Changes
+    labels:
+    - breaking-change
+  - title: New Features
+    labels:
+    - enhancement
+  - title: Other Changes
+    labels:
+    - '*'
+    exclude:
+      labels:
+      - dependencies
+  - title: Dependencies
+    labels:
+    - dependencies
