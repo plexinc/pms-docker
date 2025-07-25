@@ -113,18 +113,10 @@ spec:
         ports:
         - containerPort: 32400
           name: pms
+        {{- if or .Values.ingress.enabled .Values.extraEnv.ADVERTISE_IP }}
         env:
-        {{- $url := .Values.ingress.url }}
-        {{- $ip := .Values.extraEnv.ADVERTISE_IP }}
-        {{- if or .Values.ingress.enabled $ip }}
         - name: ADVERTISE_IP
-          value: "{{- if and .Values.ingress.enabled $ip -}}
-          {{ printf "%s:443,%s" $url $ip }}
-        {{- else if .Values.ingress.enabled -}}
-          {{ printf "%s:443" $url }}
-        {{- else -}}
-        {{ $ip }}
-        {{- end }}"
+          value: {{ .Values.extraEnv.ADVERTISE_IP | default (printf "%s:433" .Values.ingress.url) }}
         {{- end }}
         {{- range $key, $value := .Values.extraEnv }}
         {{- if ne $key "ADVERTISE_IP" }}
