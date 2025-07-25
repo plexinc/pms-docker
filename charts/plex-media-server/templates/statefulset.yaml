@@ -113,14 +113,16 @@ spec:
         ports:
         - containerPort: 32400
           name: pms
+        {{- if or .Values.ingress.enabled .Values.extraEnv.ADVERTISE_IP }}
         env:
-        {{- if .Values.ingress.enabled }}
         - name: ADVERTISE_IP
-          value: {{ .Values.ingress.url }}:443
+          value: {{ .Values.extraEnv.ADVERTISE_IP | default (printf "%s:433" .Values.ingress.url) }}
         {{- end }}
         {{- range $key, $value := .Values.extraEnv }}
+        {{- if ne $key "ADVERTISE_IP" }}
         - name: {{ $key }}
           value: {{ $value | quote }}
+        {{- end }}
         {{- end }}
         {{- if and .Values.pms.claimSecret.name .Values.pms.claimSecret.value }}
         - name: PLEX_CLAIM
