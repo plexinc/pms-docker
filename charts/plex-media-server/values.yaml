@@ -4,7 +4,7 @@ image:
   registry: index.docker.io
   repository: plexinc/pms-docker
   # renovate: datasource=custom.plex depName=plex versioning=loose
-  tag: "1.41.7.9823-59f304c16"
+  tag: "1.41.9.9961-46083195d"
   sha: ""
   pullPolicy: IfNotPresent
 
