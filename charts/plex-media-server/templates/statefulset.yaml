@@ -113,8 +113,8 @@ spec:
         ports:
         - containerPort: 32400
           name: pms
-        {{- if or .Values.ingress.enabled .Values.extraEnv.ADVERTISE_IP }}
         env:
+        {{- if or .Values.ingress.enabled .Values.extraEnv.ADVERTISE_IP }}
         - name: ADVERTISE_IP
           value: {{ .Values.extraEnv.ADVERTISE_IP | default (printf "%s:443" .Values.ingress.url) }}
         {{- end }}
