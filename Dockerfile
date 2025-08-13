@@ -9,7 +9,8 @@ ENV TERM="xterm" LANG="C.UTF-8" LC_ALL="C.UTF-8"
 ENTRYPOINT ["/init"]
 
 # Add user
-RUN useradd -U -d /config -s /bin/false plex && \
+RUN userdel -r ubuntu && \
+    useradd -U -d /config -s /bin/false plex && \
     usermod -G users plex && \
     \
 # Setup directories
