@@ -21,9 +21,15 @@ spec:
       annotations:
         {{- toYaml .Values.statefulSet.podAnnotations | nindent 8 }}
     spec:
+      {{- if .Values.hostNetwork }}
+      hostNetwork: {{ .Values.hostNetwork }}
+      {{- end }}
       {{- if .Values.dnsConfig }}
       dnsConfig:
         {{- toYaml .Values.dnsConfig | nindent 8 }}
+      {{- end }}
+      {{- if .Values.dnsPolicy }}
+      dnsPolicy: {{ .Values.dnsPolicy | quote }}
       {{- end }}
       {{- if .Values.runtimeClassName }}
       runtimeClassName: {{ .Values.runtimeClassName | quote }}

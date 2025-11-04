@@ -15,6 +15,15 @@ global:
 # -- Optional DNS configuration for the Pod
 dnsConfig: {}
 
+# -- Specifies the Pod's DNS policy. Default is typically 'ClusterFirst'.
+#    If 'hostNetwork: true' is used, you may need to set this to 'ClusterFirstWithHostNet'.
+#    Allowed values are ClusterFirst, Default, None, or ClusterFirstWithHostNet.
+dnsPolicy: ""
+
+# -- Set to true to run the Pod in the host's network namespace.
+#    This may be required for specific networking setups or accessing local resources.
+hostNetwork: false
+
 ingress:
   # -- Specify if an ingress resource for the pms server should be created or not
   enabled: false

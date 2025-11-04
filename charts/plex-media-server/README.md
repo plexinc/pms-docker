@@ -1,6 +1,6 @@
 # plex-media-server
 
-![Version: 1.1.3](https://img.shields.io/badge/Version-1.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.42.2](https://img.shields.io/badge/AppVersion-1.42.2-informational?style=flat-square)
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.42.2](https://img.shields.io/badge/AppVersion-1.42.2-informational?style=flat-square)
 
 **Homepage:** <https://www.plex.tv>
 
@@ -102,6 +102,7 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | affinity | object | `{}` |  |
 | commonLabels | object | `{}` | Common Labels for all resources created by this chart. |
 | dnsConfig | object | `{}` | Optional DNS configuration for the Pod |
+| dnsPolicy | string | `""` | Specifies the Pod's DNS policy. Default is typically 'ClusterFirst'.    If 'hostNetwork: true' is used, you may need to set this to 'ClusterFirstWithHostNet'.    Allowed values are ClusterFirst, Default, None, or ClusterFirstWithHostNet. |
 | extraContainers | list | `[]` |  |
 | extraEnv | object | `{}` |  |
 | extraInitContainers | object | `{}` |  |
@@ -109,6 +110,7 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | extraVolumes | list | `[]` | Optionally specify additional volumes for the pod. |
 | fullnameOverride | string | `""` |  |
 | global.imageRegistry | string | `""` | Allow parent charts to override registry hostname |
+| hostNetwork | bool | `false` | Set to true to run the Pod in the host's network namespace.    This may be required for specific networking setups or accessing local resources. |
 | image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"plexinc/pms-docker","sha":"","tag":"1.42.2.10156-f737b826c"}` | The docker image information for the pms application |
 | image.registry | string | `"index.docker.io"` | The public dockerhub registry |
 | imagePullSecrets | list | `[]` |  |
