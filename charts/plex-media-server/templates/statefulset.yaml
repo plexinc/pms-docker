@@ -139,9 +139,9 @@ spec:
         {{- end }}
         {{- if .Values.pms.gpu.nvidia.enabled }}
         - name: NVIDIA_VISIBLE_DEVICES
-          value: all
+          value: {{ .Values.pms.gpu.nvidia.devices | default "all" | quote }}
         - name: NVIDIA_DRIVER_CAPABILITIES
-          value: compute,video,utility
+          value: {{ .Values.pms.gpu.nvidia.capabilities | default "compute,video,utility" | quote }}
         {{- end }}
         {{- with .Values.pms.livenessProbe }}
         livenessProbe:

@@ -68,6 +68,15 @@ pms:
   gpu:
     nvidia:
       enabled: false
+      # Optional: Specify GPU devices by index, UUID, or use "all" (default)
+      # Examples: "0,1", "GPU-uuid1,GPU-uuid2", or "all"
+      # See: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html#gpu-enumeration
+      devices: "all"
+      
+      # Optional: Specify driver capabilities (default: compute,video,utility)
+      # Available: compute, compat32, graphics, utility, video, display
+      # See: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html#driver-capabilities
+      capabilities: "compute,video,utility"
 
   resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
