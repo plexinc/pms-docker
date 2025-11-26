@@ -1,6 +1,6 @@
 # plex-media-server
 
-![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.42.2](https://img.shields.io/badge/AppVersion-1.42.2-informational?style=flat-square)
+![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.42.2](https://img.shields.io/badge/AppVersion-1.42.2-informational?style=flat-square)
 
 **Homepage:** <https://www.plex.tv>
 
@@ -130,6 +130,8 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | pms.configExistingClaim | string | `""` | Name of an existing `PersistentVolumeClaim` for the PMS database NOTE: When set, 'configStorage' and 'storageClassName' are ignored. |
 | pms.configStorage | string | `"2Gi"` | The volume size to provision for the PMS database |
 | pms.gpu.nvidia.enabled | bool | `false` |  |
+| pms.gpu.nvidia.capabilities | string | `"compute,video,utility"` | NVIDIA driver capabilities to enable. See [NVIDIA docs](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html#driver-capabilities) |
+| pms.gpu.nvidia.devices | string | `"all"` | NVIDIA GPU device selection. Use "all", GPU indices (e.g., "0,1"), or UUIDs. See [NVIDIA docs](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html#gpu-enumeration) |
 | pms.livenessProbe | object | `{}` | Add kubernetes liveness probe to pms container. |
 | pms.readinessProbe | object | `{}` | Add kubernetes readiness probe to pms container. |
 | pms.resources | object | `{}` |  |
