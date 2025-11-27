@@ -129,9 +129,9 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | pms.claimSecret.name | string | `""` |  |
 | pms.configExistingClaim | string | `""` | Name of an existing `PersistentVolumeClaim` for the PMS database NOTE: When set, 'configStorage' and 'storageClassName' are ignored. |
 | pms.configStorage | string | `"2Gi"` | The volume size to provision for the PMS database |
+| pms.gpu.nvidia.capabilities | string | `"compute,video,utility"` | Optional: NVIDIA driver capabilities. Available values are: `compute`, `compat32`, `graphics`, `utility`, `video`, `display`. See [NVIDIA docs](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html#driver-capabilities) |
+| pms.gpu.nvidia.devices | string | `"all"` | Optional: NVIDIA GPU devices by index or UUID. Examples: "0,1", "GPU-uuid1,GPU-uuid2", or "all". See [NVIDIA docs](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html#gpu-enumeration) |
 | pms.gpu.nvidia.enabled | bool | `false` |  |
-| pms.gpu.nvidia.capabilities | string | `"compute,video,utility"` | NVIDIA driver capabilities to enable. See [NVIDIA docs](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html#driver-capabilities) |
-| pms.gpu.nvidia.devices | string | `"all"` | NVIDIA GPU device selection. Use "all", GPU indices (e.g., "0,1"), or UUIDs. See [NVIDIA docs](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html#gpu-enumeration) |
 | pms.livenessProbe | object | `{}` | Add kubernetes liveness probe to pms container. |
 | pms.readinessProbe | object | `{}` | Add kubernetes readiness probe to pms container. |
 | pms.resources | object | `{}` |  |
