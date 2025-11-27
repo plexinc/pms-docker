@@ -130,7 +130,7 @@ spec:
           value: {{ $value | quote }}
         {{- end }}
         {{- end }}
-        {{- if and .Values.pms.claimSecret.name .Values.pms.claimSecret.value }}
+        {{- if and .Values.pms.claimSecret.name .Values.pms.claimSecret.key }}
         - name: PLEX_CLAIM
           valueFrom:
             secretKeyRef:
