@@ -72,7 +72,6 @@ pms:
       # Examples: "0,1", "GPU-uuid1,GPU-uuid2", or "all"
       # See: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html#gpu-enumeration
       devices: "all"
-      
       # Optional: Specify driver capabilities (default: compute,video,utility)
       # Available: compute, compat32, graphics, utility, video, display
       # See: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html#driver-capabilities
