@@ -44,6 +44,25 @@ ingress:
   # -- Custom annotations to put on the ingress resource
   annotations: {}
 
+httpRoute:
+  # -- Specify if an HTTPRoute resource for the pms server should be created or not
+  enabled: false
+
+  # -- Gateway API parent references (required when enabled)
+  # @default -- `[]`
+  parentRefs: []
+  #   - name: my-gateway
+  #     namespace: gateway-namespace
+  #     sectionName: https
+
+  # -- Hostnames to match for the HTTPRoute
+  # @default -- `[]`
+  hostnames: []
+  #   - plex.example.com
+
+  # -- Custom annotations to put on the HTTPRoute resource
+  annotations: {}
+
 pms:
   # -- The storage class to use when provisioning the pms config volume
   # this needs to be created manually, null will use the default
