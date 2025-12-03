@@ -111,6 +111,10 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | fullnameOverride | string | `""` |  |
 | global.imageRegistry | string | `""` | Allow parent charts to override registry hostname |
 | hostNetwork | bool | `false` | Set to true to run the Pod in the host's network namespace.    This may be required for specific networking setups or accessing local resources. |
+| httpRoute.annotations | object | `{}` | Custom annotations to put on the HTTPRoute resource |
+| httpRoute.enabled | bool | `false` | Specify if an HTTPRoute resource for the pms server should be created or not |
+| httpRoute.hostnames | list | `[]` | Hostnames to match for the HTTPRoute |
+| httpRoute.parentRefs | list | `[]` | Gateway API parent references (required when enabled) |
 | image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"plexinc/pms-docker","sha":"","tag":"1.42.2.10156-f737b826c"}` | The docker image information for the pms application |
 | image.registry | string | `"index.docker.io"` | The public dockerhub registry |
 | imagePullSecrets | list | `[]` |  |
