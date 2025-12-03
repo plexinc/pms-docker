@@ -1,5 +1,4 @@
 {{- if .Values.httpRoute.enabled -}}
----
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -17,11 +16,11 @@ spec:
   hostnames: {{ toYaml . | nindent 4 }}
   {{- end }}
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
-        - name: {{ include "pms-chart.fullname" . }}
-          port: {{ .Values.service.port }}
-{{- end -}}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: {{ include "pms-chart.fullname" . }}
+      port: {{ .Values.service.port }}
+{{- end }}
