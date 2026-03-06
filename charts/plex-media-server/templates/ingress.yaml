@@ -3,6 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "pms-chart.fullname" . }}-ingress
+  namespace: {{ .Release.Namespace }}
   labels:
     name: {{ include "pms-chart.fullname" . }}-ingress
 {{ include "pms-chart.labels" . | indent 4 }}

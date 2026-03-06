@@ -3,6 +3,7 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: {{ include "pms-chart.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels: {{ include "pms-chart.labels" . | nindent 4 }}
   {{- with .Values.httpRoute.annotations }}
   annotations: {{ toYaml . | nindent 4 }}
