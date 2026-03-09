@@ -29,7 +29,7 @@ jobs:
       uses: azure/setup-helm@b9e51907a09c216f16ebe8536097933489208112  # v4.3.0
 
     - name: Set up Helm Chart Testing
-      uses: helm/chart-testing-action@0d28d3144d3a25ea2cc349d6e59901c4ff469b3b  # v2.7.0
+      uses: helm/chart-testing-action@6ec842c01de15ebb84c8627d2744a0c2f2755c9f  # v2.8.0
 
     - name: Set up Artifact Hub
       run: |
