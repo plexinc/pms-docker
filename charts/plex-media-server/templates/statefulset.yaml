@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "pms-chart.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     name: {{ include "pms-chart.fullname" . }}
 {{ include "pms-chart.labels" . | indent 4 }}
