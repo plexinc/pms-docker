@@ -4,7 +4,7 @@ image:
   registry: index.docker.io
   repository: plexinc/pms-docker
   # renovate: datasource=custom.plex depName=plex versioning=loose
-  tag: "1.42.2.10156-f737b826c"
+  tag: "1.43.0.10492-121068a07"
   sha: ""
   pullPolicy: IfNotPresent
 
@@ -258,6 +258,14 @@ statefulSet:
 service:
   type: ClusterIP
   port: 32400
+
+  # -- TrafficDistribution offers a way to express preferences for how traffic
+  # is distributed to Service endpoints. If the field is not set, the
+  # implementation will apply its default routing strategy. If set to
+  # "PreferSameNode" (k8s v1.35+) implementations should prioritize endpoints
+  # that are in the same zone. Clusters running k8s v1.34 or earlier should use
+  # "PreferClose" instead.
+  # trafficDistribution: PreferSameNode
 
   # -- Deprecated: Pre-defined IP address of the PMS service.
   # Used by cloud providers to connect the resulting load balancer service to a
