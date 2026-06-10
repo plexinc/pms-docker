@@ -1,6 +1,6 @@
 # plex-media-server
 
-![Version: 1.5.0](https://img.shields.io/badge/Version-1.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.43.0](https://img.shields.io/badge/AppVersion-1.43.0-informational?style=flat-square)
+![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.43.0](https://img.shields.io/badge/AppVersion-1.43.0-informational?style=flat-square)
 
 **Homepage:** <https://www.plex.tv>
 
@@ -114,6 +114,7 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | httpRoute.annotations | object | `{}` | Custom annotations to put on the HTTPRoute resource |
 | httpRoute.enabled | bool | `false` | Specify if an HTTPRoute resource for the pms server should be created or not |
 | httpRoute.hostnames | list | `[]` | Hostnames to match for the HTTPRoute |
+| httpRoute.labels | object | `{}` | Custom labels to put on the HTTPRoute resource |
 | httpRoute.parentRefs | list | `[]` | Gateway API parent references (required when enabled) |
 | image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"plexinc/pms-docker","sha":"","tag":"1.43.0.10492-121068a07"}` | The docker image information for the pms application |
 | image.registry | string | `"index.docker.io"` | The public dockerhub registry |

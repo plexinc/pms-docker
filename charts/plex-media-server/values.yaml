@@ -63,6 +63,9 @@ httpRoute:
   # -- Custom annotations to put on the HTTPRoute resource
   annotations: {}
 
+  # -- Custom labels to put on the HTTPRoute resource
+  labels: {}
+
 pms:
   # -- The storage class to use when provisioning the pms config volume
   # this needs to be created manually, null will use the default
