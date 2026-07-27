@@ -131,6 +131,16 @@ if [ ! -z "${ALLOWED_NETWORKS}" ]; then
   setPref "allowedNetworks" "${ALLOWED_NETWORKS}"
 fi
 
+# Configure Remote Access to use a manually mapped public port.  Without
+# this, servers behind routers/firewalls that do not offer UPnP/NAT-PMP
+# (or in Bridge networking, where the server is behind two layers of NAT)
+# never publish a direct WAN connection to plex.tv and remote clients
+# silently fall back to the bandwidth-limited relay.
+if [ ! -z "${PLEX_MANUAL_PORT}" ]; then
+  setPref "ManualPortMappingMode" "1"
+  setPref "ManualPortMappingPort" "${PLEX_MANUAL_PORT}"
+fi
+
 # Set transcoder temp if not yet set
 if [ -z "$(getPref "TranscoderTempDirectory")" ]; then
   setPref "TranscoderTempDirectory" "/transcode"

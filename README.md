@@ -84,7 +84,7 @@ plexinc/pms-docker
 
 Note: In this configuration, you must do some additional configuration:
 
-- If you wish your Plex Media Server to be accessible outside of your home network, you must manually setup port forwarding on your router to forward to the `ADVERTISE_IP` specified above.  By default you can forward port 32400, but if you choose to use a different external port, be sure you configure this in Plex Media Server's `Remote Access` settings.  With this type of docker networking, the Plex Media Server is essentially behind two routers and it cannot automatically setup port forwarding on its own.
+- If you wish your Plex Media Server to be accessible outside of your home network, you must manually setup port forwarding on your router to forward to the `ADVERTISE_IP` specified above.  By default you can forward port 32400, but if you choose to use a different external port, be sure you configure this in Plex Media Server's `Remote Access` settings or via the `PLEX_MANUAL_PORT` environment variable (see below).  With this type of docker networking, the Plex Media Server is essentially behind two routers and it cannot automatically setup port forwarding on its own, so setting `PLEX_MANUAL_PORT` is recommended to ensure remote clients connect directly instead of through the bandwidth-limited relay.
 - (Plex Pass only) After the server has been set up, you should configure the `LAN Networks` preference to contain the network of your LAN.  This instructs the Plex Media Server to treat these IP addresses as part of your LAN when applying bandwidth controls.  The syntax is the same as the `ALLOWED_NETWORKS` below.  For example `192.168.1.0/24,172.16.0.0/16` will allow access to the entire `192.168.1.x` range and the `172.16.x.x` range.
 
 ## Parameters
@@ -108,6 +108,7 @@ These parameters are usually not required but some special setups may benefit fr
 - **PLEX_UID** The user id of the `plex` user created inside the container.
 - **PLEX_GID** The group id of the `plex` group created inside the container
 - **CHANGE_CONFIG_DIR_OWNERSHIP** Change ownership of config directory to the plex user.  Defaults to `true`.  If you are certain permissions are already set such that the `plex` user within the container can read/write data in it's config directory, you can set this to `false` to speed up the first run of the container.
+- **PLEX_MANUAL_PORT** The public port that you have manually forwarded to the server (equivalent to enabling `Remote Access > Manually specify public port` in the server settings).  For example: `32400`.  Set this if your router/firewall does not support UPnP or NAT-PMP, or when using Bridge networking (where automatic port mapping cannot work); without it, the server never publishes a direct connection to plex.tv and remote clients silently fall back to the bandwidth-limited relay.
 - **ALLOWED_NETWORKS** IP/netmask entries which allow access to the server without requiring authorization.  We recommend you set this only if you do not sign in your server.  For example `192.168.1.0/24,172.16.0.0/16` will allow access to the entire `192.168.1.x` range and the `172.16.x.x` range.  Note: If you are using Bridge networking, then localhost will appear to plex as coming from the docker networking gateway which is often `172.16.0.1`.
 
 ## Users/Groups
