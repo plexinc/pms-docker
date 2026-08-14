@@ -106,6 +106,7 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | extraContainers | list | `[]` |  |
 | extraEnv | object | `{}` |  |
 | extraInitContainers | object | `{}` |  |
+| extraManifests | list | `[]` | Extra manifests to deploy with the release, for objects this chart does not render (Gateway API policies, NetworkPolicy, ServiceMonitor, ExternalSecret, ...) so they are owned by the release rather than applied by hand beside it. May be a list or a map. Each entry is either a YAML object or a string; both are passed through `tpl`, so entries can use the release's values and the chart's named templates. |
 | extraVolumeMounts | list | `[]` | Optionally specify additional volume mounts for the PMS and init containers. |
 | extraVolumes | list | `[]` | Optionally specify additional volumes for the pod. |
 | fullnameOverride | string | `""` |  |
