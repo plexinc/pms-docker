@@ -25,7 +25,7 @@ spec:
           service:
             name: {{ include "pms-chart.fullname" . }}
             port:
-              number: 32400
+              number: {{ .Values.service.port }}
   {{- if .Values.ingress.tls }}
   tls:
     {{- range .Values.ingress.tls }}
