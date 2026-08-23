@@ -1,6 +1,6 @@
 # plex-media-server
 
-![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.43.0](https://img.shields.io/badge/AppVersion-1.43.0-informational?style=flat-square)
+![Version: 1.7.0](https://img.shields.io/badge/Version-1.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.43.0](https://img.shields.io/badge/AppVersion-1.43.0-informational?style=flat-square)
 
 **Homepage:** <https://www.plex.tv>
 
@@ -138,9 +138,10 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | pms.gpu.nvidia.devices | string | `"all"` | Optional: NVIDIA GPU devices by index or UUID. Examples: "0,1", "GPU-uuid1,GPU-uuid2", or "all". See [NVIDIA docs](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html#gpu-enumeration) |
 | pms.gpu.nvidia.enabled | bool | `false` |  |
 | pms.livenessProbe | object | `{}` | Add kubernetes liveness probe to pms container. |
+| pms.podSecurityContext | object | `{}` | Security context applied to the PMS *pod*. Use this for pod-level fields such as `fsGroup`, `supplementalGroups` and `fsGroupChangePolicy`. |
 | pms.readinessProbe | object | `{}` | Add kubernetes readiness probe to pms container. |
 | pms.resources | object | `{}` |  |
-| pms.securityContext | object | `{}` | Security context for PMS pods |
+| pms.securityContext | object | `{}` | Security context applied to the PMS *container*. Use this for container-level fields such as `privileged`, `capabilities`, `readOnlyRootFilesystem` and `allowPrivilegeEscalation`. |
 | pms.shareProcessNamespace | bool | `false` | Enable process namespace sharing within the pod. |
 | pms.storageClassName | string | `nil` | The storage class to use when provisioning the pms config volume this needs to be created manually, null will use the default |
 | priorityClassName | string | `""` |  |
