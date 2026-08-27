@@ -111,7 +111,13 @@ pms:
   #   cpu: 100m
   #   memory: 128Mi
 
-  # -- Security context for PMS pods
+  # -- Security context applied to the PMS *pod*. Use this for pod-level fields
+  # such as `fsGroup`, `supplementalGroups` and `fsGroupChangePolicy`.
+  podSecurityContext: {}
+
+  # -- Security context applied to the PMS *container*. Use this for
+  # container-level fields such as `privileged`, `capabilities`,
+  # `readOnlyRootFilesystem` and `allowPrivilegeEscalation`.
   securityContext: {}
 
   # -- Enable process namespace sharing within the pod.
