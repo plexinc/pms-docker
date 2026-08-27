@@ -1,6 +1,6 @@
 # plex-media-server
 
-![Version: 1.7.0](https://img.shields.io/badge/Version-1.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.43.0](https://img.shields.io/badge/AppVersion-1.43.0-informational?style=flat-square)
+![Version: 1.7.1](https://img.shields.io/badge/Version-1.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.43.0](https://img.shields.io/badge/AppVersion-1.43.0-informational?style=flat-square)
 
 **Homepage:** <https://www.plex.tv>
 
@@ -116,7 +116,7 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | httpRoute.hostnames | list | `[]` | Hostnames to match for the HTTPRoute |
 | httpRoute.labels | object | `{}` | Custom labels to put on the HTTPRoute resource |
 | httpRoute.parentRefs | list | `[]` | Gateway API parent references (required when enabled) |
-| image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"plexinc/pms-docker","sha":"","tag":"1.43.0.10492-121068a07"}` | The docker image information for the pms application |
+| image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"plexinc/pms-docker","sha":"","tag":"1.43.3.10896-cb3ebc72d"}` | The docker image information for the pms application |
 | image.registry | string | `"index.docker.io"` | The public dockerhub registry |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` | Custom annotations to put on the ingress resource |
@@ -145,13 +145,13 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | pms.shareProcessNamespace | bool | `false` | Enable process namespace sharing within the pod. |
 | pms.storageClassName | string | `nil` | The storage class to use when provisioning the pms config volume this needs to be created manually, null will use the default |
 | priorityClassName | string | `""` |  |
-| rclone | object | `{"additionalArgs":[],"configSecret":"","enabled":false,"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.70.3"},"readOnly":true,"remotes":[],"resources":{}}` | The settings specific to rclone |
+| rclone | object | `{"additionalArgs":[],"configSecret":"","enabled":false,"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.75.0"},"readOnly":true,"remotes":[],"resources":{}}` | The settings specific to rclone |
 | rclone.additionalArgs | list | `[]` | Additional arguments to give to rclone when mounting the volume |
 | rclone.configSecret | string | `""` | The name of the secret that contains the rclone configuration file. The rclone config key must be called `rclone.conf` in the secret  All keys in configSecret will be available in /etc/rclone/. This might be useful if other files are needed, such as a private key for sftp mode. |
 | rclone.enabled | bool | `false` | If the rclone sidecar should be created |
-| rclone.image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.70.3"}` | The rclone image that should be used |
+| rclone.image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.75.0"}` | The rclone image that should be used |
 | rclone.image.registry | string | `"index.docker.io"` | The public dockerhub registry |
-| rclone.image.tag | string | `"1.70.3"` | If unset use latest |
+| rclone.image.tag | string | `"1.75.0"` | If unset use latest |
 | rclone.readOnly | bool | `true` | If the remote volumes should be mounted as read only |
 | rclone.remotes | list | `[]` | The remote drive that should be mounted using rclone this must be in the form of `name:[/optional/path]` this remote will be mounted at `/data/name` in the PMS container |
 | runtimeClassName | string | `""` | Specify your own runtime class name eg use gpu |
