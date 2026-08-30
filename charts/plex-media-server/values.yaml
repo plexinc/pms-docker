@@ -352,3 +352,44 @@ extraContainers: []
 #        memory: 128Mi
 #    volumeMounts:
 #      - ...
+
+# -- Extra manifests to deploy with the release, for objects this chart does not
+# render (Gateway API policies, NetworkPolicy, ServiceMonitor, ExternalSecret,
+# ...) so they are owned by the release rather than applied by hand beside it.
+# May be a list or a map. Each entry is either a YAML object or a string; both
+# are passed through `tpl`, so entries can use the release's values and the
+# chart's named templates.
+extraManifests: []
+# extraManifests:
+#  # A config claim the release owns, with a name of its own choosing, kept
+#  # across a `helm uninstall`. Point 'pms.configExistingClaim' at the same name
+#  # so the StatefulSet mounts it instead of a volumeClaimTemplate.
+#  - |
+#    apiVersion: v1
+#    kind: PersistentVolumeClaim
+#    metadata:
+#      name: {{ .Values.pms.configExistingClaim }}
+#      labels:
+#        {{- include "pms-chart.labels" . | nindent 4 }}
+#      annotations:
+#        helm.sh/resource-policy: keep
+#    spec:
+#      accessModes:
+#        - ReadWriteOnce
+#      resources:
+#        requests:
+#          storage: {{ .Values.pms.configStorage }}
+#  # An entry given as an object rather than a string. Quote any value that
+#  # starts with a template - a bare `{{` is not valid YAML.
+#  - apiVersion: gateway.envoyproxy.io/v1alpha1
+#    kind: BackendTrafficPolicy
+#    metadata:
+#      name: '{{ include "pms-chart.fullname" . }}-compression'
+#    spec:
+#      targetRefs:
+#        - group: gateway.networking.k8s.io
+#          kind: HTTPRoute
+#          name: '{{ include "pms-chart.fullname" . }}'
+#      compressor:
+#        - type: Gzip
+#          gzip: {}
