@@ -3,9 +3,23 @@
 
 echo "Stopping Plex Media Server."
 
+kill_pids() {
+  local signal="$1"
+  local pids="$2"
+  local pid
+
+  while IFS= read -r pid; do
+    if [ "$pid" != "" ]; then
+      kill "$signal" "$pid"
+    fi
+  done <<< "$pids"
+}
+
 # Ask nicely
 pids="$(ps -ef | grep 'Plex Media Server' | grep -v grep | awk '{print $2}')"
-kill -15 $pids
+if [ "$pids" != "" ]; then
+  kill_pids -15 "$pids"
+fi
 
 sleep 5
 
@@ -13,6 +27,6 @@ sleep 5
 pids="$(ps -ef | grep /usr/lib/plexmediaserver | grep -v grep | awk '{print $2}')"
 
 if [ "$pids" != "" ]; then
-  kill -9 $pids
+  kill_pids -9 "$pids"
   sleep 2
 fi
