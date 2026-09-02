@@ -148,6 +148,10 @@ spec:
         - name: NVIDIA_DRIVER_CAPABILITIES
           value: {{ .Values.pms.gpu.nvidia.capabilities | default "compute,video,utility" | quote }}
         {{- end }}
+        {{- with .Values.pms.startupProbe }}
+        startupProbe:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         {{- with .Values.pms.livenessProbe }}
         livenessProbe:
           {{- toYaml . | nindent 10 }}
