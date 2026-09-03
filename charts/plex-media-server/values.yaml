@@ -123,11 +123,8 @@ pms:
   # -- Enable process namespace sharing within the pod.
   shareProcessNamespace: false
 
-  # -- Add kubernetes startup probe to pms container. PMS answers 503 on `/identity`
-  # while it runs database migrations at startup, which can take much longer than a
-  # normal boot on a large library. A startup probe holds the liveness probe off until
-  # PMS answers once, so the liveness probe can stay tight without risking a restart
-  # loop that would relaunch the migration from the beginning.
+  # -- Add a startup probe. This can be used to delay the liveness probe
+  # until PMS has finished DB migrations and prevent restarts.
   startupProbe: {}
     # httpGet:
     #   path: /identity
