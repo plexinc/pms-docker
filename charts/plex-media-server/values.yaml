@@ -123,6 +123,15 @@ pms:
   # -- Enable process namespace sharing within the pod.
   shareProcessNamespace: false
 
+  # -- Add a startup probe. This can be used to delay the liveness probe
+  # until PMS has finished DB migrations and prevent restarts.
+  startupProbe: {}
+    # httpGet:
+    #   path: /identity
+    #   port: 32400
+    # periodSeconds: 10
+    # failureThreshold: 180
+
   # -- Add kubernetes liveness probe to pms container.
   livenessProbe: {}
     # httpGet:

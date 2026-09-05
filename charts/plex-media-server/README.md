@@ -1,6 +1,6 @@
 # plex-media-server
 
-![Version: 1.7.1](https://img.shields.io/badge/Version-1.7.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.43.0](https://img.shields.io/badge/AppVersion-1.43.0-informational?style=flat-square)
+![Version: 1.8.0](https://img.shields.io/badge/Version-1.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.43.0](https://img.shields.io/badge/AppVersion-1.43.0-informational?style=flat-square)
 
 **Homepage:** <https://www.plex.tv>
 
@@ -143,6 +143,7 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | pms.resources | object | `{}` |  |
 | pms.securityContext | object | `{}` | Security context applied to the PMS *container*. Use this for container-level fields such as `privileged`, `capabilities`, `readOnlyRootFilesystem` and `allowPrivilegeEscalation`. |
 | pms.shareProcessNamespace | bool | `false` | Enable process namespace sharing within the pod. |
+| pms.startupProbe | object | `{}` | Add a startup probe. This can be used to delay the liveness probe until PMS has finished DB migrations and prevent restarts. |
 | pms.storageClassName | string | `nil` | The storage class to use when provisioning the pms config volume this needs to be created manually, null will use the default |
 | priorityClassName | string | `""` |  |
 | rclone | object | `{"additionalArgs":[],"configSecret":"","enabled":false,"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.75.0"},"readOnly":true,"remotes":[],"resources":{}}` | The settings specific to rclone |
