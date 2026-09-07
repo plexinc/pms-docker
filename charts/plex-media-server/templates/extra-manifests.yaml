@@ -1,0 +1,13 @@
+{{- /*
+Renders arbitrary manifests supplied in .Values.extraManifests, so objects the
+chart does not template (Gateway API policies, NetworkPolicy, ServiceMonitor,
+ExternalSecret, ...) can be owned by this release.
+*/ -}}
+{{- range $manifest := .Values.extraManifests }}
+---
+{{- if kindIs "string" $manifest }}
+{{ tpl $manifest $ }}
+{{- else }}
+{{ tpl (toYaml $manifest) $ }}
+{{- end }}
+{{- end }}
