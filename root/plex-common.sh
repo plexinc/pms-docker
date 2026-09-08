@@ -28,7 +28,7 @@ function getVersionInfo {
 
   local channel
   local tokenNeeded=1
-  if [ ! -z "${PLEX_UPDATE_CHANNEL}" ] && [ "${PLEX_UPDATE_CHANNEL}" > 0 ]; then
+  if [ -n "${PLEX_UPDATE_CHANNEL}" ] && [ "${PLEX_UPDATE_CHANNEL}" -gt 0 ] 2>/dev/null; then
     channel="${PLEX_UPDATE_CHANNEL}"
   elif [ "${version,,}" = "beta" ]; then
     channel=8
