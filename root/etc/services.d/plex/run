@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv bash
 
 echo "Starting Plex Media Server."
-home="$(echo ~plex)"
+home=~plex
 export PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${home}/Library/Application Support}"
 export PLEX_MEDIA_SERVER_HOME=/usr/lib/plexmediaserver
 export PLEX_MEDIA_SERVER_MAX_PLUGIN_PROCS=6
@@ -12,7 +12,7 @@ export PLEX_MEDIA_SERVER_INFO_MODEL
 PLEX_MEDIA_SERVER_INFO_PLATFORM_VERSION="$(uname -r)"
 export PLEX_MEDIA_SERVER_INFO_PLATFORM_VERSION
 
-if [ ! -d "${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}" ]; then
+if [[ ! -d "${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}" ]]; then
   /bin/mkdir -p "${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}"
   chown plex:plex "${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}"
 fi

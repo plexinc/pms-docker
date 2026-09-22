@@ -5,7 +5,7 @@ CONT_CONF_FILE="/version.txt"
 function addVarToConf {
   local variable="$1"
   local value="$2"
-  if [ ! -z "${variable}" ]; then
+  if [[ -n "${variable}" ]]; then
     echo "${variable}=${value}" >> "${CONT_CONF_FILE}"
   fi
 }
@@ -13,9 +13,10 @@ function addVarToConf {
 function readVarFromConf {
   local variable="$1"
   local -n readVarFromConf_value=$2
-  if [ ! -z "${variable}" ]; then
+  if [[ -n "${variable}" ]]; then
     readVarFromConf_value="$(grep -w -- "${variable}" "${CONT_CONF_FILE}" | cut -d'=' -f2 | tail -n 1)"
   else
+    # shellcheck disable=SC2034 # nameref: assigns the caller's variable
     readVarFromConf_value=NULL
   fi
 }
@@ -28,11 +29,12 @@ function getVersionInfo {
 
   local channel plexBuild plexDistro versionInfo
   local tokenNeeded=1
-  if [ -n "${PLEX_UPDATE_CHANNEL}" ] && [ "${PLEX_UPDATE_CHANNEL}" -gt 0 ] 2>/dev/null; then
+  # shellcheck disable=SC2292 # keep [ ]: [[ -gt ]] would arithmetic-eval env input
+  if [[ -n "${PLEX_UPDATE_CHANNEL}" ]] && [ "${PLEX_UPDATE_CHANNEL}" -gt 0 ] 2>/dev/null; then
     channel="${PLEX_UPDATE_CHANNEL}"
-  elif [ "${version,,}" = "beta" ]; then
+  elif [[ "${version,,}" = "beta" ]]; then
     channel=8
-  elif [ "${version,,}" = "public" ]; then
+  elif [[ "${version,,}" = "public" ]]; then
     channel=16
     tokenNeeded=0
   else
@@ -44,14 +46,16 @@ function getVersionInfo {
   readVarFromConf "plex_distro" plexDistro
 
   local url="https://plex.tv/downloads/details/5?build=${plexBuild}&channel=${channel}&distro=${plexDistro}"
-  if [ ${tokenNeeded} -gt 0 ]; then
+  if [[ "${tokenNeeded}" -gt 0 ]]; then
     url="${url}&X-Plex-Token=${token}"
   fi
 
   versionInfo="$(curl -s "${url}")"
 
   # Get update info from the XML.  Note: This could countain multiple updates when user specifies an exact version with the lowest first, so we'll use first always.
+  # shellcheck disable=SC2034 # namerefs: assign the caller's variables
   getVersionInfo_remoteVersion=$(echo "${versionInfo}" | sed -n 's/.*Release.*version="\([^"]*\)".*/\1/p')
+  # shellcheck disable=SC2034
   getVersionInfo_remoteFile=$(echo "${versionInfo}" | sed -n 's/.*file="\([^"]*\)".*/\1/p')
 }
 
@@ -66,7 +70,7 @@ function installFromRawUrl {
   local last=$?
 
   # test if deb file size is ok, or if download failed
-  if [[ "$last" -gt "0" ]] || [[ $(stat -c %s /tmp/plexmediaserver.deb) -lt 10000 ]]; then
+  if [[ "${last}" -gt 0 ]] || [[ $(stat -c %s /tmp/plexmediaserver.deb) -lt 10000 ]]; then
     echo "Failed to fetch update"
     exit 1
   fi

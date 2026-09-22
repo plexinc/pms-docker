@@ -1,12 +1,13 @@
 #!/usr/bin/with-contenv bash
+# shellcheck disable=SC2154 # DEBUG, CHANGE_CONFIG_DIR_OWNERSHIP, PLEX_CLAIM_FILE come from the container env
 
 # If we are debugging, enable trace
-if [ "${DEBUG,,}" = "true" ]; then
+if [[ "${DEBUG,,}" = "true" ]]; then
   set -x
 fi
 
 # If the first run completed successfully, we are done
-if [ -e /.firstRunComplete ]; then
+if [[ -e /.firstRunComplete ]]; then
   exit 0
 fi
 
@@ -22,26 +23,28 @@ function setPref {
   
   count="$(xmlstarlet sel -t -v "count(/Preferences/@${key})" "${prefFile}")"
   count=$((count + 0))
-  if [[ $count -gt 0 ]]; then
+  if [[ ${count} -gt 0 ]]; then
     xmlstarlet ed --inplace --update "/Preferences/@${key}" -v "${value}" "${prefFile}"
   else
     xmlstarlet ed --inplace --insert "/Preferences"  --type attr -n "${key}" -v "${value}" "${prefFile}"
   fi
 }
 
-home="$(echo ~plex)"
-[ -f /etc/default/plexmediaserver ] && . /etc/default/plexmediaserver
+home=~plex
+[[ -f /etc/default/plexmediaserver ]] && . /etc/default/plexmediaserver
 pmsApplicationSupportDir="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${home}/Library/Application Support}"
 prefFile="${pmsApplicationSupportDir}/Plex Media Server/Preferences.xml"
 
 # Setup user/group ids
-if [ ! -z "${PLEX_UID}" ]; then
-  if [ ! "$(id -u plex)" -eq "${PLEX_UID}" ]; then
+if [[ -n "${PLEX_UID}" ]]; then
+  # shellcheck disable=SC2292 # keep [ ]: [[ -ne ]] would arithmetic-eval env input
+  if [ "$(id -u plex)" -ne "${PLEX_UID}" ]; then
     
     # usermod likes to chown the home directory, so create a new one and use that
     # However, if the new UID is 0, we can't set the home dir back because the
     # UID of 0 is already in use (executing this script).
-    if [ ! "${PLEX_UID}" -eq 0 ]; then
+    # shellcheck disable=SC2292 # keep [ ]: [[ -ne ]] would arithmetic-eval env input
+    if [ "${PLEX_UID}" -ne 0 ]; then
       mkdir /tmp/temphome
       usermod -d /tmp/temphome plex
     fi
@@ -50,23 +53,25 @@ if [ ! -z "${PLEX_UID}" ]; then
     usermod -o -u "${PLEX_UID}" plex
     
     # Cleanup the temp home dir
-    if [ ! "${PLEX_UID}" -eq 0 ]; then
+    # shellcheck disable=SC2292 # keep [ ]: [[ -ne ]] would arithmetic-eval env input
+    if [ "${PLEX_UID}" -ne 0 ]; then
       usermod -d /config plex
       rm -Rf /tmp/temphome
     fi
   fi
 fi
 
-if [ ! -z "${PLEX_GID}" ]; then
-  if [ ! "$(id -g plex)" -eq "${PLEX_GID}" ]; then
+if [[ -n "${PLEX_GID}" ]]; then
+  # shellcheck disable=SC2292 # keep [ ]: [[ -ne ]] would arithmetic-eval env input
+  if [ "$(id -g plex)" -ne "${PLEX_GID}" ]; then
     groupmod -o -g "${PLEX_GID}" plex
   fi
 fi
 
 # Update ownership of dirs we need to write
-if [ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]; then
-  if [ -f "${prefFile}" ]; then
-    if [ ! "$(stat -c %u "${prefFile}")" = "$(id -u plex)" ]; then
+if [[ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]]; then
+  if [[ -f "${prefFile}" ]]; then
+    if [[ "$(stat -c %u "${prefFile}")" != "$(id -u plex)" ]]; then
       find /config \! \( -uid "$(id -u plex)" -gid "$(id -g plex)" \) -print0 | xargs -0 chown -h plex:plex
     fi
   else
@@ -76,7 +81,7 @@ if [ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]; then
 fi
 
 # Create empty shell pref file if it doesn't exist already
-if [ ! -e "${prefFile}" ]; then
+if [[ ! -e "${prefFile}" ]]; then
   echo "Creating pref shell"
   mkdir -p "$(dirname "${prefFile}")"
   cat > "${prefFile}" <<-EOF
@@ -88,7 +93,7 @@ fi
 
 # Setup Server's client identifier
 serial="$(getPref "MachineIdentifier")"
-if [ -z "${serial}" ]; then
+if [[ -z "${serial}" ]]; then
   serial="$(uuidgen)"
   setPref "MachineIdentifier" "${serial}"
 fi
@@ -101,10 +106,10 @@ fi
 
 # Get server token and only turn claim token into server token if we have former but not latter.
 token="$(getPref "PlexOnlineToken")"
-if [ -z "${PLEX_CLAIM}" ] && [ -f "${PLEX_CLAIM_FILE}" ]; then
+if [[ -z "${PLEX_CLAIM}" ]] && [[ -f "${PLEX_CLAIM_FILE}" ]]; then
   PLEX_CLAIM=$(cat "${PLEX_CLAIM_FILE}")
 fi
-if [ ! -z "${PLEX_CLAIM}" ] && [ -z "${token}" ]; then
+if [[ -n "${PLEX_CLAIM}" ]] && [[ -z "${token}" ]]; then
   echo "Attempting to obtain server token from claim token"
   loginInfo="$(curl -X POST \
         -H "X-Plex-Client-Identifier: ${clientId}" \
@@ -116,24 +121,24 @@ if [ ! -z "${PLEX_CLAIM}" ] && [ -z "${token}" ]; then
         -H 'X-Plex-Device-Name: PlexMediaServer' \
         -H 'X-Plex-Device: Linux' \
         "https://plex.tv/api/claim/exchange?token=${PLEX_CLAIM}")"
-  token="$(echo "$loginInfo" | sed -n 's/.*<authentication-token>\(.*\)<\/authentication-token>.*/\1/p')"
+  token="$(echo "${loginInfo}" | sed -n 's/.*<authentication-token>\(.*\)<\/authentication-token>.*/\1/p')"
   
-  if [ "$token" ]; then
+  if [[ -n "${token}" ]]; then
     echo "Token obtained successfully"
     setPref "PlexOnlineToken" "${token}"
   fi
 fi
 
-if [ ! -z "${ADVERTISE_IP}" ]; then
+if [[ -n "${ADVERTISE_IP}" ]]; then
   setPref "customConnections" "${ADVERTISE_IP}"
 fi
 
-if [ ! -z "${ALLOWED_NETWORKS}" ]; then
+if [[ -n "${ALLOWED_NETWORKS}" ]]; then
   setPref "allowedNetworks" "${ALLOWED_NETWORKS}"
 fi
 
 # Set transcoder temp if not yet set
-if [ -z "$(getPref "TranscoderTempDirectory")" ]; then
+if [[ -z "$(getPref "TranscoderTempDirectory")" ]]; then
   setPref "TranscoderTempDirectory" "/transcode"
 fi
 
