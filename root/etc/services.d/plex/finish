@@ -5,6 +5,7 @@ echo "Stopping Plex Media Server."
 
 # Ask nicely
 pids="$(ps -ef | grep 'Plex Media Server' | grep -v grep | awk '{print $2}')"
+# shellcheck disable=SC2086 # intentional word splitting of pid list
 kill -15 $pids
 
 sleep 5
@@ -13,6 +14,7 @@ sleep 5
 pids="$(ps -ef | grep /usr/lib/plexmediaserver | grep -v grep | awk '{print $2}')"
 
 if [ "$pids" != "" ]; then
+  # shellcheck disable=SC2086 # intentional word splitting of pid list
   kill -9 $pids
   sleep 2
 fi

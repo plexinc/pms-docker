@@ -6,7 +6,7 @@ function addVarToConf {
   local variable="$1"
   local value="$2"
   if [ ! -z "${variable}" ]; then
-    echo ${variable}=${value} >> ${CONT_CONF_FILE}
+    echo "${variable}=${value}" >> "${CONT_CONF_FILE}"
   fi
 }
 
@@ -14,7 +14,7 @@ function readVarFromConf {
   local variable="$1"
   local -n readVarFromConf_value=$2
   if [ ! -z "${variable}" ]; then
-    readVarFromConf_value="$(grep -w ${variable} ${CONT_CONF_FILE} | cut -d'=' -f2 | tail -n 1)"
+    readVarFromConf_value="$(grep -w -- "${variable}" "${CONT_CONF_FILE}" | cut -d'=' -f2 | tail -n 1)"
   else
     readVarFromConf_value=NULL
   fi
@@ -48,7 +48,7 @@ function getVersionInfo {
     url="${url}&X-Plex-Token=${token}"
   fi
 
-  local versionInfo="$(curl -s "${url}")"
+  versionInfo="$(curl -s "${url}")"
 
   # Get update info from the XML.  Note: This could countain multiple updates when user specifies an exact version with the lowest first, so we'll use first always.
   getVersionInfo_remoteVersion=$(echo "${versionInfo}" | sed -n 's/.*Release.*version="\([^"]*\)".*/\1/p')
