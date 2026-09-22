@@ -45,12 +45,16 @@ function getVersionInfo {
   readVarFromConf "plex_build" plexBuild
   readVarFromConf "plex_distro" plexDistro
 
-  local url="https://plex.tv/downloads/details/5?build=${plexBuild}&channel=${channel}&distro=${plexDistro}"
+  local -a query=(
+    --data-urlencode "build=${plexBuild}"
+    --data-urlencode "channel=${channel}"
+    --data-urlencode "distro=${plexDistro}"
+  )
   if [[ "${tokenNeeded}" -gt 0 ]]; then
-    url="${url}&X-Plex-Token=${token}"
+    query+=(--data-urlencode "X-Plex-Token=${token}")
   fi
 
-  versionInfo="$(curl -s "${url}")"
+  versionInfo="$(curl -s -G "${query[@]}" "https://plex.tv/downloads/details/5")"
 
   # Get update info from the XML.  Note: This could countain multiple updates when user specifies an exact version with the lowest first, so we'll use first always.
   # shellcheck disable=SC2034 # namerefs: assign the caller's variables
