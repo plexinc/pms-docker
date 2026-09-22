@@ -26,10 +26,7 @@ function setPref {
   fi
 }
 
-home=~plex
-[[ -f /etc/default/plexmediaserver ]] && . /etc/default/plexmediaserver
-pmsApplicationSupportDir="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${home}/Library/Application Support}"
-prefFile="${pmsApplicationSupportDir}/Plex Media Server/Preferences.xml"
+setPrefFile
 
 # Setup user/group ids
 if [[ -n "${PLEX_UID}" ]]; then

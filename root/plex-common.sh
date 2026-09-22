@@ -13,11 +13,19 @@ function asPlex {
   fi
 }
 
-# prefFile is set by the sourcing script
+# Resolve prefFile the same way PMS does (services.d/plex/run)
+function setPrefFile {
+  local home pmsApplicationSupportDir
+  home=~plex
+  [[ -f /etc/default/plexmediaserver ]] && . /etc/default/plexmediaserver
+  pmsApplicationSupportDir="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${home}/Library/Application Support}"
+  prefFile="${pmsApplicationSupportDir}/Plex Media Server/Preferences.xml"
+}
+
+# Requires setPrefFile to have been called
 function getPref {
   local key="$1"
 
-  # shellcheck disable=SC2154
   asPlex xmlstarlet sel -T -t -m "/Preferences" -v "@${key}" -n "${prefFile}"
 }
 
