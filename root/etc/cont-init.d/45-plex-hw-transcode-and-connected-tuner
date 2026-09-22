@@ -22,7 +22,7 @@ do
     fi
 
     # If plex user isn't part of this group, add them
-    if ! getent group "${CURRENT_GROUP}" | grep -qw plex; then
+    if ! getent group "${CURRENT_GROUP}" | cut -d: -f4 | tr ',' '\n' | grep -qx plex; then
       usermod -a -G "${CURRENT_GROUP}" plex
     fi
 
