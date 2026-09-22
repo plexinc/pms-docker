@@ -125,9 +125,9 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | ingress.ingressClassName | string | `"ingress-nginx"` | The ingress class that should be used |
 | ingress.tls | list | `[]` | Optional TLS configuration to provide valid https connections using an existing SSL certificate |
 | ingress.url | string | `""` | The url to use for the ingress reverse proxy to point at this pms instance |
-| initContainer | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"alpine","sha":"","tag":"3.22"},"script":""}` | A basic image that will convert the configmap to a file in the rclone config volume this is ignored if rclone is not enabled |
+| initContainer | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"alpine","sha":"","tag":"3.24"},"script":""}` | A basic image that will convert the configmap to a file in the rclone config volume this is ignored if rclone is not enabled |
 | initContainer.image.registry | string | `"index.docker.io"` | The public dockerhub registry |
-| initContainer.image.tag | string | `"3.22"` | If unset use latest |
+| initContainer.image.tag | string | `"3.24"` | If unset use latest |
 | initContainer.script | string | `""` | A custom script that will be run in an init container to do any setup before the PMS service starts up This will be run every time the pod starts, make sure that some mechanism is included to prevent this from running more than once if it should only be run on the first startup. |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
