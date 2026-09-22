@@ -26,6 +26,6 @@ do
       usermod -a -G "${CURRENT_GROUP}" plex
     fi
 
-    GROUP_COUNT=$(($GROUP_COUNT + 1))
+    GROUP_COUNT=$((GROUP_COUNT + 1))
 done
 

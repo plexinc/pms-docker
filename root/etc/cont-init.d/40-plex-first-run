@@ -21,8 +21,8 @@ function setPref {
   local value="$2"
   
   count="$(xmlstarlet sel -t -v "count(/Preferences/@${key})" "${prefFile}")"
-  count=$(($count + 0))
-  if [[ $count > 0 ]]; then
+  count=$((count + 0))
+  if [[ $count -gt 0 ]]; then
     xmlstarlet ed --inplace --update "/Preferences/@${key}" -v "${value}" "${prefFile}"
   else
     xmlstarlet ed --inplace --insert "/Preferences"  --type attr -n "${key}" -v "${value}" "${prefFile}"
