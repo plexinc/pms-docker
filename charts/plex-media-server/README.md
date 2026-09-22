@@ -147,13 +147,13 @@ Before contributing, please read the [Code of Conduct](../../CODE_OF_CONDUCT.md)
 | pms.startupProbe | object | `{}` | Add a startup probe. This can be used to delay the liveness probe until PMS has finished DB migrations and prevent restarts. |
 | pms.storageClassName | string | `nil` | The storage class to use when provisioning the pms config volume this needs to be created manually, null will use the default |
 | priorityClassName | string | `""` |  |
-| rclone | object | `{"additionalArgs":[],"configSecret":"","enabled":false,"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.75.0"},"readOnly":true,"remotes":[],"resources":{}}` | The settings specific to rclone |
+| rclone | object | `{"additionalArgs":[],"configSecret":"","enabled":false,"image":{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.75.1"},"readOnly":true,"remotes":[],"resources":{}}` | The settings specific to rclone |
 | rclone.additionalArgs | list | `[]` | Additional arguments to give to rclone when mounting the volume |
 | rclone.configSecret | string | `""` | The name of the secret that contains the rclone configuration file. The rclone config key must be called `rclone.conf` in the secret  All keys in configSecret will be available in /etc/rclone/. This might be useful if other files are needed, such as a private key for sftp mode. |
 | rclone.enabled | bool | `false` | If the rclone sidecar should be created |
-| rclone.image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.75.0"}` | The rclone image that should be used |
+| rclone.image | object | `{"pullPolicy":"IfNotPresent","registry":"index.docker.io","repository":"rclone/rclone","sha":"","tag":"1.75.1"}` | The rclone image that should be used |
 | rclone.image.registry | string | `"index.docker.io"` | The public dockerhub registry |
-| rclone.image.tag | string | `"1.75.0"` | If unset use latest |
+| rclone.image.tag | string | `"1.75.1"` | If unset use latest |
 | rclone.readOnly | bool | `true` | If the remote volumes should be mounted as read only |
 | rclone.remotes | list | `[]` | The remote drive that should be mounted using rclone this must be in the form of `name:[/optional/path]` this remote will be mounted at `/data/name` in the PMS container |
 | runtimeClassName | string | `""` | Specify your own runtime class name eg use gpu |
