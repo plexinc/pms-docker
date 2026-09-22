@@ -66,15 +66,21 @@ function installFromUrl {
 
 function installFromRawUrl {
   local remoteFile="$1"
-  curl -J -L -o /tmp/plexmediaserver.deb "${remoteFile}"
-  local last=$?
+  local deb last
+  deb="$(mktemp --suffix=.deb)" || exit 1
+  # Expand now: ${deb} is local and may be out of scope when the trap fires
+  # shellcheck disable=SC2064
+  trap "rm -f '${deb}'" EXIT
+  curl --fail -L -o "${deb}" "${remoteFile}"
+  last=$?
 
   # test if deb file size is ok, or if download failed
-  if [[ "${last}" -gt 0 ]] || [[ $(stat -c %s /tmp/plexmediaserver.deb) -lt 10000 ]]; then
+  if [[ "${last}" -gt 0 ]] || [[ $(stat -c %s "${deb}") -lt 10000 ]]; then
     echo "Failed to fetch update"
+    rm -f "${deb}"
     exit 1
   fi
 
-  dpkg -i --force-confold --force-architecture  /tmp/plexmediaserver.deb
-  rm -f /tmp/plexmediaserver.deb
+  dpkg -i --force-confold --force-architecture "${deb}"
+  rm -f "${deb}"
 }
