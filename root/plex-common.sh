@@ -2,6 +2,25 @@
 
 CONT_CONF_FILE="/version.txt"
 
+# shellcheck disable=SC2154 # CHANGE_CONFIG_DIR_OWNERSHIP comes from the container env
+# Preferences.xml lives in a plex-owned dir, so touch it as the plex user. Opting out of
+# CHANGE_CONFIG_DIR_OWNERSHIP keeps the previous run-as-root behaviour for root-owned configs.
+function asPlex {
+  if [[ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]]; then
+    s6-setuidgid plex "$@"
+  else
+    "$@"
+  fi
+}
+
+# prefFile is set by the sourcing script
+function getPref {
+  local key="$1"
+
+  # shellcheck disable=SC2154
+  asPlex xmlstarlet sel -T -t -m "/Preferences" -v "@${key}" -n "${prefFile}"
+}
+
 function addVarToConf {
   local variable="$1"
   local value="$2"

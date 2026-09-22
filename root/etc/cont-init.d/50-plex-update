@@ -8,15 +8,10 @@ fi
 
 . /plex-common.sh
 
-function getPref {
-  local key="$1"
-
-  xmlstarlet sel -T -t -m "/Preferences" -v "@${key}" -n "${prefFile}"
-}
-
 # Get token
 [[ -f /etc/default/plexmediaserver ]] && . /etc/default/plexmediaserver
 pmsApplicationSupportDir="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${HOME}/Library/Application Support}"
+# shellcheck disable=SC2034 # read by getPref in plex-common.sh
 prefFile="${pmsApplicationSupportDir}/Plex Media Server/Preferences.xml"
 token="$(getPref "PlexOnlineToken")"
 

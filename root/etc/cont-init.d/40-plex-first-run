@@ -11,22 +11,18 @@ if [[ -e /.firstRunComplete ]]; then
   exit 0
 fi
 
-function getPref {
-  local key="$1"
-  
-  xmlstarlet sel -T -t -m "/Preferences" -v "@${key}" -n "${prefFile}"
-}
+. /plex-common.sh
 
 function setPref {
   local key="$1"
   local value="$2"
   
-  count="$(xmlstarlet sel -t -v "count(/Preferences/@${key})" "${prefFile}")"
+  count="$(asPlex xmlstarlet sel -t -v "count(/Preferences/@${key})" "${prefFile}")"
   count=$((count + 0))
   if [[ ${count} -gt 0 ]]; then
-    xmlstarlet ed --inplace --update "/Preferences/@${key}" -v "${value}" "${prefFile}"
+    asPlex xmlstarlet ed --inplace --update "/Preferences/@${key}" -v "${value}" "${prefFile}"
   else
-    xmlstarlet ed --inplace --insert "/Preferences"  --type attr -n "${key}" -v "${value}" "${prefFile}"
+    asPlex xmlstarlet ed --inplace --insert "/Preferences"  --type attr -n "${key}" -v "${value}" "${prefFile}"
   fi
 }
 
@@ -84,11 +80,12 @@ fi
 if [[ ! -e "${prefFile}" ]]; then
   echo "Creating pref shell"
   mkdir -p "$(dirname "${prefFile}")"
-  cat > "${prefFile}" <<-EOF
+  chown -h plex:plex "$(dirname "${prefFile}")"
+  asPlex tee "${prefFile}" >/dev/null <<-EOF
 <?xml version="1.0" encoding="utf-8"?>
 <Preferences/>
 EOF
-  chown -R plex:plex "$(dirname "${prefFile}")"
+  chown -h plex:plex "${prefFile}"
 fi
 
 # Setup Server's client identifier
