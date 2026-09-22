@@ -26,7 +26,7 @@ function getVersionInfo {
   local -n getVersionInfo_remoteVersion=$3
   local -n getVersionInfo_remoteFile=$4
 
-  local channel
+  local channel plexBuild plexDistro versionInfo
   local tokenNeeded=1
   if [ -n "${PLEX_UPDATE_CHANNEL}" ] && [ "${PLEX_UPDATE_CHANNEL}" -gt 0 ] 2>/dev/null; then
     channel="${PLEX_UPDATE_CHANNEL}"
