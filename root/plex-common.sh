@@ -131,6 +131,7 @@ function installFromRawUrl {
     exit 1
   fi
 
-  dpkg -i --force-confold --force-architecture "${deb}"
+  # HOME=/config is plex-writable: dpkg reads ~/.dpkg.cfg and maintainer scripts inherit HOME
+  HOME=/root dpkg -i --force-confold --force-architecture "${deb}"
   rm -f "${deb}"
 }
