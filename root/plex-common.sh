@@ -100,7 +100,7 @@ function getVersionInfo {
   fi
 
   # -q (must be the first arg): ignore ~/.curlrc, HOME=/config is plex-writable
-  versionInfo="$(curl -q -s -G "${query[@]}" "https://plex.tv/downloads/details/5")"
+  versionInfo="$(curl -q -s -G "${query[@]}" "https://api.plex.tv/downloads/details/5")"
 
   # Get update info from the XML.  Note: This could countain multiple updates when user specifies an exact version with the lowest first, so we'll use first always.
   # shellcheck disable=SC2034 # namerefs: assign the caller's variables
@@ -111,7 +111,7 @@ function getVersionInfo {
 
 
 function installFromUrl {
-  installFromRawUrl "https://plex.tv/${1}"
+  installFromRawUrl "https://api.plex.tv/${1}"
 }
 
 function installFromRawUrl {

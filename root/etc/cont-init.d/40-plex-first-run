@@ -115,7 +115,7 @@ if [[ -n "${PLEX_CLAIM}" ]] && [[ -z "${token}" ]]; then
         -H 'X-Plex-Platform-Version: 1.0' \
         -H 'X-Plex-Device-Name: PlexMediaServer' \
         -H 'X-Plex-Device: Linux' \
-        "https://plex.tv/api/claim/exchange?token=${PLEX_CLAIM}")"
+        "https://api.plex.tv/api/claim/exchange?token=${PLEX_CLAIM}")"
   token="$(echo "${loginInfo}" | sed -n 's/.*<authentication-token>\(.*\)<\/authentication-token>.*/\1/p')"
   
   if [[ -n "${token}" ]]; then
