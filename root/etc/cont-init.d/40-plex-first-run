@@ -105,7 +105,8 @@ if [[ -z "${PLEX_CLAIM}" ]] && [[ -f "${PLEX_CLAIM_FILE}" ]]; then
 fi
 if [[ -n "${PLEX_CLAIM}" ]] && [[ -z "${token}" ]]; then
   echo "Attempting to obtain server token from claim token"
-  loginInfo="$(curl -X POST \
+  # -q (must be the first arg): ignore ~/.curlrc, HOME=/config is plex-writable
+  loginInfo="$(curl -q -X POST \
         -H "X-Plex-Client-Identifier: ${clientId}" \
         -H 'X-Plex-Product: Plex Media Server'\
         -H 'X-Plex-Version: 1.1' \

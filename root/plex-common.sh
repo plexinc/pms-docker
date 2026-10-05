@@ -81,7 +81,8 @@ function getVersionInfo {
     query+=(--data-urlencode "X-Plex-Token=${token}")
   fi
 
-  versionInfo="$(curl -s -G "${query[@]}" "https://plex.tv/downloads/details/5")"
+  # -q (must be the first arg): ignore ~/.curlrc, HOME=/config is plex-writable
+  versionInfo="$(curl -q -s -G "${query[@]}" "https://plex.tv/downloads/details/5")"
 
   # Get update info from the XML.  Note: This could countain multiple updates when user specifies an exact version with the lowest first, so we'll use first always.
   # shellcheck disable=SC2034 # namerefs: assign the caller's variables
@@ -102,7 +103,7 @@ function installFromRawUrl {
   # Expand now: ${deb} is local and may be out of scope when the trap fires
   # shellcheck disable=SC2064
   trap "rm -f '${deb}'" EXIT
-  curl --fail -L -o "${deb}" "${remoteFile}"
+  curl -q --fail -L -o "${deb}" "${remoteFile}"
   last=$?
 
   # test if deb file size is ok, or if download failed
