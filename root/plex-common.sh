@@ -2,11 +2,25 @@
 
 CONT_CONF_FILE="/version.txt"
 
+# True if plex can modify the prefs dir, i.e. it or any existing parent is plex-writable.
+# Requires setPrefFile to have been called
+function plexCanWritePrefDir {
+  local dir
+  dir="$(dirname "${prefFile}")"
+  while [[ "${dir}" != "/" ]]; do
+    if [[ -e "${dir}" ]] && s6-setuidgid plex test -w "${dir}"; then
+      return 0
+    fi
+    dir="$(dirname "${dir}")"
+  done
+  return 1
+}
+
 # shellcheck disable=SC2154 # CHANGE_CONFIG_DIR_OWNERSHIP comes from the container env
-# Preferences.xml lives in a plex-owned dir, so touch it as the plex user. Opting out of
-# CHANGE_CONFIG_DIR_OWNERSHIP keeps the previous run-as-root behaviour for root-owned configs.
+# Root must not act on files plex controls, so touch Preferences.xml as the plex user.
+# Only a config dir plex can't write (with CHANGE_CONFIG_DIR_OWNERSHIP off) stays root.
 function asPlex {
-  if [[ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]]; then
+  if [[ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]] || plexCanWritePrefDir; then
     s6-setuidgid plex "$@"
   else
     "$@"
