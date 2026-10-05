@@ -1,7 +1,7 @@
 #!/bin/bash
 # shellcheck disable=SC2154 # TARGETPLATFORM, TARGETARCH, TAG, PLEX_DISTRO are Docker build args
 
-. /plex-common.sh
+source /plex-common.sh
 
 PLEX_BUILD=''
 if [[ "${TARGETPLATFORM}" = 'linux/arm/v7' ]]; then

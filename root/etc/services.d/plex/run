@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv bash
 
 echo "Starting Plex Media Server."
-. /plex-common.sh
+source /plex-common.sh
 setAppSupportDir
 # shellcheck disable=SC2154 # set by setAppSupportDir
 export PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR="${pmsApplicationSupportDir}"

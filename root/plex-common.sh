@@ -31,7 +31,7 @@ function asPlex {
 function setAppSupportDir {
   local home
   home=~plex
-  [[ -f /etc/default/plexmediaserver ]] && . /etc/default/plexmediaserver
+  [[ -f /etc/default/plexmediaserver ]] && source /etc/default/plexmediaserver
   pmsApplicationSupportDir="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${home}/Library/Application Support}"
 }
 

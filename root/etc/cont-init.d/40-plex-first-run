@@ -11,7 +11,7 @@ if [[ -e /.firstRunComplete ]]; then
   exit 0
 fi
 
-. /plex-common.sh
+source /plex-common.sh
 
 function setPref {
   local key="$1"

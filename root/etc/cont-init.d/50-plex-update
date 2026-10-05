@@ -6,7 +6,7 @@ if [[ "${DEBUG,,}" = "true" ]]; then
   set -x
 fi
 
-. /plex-common.sh
+source /plex-common.sh
 
 # Get token
 setPrefFile
