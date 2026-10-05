@@ -27,12 +27,16 @@ function asPlex {
   fi
 }
 
-# Resolve prefFile the same way PMS does (services.d/plex/run)
-function setPrefFile {
-  local home pmsApplicationSupportDir
+# Resolve the PMS app support dir, shared by PMS (services.d/plex/run) and the init scripts
+function setAppSupportDir {
+  local home
   home=~plex
   [[ -f /etc/default/plexmediaserver ]] && . /etc/default/plexmediaserver
   pmsApplicationSupportDir="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${home}/Library/Application Support}"
+}
+
+function setPrefFile {
+  setAppSupportDir
   prefFile="${pmsApplicationSupportDir}/Plex Media Server/Preferences.xml"
 }
 

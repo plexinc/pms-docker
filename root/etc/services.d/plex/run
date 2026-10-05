@@ -1,9 +1,10 @@
 #!/usr/bin/with-contenv bash
 
 echo "Starting Plex Media Server."
-home=~plex
-[[ -f /etc/default/plexmediaserver ]] && . /etc/default/plexmediaserver
-export PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${home}/Library/Application Support}"
+. /plex-common.sh
+setAppSupportDir
+# shellcheck disable=SC2154 # set by setAppSupportDir
+export PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR="${pmsApplicationSupportDir}"
 export PLEX_MEDIA_SERVER_HOME=/usr/lib/plexmediaserver
 export PLEX_MEDIA_SERVER_MAX_PLUGIN_PROCS=6
 export PLEX_MEDIA_SERVER_INFO_VENDOR=Docker
