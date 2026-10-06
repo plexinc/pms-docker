@@ -32,7 +32,7 @@ if [[ "${versionToInstall}" = "${installedVersion}" ]]; then
 fi
 
 # Get updated version number
-getVersionInfo "${versionToInstall}" "${token}" remoteVersion remoteFile
+getVersionInfo "${versionToInstall}" "${token}" remoteVersion remoteFile remoteHash
 
 if [[ -z "${remoteVersion}" ]] || [[ -z "${remoteFile}" ]]; then
   echo "Could not get update version"
@@ -46,4 +46,4 @@ fi
 
 # Do update process
 echo "Attempting to upgrade to: ${remoteVersion}"
-installFromUrl "${remoteFile}"
+installFromUrl "${remoteFile}" "${remoteHash}"

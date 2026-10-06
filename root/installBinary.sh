@@ -20,7 +20,7 @@ if [[ -n "${URL}" ]]; then
   echo "Attempting to install from URL: ${URL}"
   installFromRawUrl "${URL}"
 elif [[ "${TAG}" != "beta" ]] && [[ "${TAG}" != "public" ]]; then
-  getVersionInfo "${TAG}" "" remoteVersion remoteFile
+  getVersionInfo "${TAG}" "" remoteVersion remoteFile remoteHash
 
   if [[ -z "${remoteVersion}" ]] || [[ -z "${remoteFile}" ]]; then
     echo "Could not get install version"
@@ -28,5 +28,5 @@ elif [[ "${TAG}" != "beta" ]] && [[ "${TAG}" != "public" ]]; then
   fi
 
   echo "Attempting to install: ${remoteVersion}"
-  installFromUrl "${remoteFile}"
+  installFromUrl "${remoteFile}" "${remoteHash}"
 fi

@@ -71,6 +71,7 @@ function getVersionInfo {
   local token="$2"
   local -n getVersionInfo_remoteVersion=$3
   local -n getVersionInfo_remoteFile=$4
+  local -n getVersionInfo_remoteHash=$5
 
   local channel plexBuild plexDistro versionInfo
   local tokenNeeded=1
@@ -107,15 +108,26 @@ function getVersionInfo {
   getVersionInfo_remoteVersion=$(echo "${versionInfo}" | sed -n 's/.*Release.*version="\([^"]*\)".*/\1/p')
   # shellcheck disable=SC2034
   getVersionInfo_remoteFile=$(echo "${versionInfo}" | sed -n 's/.*file="\([^"]*\)".*/\1/p')
+  # shellcheck disable=SC2034
+  getVersionInfo_remoteHash=$(echo "${versionInfo}" | sed -n 's/.*fileHash="\([^"]*\)".*/\1/p')
 }
 
 
+# The package is served from downloads.plex.tv, so check it against the sha1 from api.plex.tv.
+# fileHashSha256 is not usable: the API returns the sha256 of empty input.
 function installFromUrl {
-  installFromRawUrl "https://api.plex.tv/${1}"
+  local remoteHash="$2"
+  if [[ ! "${remoteHash}" =~ ^[0-9a-f]{40}$ ]]; then
+    echo "Missing or invalid update checksum"
+    exit 1
+  fi
+  installFromRawUrl "https://api.plex.tv/${1}" "${remoteHash}"
 }
 
+# Optional second arg: expected sha1 of the package
 function installFromRawUrl {
   local remoteFile="$1"
+  local remoteHash="$2"
   local deb last
   deb="$(mktemp --suffix=.deb)" || exit 1
   # Expand now: ${deb} is local and may be out of scope when the trap fires
@@ -127,6 +139,12 @@ function installFromRawUrl {
   # test if deb file size is ok, or if download failed
   if [[ "${last}" -gt 0 ]] || [[ $(stat -c %s "${deb}") -lt 10000 ]]; then
     echo "Failed to fetch update"
+    rm -f "${deb}"
+    exit 1
+  fi
+
+  if [[ -n "${remoteHash}" ]] && ! echo "${remoteHash}  ${deb}" | sha1sum -c --status; then
+    echo "Update checksum mismatch"
     rm -f "${deb}"
     exit 1
   fi
