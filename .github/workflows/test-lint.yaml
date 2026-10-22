@@ -34,7 +34,7 @@ jobs:
     - name: Set up Helm Chart Testing
       uses: helm/chart-testing-action@6ec842c01de15ebb84c8627d2744a0c2f2755c9f  # v2.8.0
       with:
-        version: v3.14.0  # renovate: datasource=github-releases depName=chart-testing packageName=helm/chart-testing
+        version: v3.15.0  # renovate: datasource=github-releases depName=chart-testing packageName=helm/chart-testing
         yamale_version: 6.0.0  # renovate: datasource=github-releases depName=yamale packageName=23andMe/Yamale
 
     - name: Set up Artifact Hub
