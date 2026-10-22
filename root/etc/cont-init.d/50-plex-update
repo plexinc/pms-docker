@@ -1,22 +1,15 @@
 #!/usr/bin/with-contenv bash
+# shellcheck disable=SC2154 # DEBUG comes from the container env
 
 # If we are debugging, enable trace
-if [ "${DEBUG,,}" = "true" ]; then
+if [[ "${DEBUG,,}" = "true" ]]; then
   set -x
 fi
 
-. /plex-common.sh
-
-function getPref {
-  local key="$1"
-
-  xmlstarlet sel -T -t -m "/Preferences" -v "@${key}" -n "${prefFile}"
-}
+source /plex-common.sh
 
 # Get token
-[ -f /etc/default/plexmediaserver ] && . /etc/default/plexmediaserver
-pmsApplicationSupportDir="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${HOME}/Library/Application Support}"
-prefFile="${pmsApplicationSupportDir}/Plex Media Server/Preferences.xml"
+setPrefFile
 token="$(getPref "PlexOnlineToken")"
 
 # Determine current version
@@ -28,29 +21,29 @@ fi
 
 # Read set version
 readVarFromConf "version" versionToInstall
-if [ -z "${versionToInstall}" ]; then
+if [[ -z "${versionToInstall}" ]]; then
   echo "No version specified in install.  Broken image"
   exit 1
 fi
 
 # Short-circuit test of version before remote check to see if it's already installed.
-if [ "${versionToInstall}" = "${installedVersion}" ]; then
+if [[ "${versionToInstall}" = "${installedVersion}" ]]; then
   exit 0
 fi
 
 # Get updated version number
-getVersionInfo "${versionToInstall}" "${token}" remoteVersion remoteFile
+getVersionInfo "${versionToInstall}" "${token}" remoteVersion remoteFile remoteHash
 
-if [ -z "${remoteVersion}" ] || [ -z "${remoteFile}" ]; then
+if [[ -z "${remoteVersion}" ]] || [[ -z "${remoteFile}" ]]; then
   echo "Could not get update version"
   exit 0
 fi
 
 # Check if there's no update required
-if [ "${remoteVersion}" = "${installedVersion}" ]; then
+if [[ "${remoteVersion}" = "${installedVersion}" ]]; then
   exit 0
 fi
 
 # Do update process
 echo "Attempting to upgrade to: ${remoteVersion}"
-installFromUrl "${remoteFile}"
+installFromUrl "${remoteFile}" "${remoteHash}"
