@@ -32,7 +32,7 @@ jobs:
         version: 4.3.0  # renovate: datasource=github-releases depName=helm packageName=helm/helm
 
     - name: Set up Helm Chart Testing
-      uses: helm/chart-testing-action@6ec842c01de15ebb84c8627d2744a0c2f2755c9f  # v2.8.0
+      uses: helm/chart-testing-action@720270857a28afd41e2426521a7801db09e9b510  # v2.9.0
       with:
         version: v3.14.0  # renovate: datasource=github-releases depName=chart-testing packageName=helm/chart-testing
         yamale_version: 6.0.0  # renovate: datasource=github-releases depName=yamale packageName=23andMe/Yamale
@@ -136,7 +136,7 @@ jobs:
       uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310  # v5.0.1
 
     - name: Set up Helm Chart Testing
-      uses: helm/chart-testing-action@6ec842c01de15ebb84c8627d2744a0c2f2755c9f  # v2.8.0
+      uses: helm/chart-testing-action@720270857a28afd41e2426521a7801db09e9b510  # v2.9.0
 
     - name: Checkout source
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
