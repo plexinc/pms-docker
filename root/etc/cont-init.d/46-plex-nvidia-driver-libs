@@ -1,0 +1,35 @@
+#!/usr/bin/with-contenv bash
+
+# The Plex Transcoder is loaded by Plex's bundled musl dynamic loader, which
+# does not read /etc/ld.so.cache and only searches a fixed set of directories.
+# The NVIDIA container toolkit mounts the host's driver libraries at whatever
+# path the host distro uses (e.g. /usr/lib/<multiarch>/nvidia/current on
+# Debian) and registers them in the glibc linker cache.  When that path is not
+# on the musl loader's search list, dlopen("libcuda.so.1") fails and hardware
+# transcoding silently falls back to software with a misleading
+# "Operation not permitted" error.
+#
+# The linker cache is the toolkit's authoritative record of where the driver
+# libraries were injected, so resolve them from there and link them into
+# /usr/local/lib, which the bundled loader does search.
+
+LDCONFIG=$(command -v ldconfig.real || command -v ldconfig) || exit 0
+TARGET=/usr/local/lib
+mkdir -p "${TARGET}"
+
+# Directories the bundled musl loader already searches (no action needed for
+# libraries the runtime placed directly in one of these).
+SEARCHED=$(printf ':%s' /usr/local/lib /usr/lib64 /usr/lib/*-linux-gnu /lib/*-linux-gnu /usr/local/lib/*-linux-gnu)':'
+
+# Second field filter keeps 64-bit entries only (libc6,x86-64 / libc6,AArch64)
+# so 32-bit compatibility libraries cannot shadow the real ones.
+"${LDCONFIG}" -p | awk '$1 ~ /^(libcuda|libnvcuvid|libnvidia-)/ && $2 ~ /64/ {print $NF}' | \
+while read -r lib; do
+  case "${SEARCHED}" in *":$(dirname "${lib}"):"*) continue ;; esac
+  name=$(basename "${lib}")
+  # Never clobber a real file; only create missing links or refresh
+  # existing/stale ones (e.g. after a host driver upgrade).
+  if [ ! -e "${TARGET}/${name}" ] || [ -L "${TARGET}/${name}" ]; then
+    ln -sfn "${lib}" "${TARGET}/${name}"
+  fi
+done
