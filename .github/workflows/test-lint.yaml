@@ -17,7 +17,7 @@ env:
 jobs:
   chart-lint:
     name: Chart / lint
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2604
 
     steps:
     - name: Set up Python
@@ -121,7 +121,7 @@ jobs:
 
   chart-test:
     name: Chart / test
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2604
     needs:
     - chart-lint
 
